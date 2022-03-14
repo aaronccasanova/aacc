@@ -1,0 +1,34 @@
+{
+  "name": "@aacc/tsc-js",
+  "version": "0.0.0",
+  "description": "Example hybrid ESM/CJS JavaScript build with TSC",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist/* && tsc -p tsconfig-mjs.json && tsc -p tsconfig-cjs.json && npm run add-build-pkgs",
+    "add-build-pkgs": "echo '{\"type\": \"module\"}' > dist/mjs/package.json && echo '{\"type\": \"commonjs\"}' >> dist/cjs/package.json",
+    "dev": "npm run build -- --watch",
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@aacc/tsconfigs": "^0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.2"
+  }
+}

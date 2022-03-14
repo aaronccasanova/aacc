@@ -1,0 +1,16 @@
+{
+  "extends": "@aacc/tsconfigs/node-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "src",
+    "declarationDir": "dist/types",
+
+    // Suppresses tsconfig warning, will be overwritten by mjs/cjs configs
+    "outDir": "dist",
+
+    "allowJs": true,
+    "checkJs": true
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": ["src"]
+}

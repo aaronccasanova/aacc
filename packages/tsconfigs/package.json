@@ -1,0 +1,20 @@
+{
+  "name": "@aacc/tsconfigs",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "A collection of typescript configuration files to extend",
+  "author": "Aaron Casanova",
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/tsconfigs"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/tsconfigs/README.md"
+}
