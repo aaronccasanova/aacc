@@ -60,3 +60,6 @@ npx lerna add @aacc/tsconfigs --scope @aacc/tsc-ts
 - Add `babel-{ts,js}` package
 - Add `rollup-{ts,js}` package
 - Add `webpack-{ts,js}` package
+- Move TypeScript build and type-check up to the root of the monorepo. AC:
+  - Single `typescript` dependency
+  - Use TypeScript project references
