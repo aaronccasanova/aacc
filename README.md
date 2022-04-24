@@ -53,6 +53,9 @@ Monorepo architecture was influenced by the following article and repo...
 ```sh
 # Add tsconfigs dep to tsc-ts package
 npx lerna add @aacc/tsconfigs --scope @aacc/tsc-ts
+
+# Add dev dep to rollup-js package
+npx lerna add -D rollup --scope @aacc/rollup-js
 ```
 
 #### TODO:
