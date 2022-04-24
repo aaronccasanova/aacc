@@ -1,5 +1,5 @@
 {
-  "name": "@aacc/browserslist",
+  "name": "@aacc/browserslist-config",
   "version": "0.0.0",
   "license": "MIT",
   "description": "A collection of browserslist configurations",
@@ -12,10 +12,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aaronccasanova/aacc.git",
-    "directory": "packages/browserslist"
+    "directory": "packages/browserslist-config"
   },
   "bugs": {
     "url": "https://github.com/aaronccasanova/aacc/issues"
   },
-  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/browserslist/README.md"
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/browserslist-config/README.md"
 }

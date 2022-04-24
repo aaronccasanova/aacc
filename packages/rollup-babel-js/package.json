@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@aacc/tsconfigs": "^0.0.0",
-    "@aacc/browserslist": "^0.0.0",
+    "@aacc/browserslist-config": "^0.0.0",
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
@@ -45,6 +45,6 @@
     "typescript": "^4.6.3"
   },
   "browserslist": [
-    "extends @aacc/browserslist"
+    "extends @aacc/browserslist-config"
   ]
 }
