@@ -21,7 +21,7 @@ npm i -D @aacc/tsconfigs
 Reference local configs:
 
 - `tsconfig.json` serves as the base for both module outputs
-- `tsconfig-mjs.json` extends base and is used build to the ESM output
+- `tsconfig-esm.json` extends base and is used build to the ESM output
 - `tsconfig-cjs.json` extends base and is used to build to CJS output
 
 ### Configure package.json

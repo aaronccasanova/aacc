@@ -1,13 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "ES2021",
-
-    /* Modules */
-    "module": "CommonJS",
-
-    /* Emit */
-    "outDir": "dist/cjs"
+    "outDir": "dist/cjs",
+    "module": "commonjs"
   }
 }
