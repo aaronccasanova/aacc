@@ -44,5 +44,10 @@
     "moduleResolution": "node", // Required for json resolution
     "jsx": "react",
     "pretty": true
+
+    // References:
+    // - https://github.com/microsoft/TypeScript/wiki/Node-Target-Mapping
+    // - https://github.com/tsconfig/bases
+    // - https://github.com/sindresorhus/tsconfig
   }
 }
