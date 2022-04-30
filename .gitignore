@@ -1,3 +1,9 @@
+.turbo
+
+####################################
+# GitHub Node.js .gitignore template
+####################################
+
 # Logs
 logs
 *.log

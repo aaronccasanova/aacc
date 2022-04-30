@@ -1,14 +1,18 @@
 {
   "name": "aacc",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "initialize": "npm i && npm run clean && lerna bootstrap",
-    "clean": "lerna clean --yes && lerna exec -- rm -rf dist",
-    "refresh": "lerna bootstrap",
-    "build": "lerna run build --stream"
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "clean": "rm -rf node_modules && rm -rf packages/*/{node_modules,dist,.turbo}"
   },
   "devDependencies": {
     "lerna": "^4.0.0",
+    "turbo": "^1.2.6",
     "typescript": "^4.6.3"
   }
 }
