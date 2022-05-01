@@ -18,6 +18,7 @@ export default {
   output: [
     {
       format: /** @type {const} */ ('cjs'),
+      entryFileNames: '[name].cjs',
       dir: path.dirname(pkg.main),
       preserveModules: true,
     },

@@ -8,7 +8,8 @@
     "access": "public",
     "@aacc:registry": "https://registry.npmjs.org"
   },
-  "main": "dist/cjs/index.js",
+  "type": "module",
+  "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.js",
   "browser": "dist/browser/index.js",
   "types": "dist/types/index.d.ts",
@@ -16,12 +17,12 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.cjs"
     }
   },
   "scripts": {
-    "dev": "npm run build -- --watch",
-    "build": "npm run build:types && npm run build:js",
+    "dev": "npm-run-all --parallel 'build:* -- --watch'",
+    "build": "npm-run-all --parallel build:*",
     "build:js": "webpack --mode=production",
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",

@@ -2,51 +2,29 @@
 
 Casa for my packages, projects, and experiments.
 
-## Initial setup (One time)
+## Getting started
 
-1. Initialize the repository by installing external dependencies and symlinking internal packages.
+- Install dependencies and symlink `packages/*`
 
 ```sh
-npm run initialize
+npm i
 ```
 
-2. Build every package in the monorepo.
+> Note: Re-run the above command if you add or remove `packages/*` to ensure all symlinks are up to date.
+
+- Build all `packages/*`
 
 ```sh
 npm run build
 ```
 
-> Note: Run the following command if you add/remove any internal packages to ensure all symlinks are up to date.
-
-```sh
-npm run refresh
-```
-
 ## Local development
 
-Simply `cd` into the desired package and `npm run dev`
+Run the `dev` script with Turborepo's `--filter=<package-name>...` option to start a project and all it's dependencies in watch mode.
 
 ```sh
-cd packages/tsc-ts
-npm run dev
+npm run dev -- --filter=@aacc/test-app...
 ```
-
-Or use the `lerna run` command at the root of the monorepo.
-
-```sh
-npx lerna run dev --scope @aacc/tsc-ts
-```
-
-> Note: All `dev` script run the package in watch mode.
-
----
-
-## Notes
-
-Monorepo architecture was influenced by the following article and repo...
-
-- https://letsdebug.it/post/12-monorepo-with-vue-vite-lerna/?ref=morioh.com
-- https://bitbucket.org/letsdebugit/vite-monorepo-example/src/master/package.json
 
 #### Command history:
 
@@ -56,6 +34,12 @@ npx lerna add @aacc/tsconfigs --scope @aacc/tsc-ts
 
 # Add dev dep to rollup-js package
 npx lerna add -D rollup --scope @aacc/rollup-js
+
+# Inspect inferred dependencies from the Turborepo "build" pipeline
+npm run build -- --dry-run
+
+# Graph the inferred dependencies from the Turborepo "build" pipeline
+npm run build -- --graph
 ```
 
 #### TODO:
