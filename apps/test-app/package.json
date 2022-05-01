@@ -4,12 +4,13 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "dev": "npm run i-esm",
+    "dev": "nodemon test-implicit-esm.js",
     "e-cjs": "node test-explicit-cjs.cjs",
     "e-esm": "node test-explicit-esm.mjs",
     "i-cjs": "node test-implicit-cjs.js",
     "i-esm": "node test-implicit-esm.js",
-    "build": "echo building @aacc/test-app"
+    "build": "echo building @aacc/test-app",
+    "start": "npm run i-esm"
   },
   "keywords": [],
   "author": "Aaron Casanova",
@@ -17,5 +18,8 @@
   "dependencies": {
     "@aacc/rollup-babel-ts": "0.0.0",
     "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
