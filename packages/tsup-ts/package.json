@@ -1,0 +1,33 @@
+{
+  "name": "@aacc/tsup-ts",
+  "version": "0.0.0",
+  "description": "Example hybrid ESM/CJS TypeScript build with TSUP",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "npm run build -- --watch",
+    "build": "tsup",
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "@aacc/tsconfigs": "^0.0.0",
+    "tsup": "^5.12.6",
+    "typescript": "^4.6.3"
+  }
+}
