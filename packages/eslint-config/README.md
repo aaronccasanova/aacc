@@ -1,6 +1,7 @@
 # @aacc/eslint-config
 
-1. Install the correct versions of each package, which are listed by the command:
+1. Install the correct versions of each package, which are listed by the
+   command:
 
 ```sh
 npm info "@aacc/eslint-config@latest" peerDependencies

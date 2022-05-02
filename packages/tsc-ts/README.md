@@ -39,4 +39,5 @@ Reference local package.json, specify:
 
 ### TODO:
 
-- Read up on pre/post NPM scripts: https://docs.npmjs.com/cli/v8/using-npm/scripts
+- Read up on pre/post NPM scripts:
+  https://docs.npmjs.com/cli/v8/using-npm/scripts

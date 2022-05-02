@@ -10,7 +10,8 @@ Casa for my packages, projects, and experiments.
 npm i
 ```
 
-> Note: Re-run the above command if you add or remove `packages/*` to ensure all symlinks are up to date.
+> Note: Re-run the above command if you add or remove `packages/*` to ensure all
+> symlinks are up to date.
 
 - Build all `packages/*`
 
@@ -20,7 +21,8 @@ npm run build
 
 ## Local development
 
-Run the `dev` script with Turborepo's `--filter=<package-name>...` option to start a project and all it's dependencies in watch mode.
+Run the `dev` script with Turborepo's `--filter=<package-name>...` option to
+start a project and all it's dependencies in watch mode.
 
 ```sh
 npm run dev -- --filter=@aacc/test-app...
@@ -40,6 +42,9 @@ npm run build -- --dry-run
 
 # Graph the inferred dependencies from the Turborepo "build" pipeline
 npm run build -- --graph
+
+# Check formatting of all packages
+prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 ```
 
 #### TODO:
@@ -50,3 +55,7 @@ npm run build -- --graph
 - Move TypeScript build and type-check up to the root of the monorepo. AC:
   - Single `typescript` dependency
   - Use TypeScript project references
+- Add eslint-config package
+- Integrate eslint-config in all packages
+- Add prettier-config package
+- Integrate prettier-config in all packages
