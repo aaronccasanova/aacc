@@ -27,14 +27,16 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "lint": "TIMING=1 eslint src --ext .js,.jsx,.ts,.tsx",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "the-answer": "^1.0.0"
   },
   "devDependencies": {
-    "@aacc/tsconfigs": "^0.0.0",
     "@aacc/browserslist-config": "^0.0.0",
+    "@aacc/eslint-config": "^0.0.0",
+    "@aacc/tsconfigs": "^0.0.0",
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",

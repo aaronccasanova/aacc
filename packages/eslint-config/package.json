@@ -1,0 +1,42 @@
+{
+  "name": "@aacc/eslint-config",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "Shared ESLint configs",
+  "author": "Aaron Casanova",
+  "main": "./configs/base.js",
+  "exports": {
+    ".": "./configs/base.js",
+    "./base": "./configs/base.js",
+    "./node": "./configs/node.js",
+    "./typescript": "./configs/typescript.js"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@aacc/tsconfigs": "^0.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.5.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/eslint-config"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/eslint-config/README.md"
+}
