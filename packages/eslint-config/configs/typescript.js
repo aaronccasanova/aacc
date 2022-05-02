@@ -8,11 +8,12 @@ module.exports = {
     'airbnb-typescript',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    // Prettier must comes last to override configs that include formatting rules
+    'prettier',
   ],
   plugins: ['@typescript-eslint'],
   rules: {
     ...require('./rules/base'),
-    '@typescript-eslint/semi': 'off',
   },
   // Consumers must define this parser options in their .eslintrc
   // parserOptions: {

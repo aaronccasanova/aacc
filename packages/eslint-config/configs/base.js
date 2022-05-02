@@ -2,7 +2,11 @@
  * @type {import('eslint').Linter.Config}
  */
 module.exports = {
-  extends: ['airbnb', 'prettier'],
+  extends: [
+    'airbnb',
+    // Prettier must comes last to override configs that include formatting rules
+    'prettier',
+  ],
   env: {
     browser: true,
     node: true,
