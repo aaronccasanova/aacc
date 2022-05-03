@@ -27,6 +27,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "lint": "TIMING=1 eslint src --ext .js,.jsx,.ts,.tsx",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {

@@ -23,6 +23,7 @@
     "dev": "npm run build -- --watch",
     "build": "tsup",
     "type-check": "tsc --noEmit -p tsconfig.json",
+    "lint": "TIMING=1 eslint src --ext .js,.jsx,.ts,.tsx",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {

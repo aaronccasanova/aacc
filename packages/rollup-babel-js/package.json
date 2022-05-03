@@ -27,6 +27,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
+    "lint": "TIMING=1 eslint src --ext .js,.jsx",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -37,11 +38,9 @@
     "@aacc/browserslist-config": "^0.0.0",
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
-    "@babel/preset-typescript": "^7.16.7",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
-    "@rollup/plugin-typescript": "^8.3.2",
     "rollup": "^2.70.2",
     "typescript": "^4.6.3"
   },

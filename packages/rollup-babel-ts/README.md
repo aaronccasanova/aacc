@@ -10,7 +10,6 @@ npm i -D @babel/preset-typescript
 npm i -D @rollup/plugin-babel
 npm i -D @rollup/plugin-commonjs
 npm i -D @rollup/plugin-node-resolve
-npm i -D @rollup/plugin-typescript
 npm i -D typescript
 ```
 
