@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@aacc/browserslist-config": "^0.0.0",
+    "@aacc/eslint-config": "^0.0.0",
     "@aacc/tsconfigs": "^0.0.0",
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",

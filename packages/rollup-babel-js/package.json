@@ -34,6 +34,7 @@
     "the-answer": "^1.0.0"
   },
   "devDependencies": {
+    "@aacc/eslint-config": "^0.0.0",
     "@aacc/tsconfigs": "^0.0.0",
     "@aacc/browserslist-config": "^0.0.0",
     "@babel/core": "^7.17.9",
