@@ -1,0 +1,33 @@
+{
+  "name": "@aacc/babel-preset",
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "Shared Babel preset",
+  "author": "Aaron Casanova",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@aacc/eslint-config": "^0.0.0",
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7"
+  },
+  "devDependencies": {
+    "@aacc/eslint-config": "^0.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/babel-preset"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/babel-preset/README.md"
+}
