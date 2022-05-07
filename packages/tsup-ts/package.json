@@ -22,12 +22,12 @@
     "dev": "npm run build -- --watch",
     "build": "tsup",
     "type-check": "tsc --noEmit -p tsconfig.json",
-    "lint": "TIMING=1 eslint src --ext .js,.jsx,.ts,.tsx",
+    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@aacc/eslint-config": "^0.0.0",
-    "@aacc/tsconfigs": "^0.0.0",
+    "@aacc/eslint-config": "*",
+    "@aacc/tsconfigs": "*",
     "tsup": "^5.12.6",
     "typescript": "^4.6.3"
   }

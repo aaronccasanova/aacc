@@ -1,14 +1,20 @@
 {
   "name": "@aacc/browserslist-config",
   "version": "0.0.0",
-  "license": "MIT",
   "description": "A collection of browserslist configurations",
-  "author": "Aaron Casanova",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "lint": "TIMING=1 eslint . --ext .js --cache"
+  },
+  "devDependencies": {
+    "@aacc/eslint-config": "*"
+  },
   "publishConfig": {
     "access": "public",
     "@aacc:registry": "https://registry.npmjs.org"
   },
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aaronccasanova/aacc.git",

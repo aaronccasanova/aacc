@@ -23,12 +23,12 @@
     "build": "rm -rf dist/* && tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json && npm run add-build-pkgs",
     "add-build-pkgs": "echo '{\"type\": \"module\"}' > dist/esm/package.json && echo '{\"type\": \"commonjs\"}' >> dist/cjs/package.json",
     "type-check": "tsc --noEmit -p tsconfig.json",
-    "lint": "TIMING=1 eslint src --ext .js,.jsx",
+    "lint": "TIMING=1 eslint . --ext .js --cache",
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@aacc/eslint-config": "^0.0.0",
-    "@aacc/tsconfigs": "^0.0.0",
+    "@aacc/eslint-config": "*",
+    "@aacc/tsconfigs": "*",
     "typescript": "^4.6.3"
   }
 }

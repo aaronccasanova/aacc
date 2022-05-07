@@ -1,21 +1,20 @@
 {
   "name": "@aacc/babel-preset",
   "version": "0.0.0",
-  "license": "MIT",
   "description": "Shared Babel preset",
-  "author": "Aaron Casanova",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "TIMING=1 eslint . --ext .js --cache"
   },
   "dependencies": {
-    "@aacc/eslint-config": "^0.0.0",
     "@babel/core": "^7.17.9",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7"
   },
   "devDependencies": {
-    "@aacc/eslint-config": "^0.0.0"
+    "@aacc/eslint-config": "*"
   },
   "publishConfig": {
     "access": "public",

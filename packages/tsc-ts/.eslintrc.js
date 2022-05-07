@@ -2,10 +2,11 @@
  * @type {import('eslint').Linter.Config}
  */
 module.exports = {
+  root: true,
   extends: ['@aacc/eslint-config/typescript'],
-  // files: ['*.ts', '*.tsx'],
   parserOptions: {
-    // tsconfigRootDir: __dirname,
-    project: './tsconfig.json',
+    tsconfigRootDir: __dirname,
+    project: 'tsconfig.eslint.json',
   },
+  ignorePatterns: ['node_modules', 'dist'],
 }

@@ -1,10 +1,16 @@
 {
   "name": "@aacc/prettier-config",
   "version": "0.0.0",
-  "license": "MIT",
   "description": "Shared Prettier config",
-  "author": "Aaron Casanova",
-  "main": "./index.js",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "lint": "TIMING=1 eslint . --ext .js --cache"
+  },
+  "devDependencies": {
+    "@aacc/eslint-config": "*"
+  },
   "publishConfig": {
     "access": "public",
     "@aacc:registry": "https://registry.npmjs.org"

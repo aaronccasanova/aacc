@@ -4,10 +4,6 @@
   "description": "Example hybrid ESM/CJS JavaScript build with Rollup and Babel",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public",
-    "@aacc:registry": "https://registry.npmjs.org"
-  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.mjs",
   "browser": "dist/browser/index.js",
@@ -26,17 +22,17 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "lint": "TIMING=1 eslint src --ext .js,.jsx",
+    "lint": "TIMING=1 eslint . --ext .js --cache --fix",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "the-answer": "^1.0.0"
   },
   "devDependencies": {
-    "@aacc/babel-preset": "^0.0.0",
-    "@aacc/eslint-config": "^0.0.0",
-    "@aacc/tsconfigs": "^0.0.0",
-    "@aacc/browserslist-config": "^0.0.0",
+    "@aacc/babel-preset": "*",
+    "@aacc/eslint-config": "*",
+    "@aacc/tsconfigs": "*",
+    "@aacc/browserslist-config": "*",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
@@ -45,5 +41,9 @@
   },
   "browserslist": [
     "extends @aacc/browserslist-config"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  }
 }

@@ -1,1 +1,7 @@
-module.exports = require('./configs/node')
+/**
+ * @type {import('eslint').Linter.Config}
+ */
+module.exports = {
+  root: true,
+  extends: ['./configs/node'],
+}
