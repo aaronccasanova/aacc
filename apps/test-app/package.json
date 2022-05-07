@@ -9,12 +9,14 @@
     "i-cjs": "node test-implicit-cjs.js",
     "i-esm": "node test-implicit-esm.js",
     "build": "echo building @aacc/test-app",
-    "start": "npm run i-esm"
+    "start": "npm run i-esm",
+    "lint": "TIMING=1 eslint . --ext .js,.cjs,.mjs --cache"
   },
   "keywords": [],
   "author": "Aaron Casanova",
   "license": "MIT",
   "dependencies": {
+    "@aacc/eslint-config": "*",
     "@aacc/rollup-babel-ts": "*",
     "express": "^4.18.1"
   },
