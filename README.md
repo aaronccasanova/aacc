@@ -52,6 +52,8 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 - Add `babel-{ts,js}` package
 - Add `rollup-{ts,js}` package
 - Add `webpack-{ts,js}` package
+- Add `esbuild-{ts,js}` package
+- Add `vite-{ts,js}` package
 - Move TypeScript build and type-check up to the root of the monorepo. AC:
   - Single `typescript` dependency
   - Use TypeScript project references
