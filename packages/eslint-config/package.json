@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "Shared ESLint configs",
   "author": "Aaron Casanova",
-  "main": "./configs/base.js",
+  "main": "configs/base.js",
   "exports": {
     ".": "./configs/base.js",
     "./base": "./configs/base.js",
