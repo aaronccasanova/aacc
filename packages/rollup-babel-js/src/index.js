@@ -1,5 +1,6 @@
 import answer from 'the-answer'
 
-console.log('the answer is ' + answer)
+/* eslint-disable-next-line no-console */
+console.log(`the answer is ${String(answer)}`)
 
 export * from './greet'
