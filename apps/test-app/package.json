@@ -2,9 +2,8 @@
   "name": "@aacc/test-app",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
-    "dev": "nodemon test-implicit-esm.js",
+    "dev": "nodemon test-explicit-esm.js",
     "e-cjs": "node test-explicit-cjs.cjs",
     "e-esm": "node test-explicit-esm.mjs",
     "i-cjs": "node test-implicit-cjs.js",
