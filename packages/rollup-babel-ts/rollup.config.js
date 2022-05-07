@@ -1,10 +1,10 @@
 import path from 'path'
 
-import pkg from './package.json'
-
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
+
+import pkg from './package.json'
 
 const name = 'aaccRollupBabelTs'
 
@@ -51,7 +51,7 @@ export default {
   ],
   external: [
     ...Object.keys(pkg.dependencies ?? {}),
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...Object.keys(pkg.peerDependencies ?? {}),
   ],
 }

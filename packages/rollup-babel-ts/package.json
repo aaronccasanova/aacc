@@ -29,6 +29,7 @@
     "lint": "TIMING=1 eslint src --ext .js,.jsx,.ts,.tsx",
     "prepublishOnly": "npm run build"
   },
+  "peerDependencies": {},
   "dependencies": {
     "the-answer": "^1.0.0"
   },
