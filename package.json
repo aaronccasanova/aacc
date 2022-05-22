@@ -12,7 +12,10 @@
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "clean": "rm -rf node_modules && rm -rf packages/*/{node_modules,dist,.turbo}",
-    "format": "prettier --write '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'"
+    "format": "prettier --write '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
     "@aacc/eslint-config": "*",
