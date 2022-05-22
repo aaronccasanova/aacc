@@ -23,5 +23,8 @@
     "turbo": "^1.2.6",
     "typescript": "^4.6.3"
   },
-  "prettier": "./packages/prettier-config"
+  "prettier": "./packages/prettier-config",
+  "dependencies": {
+    "@changesets/cli": "^2.22.0"
+  }
 }
