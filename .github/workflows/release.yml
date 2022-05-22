@@ -42,7 +42,7 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: |
           curl -s \
-            --form-string "token=${{ secrects.PUSHOVER_TOKEN }}" \
+            --form-string "token=${{ secrets.PUSHOVER_TOKEN }}" \
             --form-string "user=${{ secrets.PUSHOVER_USER }}" \
             --form-string "message=New version(s) of @aacc was published!" \
             https://api.pushover.net/1/messages.json
