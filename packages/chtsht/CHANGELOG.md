@@ -1,5 +1,13 @@
 # chtsht
 
+## 0.1.6
+
+### Patch Changes
+
+- [`75ad680`](https://github.com/aaronccasanova/aacc/commit/75ad680250b9cb6013789d38db828ffe902fa5d5)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Fix chtsht
+  version
+
 ## 0.0.3
 
 ### Patch Changes
