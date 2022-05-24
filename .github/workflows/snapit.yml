@@ -16,7 +16,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: github.event.comment.id
-          reactions: ok_hand
+          reactions: eyes
 
       - name: Checkout Repo
         uses: actions/checkout@v2
@@ -32,4 +32,4 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: github.event.comment.id
-          reactions: ship
+          reactions: rocket
