@@ -4,7 +4,6 @@ import path from 'node:path'
 import os from 'node:os'
 
 import React from 'react'
-import { Newline, Text } from 'ink'
 import SelectInput from 'ink-select-input'
 import Table from 'ink-table'
 import prompts from 'prompts'
@@ -76,8 +75,6 @@ export function Cheatsheet(props: CheatsheetProps) {
     params: null,
   })
 
-  const hasParameters = Boolean(state.params)
-
   React.useEffect(() => {
     async function run() {
       if (!state.entry) {
@@ -101,17 +98,15 @@ export function Cheatsheet(props: CheatsheetProps) {
         }
       }
 
-      const { stdout, stderr } = await execa.command(command)
-
       console.log('\n======\n')
       console.log('COMMAND:', chalk.green(command), '\n')
-      if (stdout) {
-        console.log('\n', stdout)
-      }
 
-      if (stderr) {
-        console.log('\n', stderr)
-      }
+      const execProcess = execa.command(command)
+
+      execProcess.stdout?.pipe(process.stdout)
+      execProcess.stderr?.pipe(process.stderr)
+
+      await execProcess
 
       console.log('\n======\n')
 
@@ -126,37 +121,40 @@ export function Cheatsheet(props: CheatsheetProps) {
     })
   }, [state])
 
-  return exec ? (
-    <>
-      {hasParameters && (
-        <>
-          <Text color="yellow">{state.entry?.command}</Text>
-          <Newline />
-        </>
-      )}
-      {!hasParameters && (
-        <SelectInput
-          items={Object.values(entries).map((entry) => ({
-            label: `${entry.description}: ${entry.command}`,
-            value: entry.command,
-          }))}
-          onSelect={(item) => {
-            const entry = entries.find((i) => i.command === item.value)!
+  // If NOT exec mode, print cheatsheet
+  if (!exec) {
+    return (
+      <Table
+        data={entries.map((entry) => ({
+          Description: entry.description,
+          Command: entry.command,
+        }))}
+      />
+    )
+  }
 
-            setState({
-              entry,
-              params: entry.command.match(/<[^>]+>/g),
-            })
-          }}
-        />
-      )}
-    </>
-  ) : (
-    <Table
-      data={entries.map((entry) => ({
-        Description: entry.description,
-        Command: entry.command,
+  // If exec mode and entry selected, hide select input
+  if (exec && Boolean(state.entry)) return null
+
+  // If exec mode and no entry selected, show select input
+  return (
+    <SelectInput
+      items={Object.values(entries).map((entry) => ({
+        label: `${entry.description}: ${entry.command}`,
+        value: entry.command,
       }))}
+      onSelect={(item) => {
+        const entry = entries.find((i) => i.command === item.value)!
+        const params = entry.command.match(/<[^>]+>/g)
+
+        if (params) {
+          console.log(
+            `Enter dynamic parameters for: ${chalk.yellow(entry?.command)}`,
+          )
+        }
+
+        setState({ entry, params })
+      }}
     />
   )
 }
