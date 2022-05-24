@@ -1,0 +1,11 @@
+{
+  "extends": "@aacc/tsconfigs/node-library.json",
+  "compilerOptions": {
+    "module": "es2022",
+    "target": "es2022",
+    "outDir": "dist",
+    "declarationDir": "dist/types"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
