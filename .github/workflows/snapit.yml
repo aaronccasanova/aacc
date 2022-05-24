@@ -15,7 +15,7 @@ jobs:
       - name: Add initial reaction
         uses: peter-evans/create-or-update-comment@v2
         with:
-          comment-id: github.event.comment.id
+          comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
       - name: Checkout Repo
@@ -32,5 +32,5 @@ jobs:
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
         with:
-          comment-id: github.event.comment.id
+          comment-id: ${{ github.event.comment.id }}
           reactions: rocket
