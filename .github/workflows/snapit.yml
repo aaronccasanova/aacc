@@ -26,8 +26,8 @@ jobs:
       - name: Dump github.event.issue
         run: echo '${{ toJSON(github.event.issue) }}'
 
-      - name: Dump context.payload.comment
-        run: echo '${{ toJSON(context.payload.comment) }}'
+      - name: Dump github.event.comment
+        run: echo '${{ toJSON(github.event.comment) }}'
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
