@@ -1,5 +1,14 @@
 # chtsht
 
+## 0.2.0
+
+### Minor Changes
+
+- [#5](https://github.com/aaronccasanova/aacc/pull/5)
+  [`26a39d3`](https://github.com/aaronccasanova/aacc/commit/26a39d3dca6dcef727e713bab6bc7e65156c29dd)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Updated exec
+  mode to pipe execa output to stdout
+
 ## 0.1.6
 
 ### Patch Changes
