@@ -20,9 +20,11 @@ jobs:
 
       - name: Log things
         run: |
-          echo '${{ github.ref }}'
-          echo '${{ github.head_ref }}'
-          echo '${{ github.ref_name }}'
+          echo 'ref ${{ github.ref }}'
+          echo 'head_ref ${{ github.head_ref }}'
+          echo 'ref_name ${{ github.ref_name }}'
+          echo 'action_ref ${{ github.action_ref }}'
+          echo 'base_ref ${{ github.base_ref }}'
 
       - name: Checkout Repo
         uses: actions/checkout@v2
