@@ -37,10 +37,11 @@ jobs:
       - name: Create snapshot release
         run: |
           npm run version-packages -- --snapshot snapshot-release
+          git diff
         # npm run release -- --no-git-tags --snapshot
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # env:
+          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
