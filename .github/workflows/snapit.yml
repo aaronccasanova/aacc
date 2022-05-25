@@ -61,14 +61,38 @@ jobs:
 
             const {stdout} = await releaseProcess
 
-            console.log(stdout)
+            const newTags = Array.from(
+              stdout.matchAll(/New tag:\s+([^\s\n]+)/g),
+            ).map(
+              ([_, tag]) => tag,
+            )
 
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'Testing create comment'
-            })
+            if (newTags.length) {
+              const body = (
+                `**Thanks author_name your snapshot has been shipped! 🚢**\n` +
+                `Test your changes with:\n` +
+                newTags.map(formatTag)
+              )
+
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              })
+
+              function formatTag(tag) {
+                return (
+                  '\`\`\`sh\n' +
+                  `npm i ${tag}\n` +
+                  '\`\`\`\n'
+                )
+              }
+
+              return true
+            }
+
+            return false
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
