@@ -52,13 +52,13 @@ jobs:
       - name: Publish snapshots
         id: publish_snapshots
         run: |
-          echo "::set-output name=new_tags::$(
-            npm run release -- --no-git-tags --snapshot |
-            grep -E 'New tag:'
-          )"
+          # Runs the snapshot release script and redirects to stdout and variable
+          # https://unix.stackexchange.com/a/526905
+          publish_snapshots_stdout=$(npm run release -- --no-git-tags --snapshot 2>&1 | tee /dev/tty)
+          echo "::set-output name=stdout::$publish_snapshots_stdout"
           
       - name: Log publish_snapshots output
-        run: echo '${{ steps.publish_snapshots.outputs.new_tags }}'
+        run: echo '${{ steps.publish_snapshots.outputs.stdout }}'
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
