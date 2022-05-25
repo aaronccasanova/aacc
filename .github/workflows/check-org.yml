@@ -5,14 +5,14 @@ on:
     types: [created]
 
 jobs:
-  snapshot:
+  check-org:
     name: Check org
     if:
       ${{ github.event.issue.pull_request && github.event.comment.body ==
       '/check-org' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create and publish snapshot release
+      - name: Check org
         uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
