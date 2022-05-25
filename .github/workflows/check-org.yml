@@ -12,6 +12,12 @@ jobs:
       '/check-org' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+
       - name: Check org
         uses: actions/github-script@v6
         env:
