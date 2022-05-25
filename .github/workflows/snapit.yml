@@ -23,11 +23,16 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.pull_request.head.ref }}
 
-      - name: Dump github.event.issue
-        run: echo '${{ toJSON(github.event.issue) }}'
-
-      - name: Dump github.event.comment
-        run: echo '${{ toJSON(github.event.comment) }}'
+      - name: Create snapshot release
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run version-packages --snapshot snapshot-release
+          publish: echo nope
+        # publish: npm run release --no-git-tags --snapshot
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
