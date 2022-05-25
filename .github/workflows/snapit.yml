@@ -77,7 +77,7 @@ jobs:
               }
 
               const body = (
-                `**Thanks author_name your snapshot has been shipped! 🚢**\n` +
+                `**Thanks `${context.actor}` your snapshot has been shipped! 🚢**\n` +
                 `Test your changes with:\n` +
                 newTags.map(formatTag).join('\n')
               )
