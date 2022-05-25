@@ -6,10 +6,10 @@ on:
 
 jobs:
   snapshot:
-    name: Snapshot Release
-    if:
-      ${{ github.event.issue.pull_request && github.event.comment.body ==
-      '/snapit' }}
+    name: Snapshot release
+    if: |
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/snapit'
     runs-on: ubuntu-latest
     steps:
       - name: Add initial reaction
@@ -24,8 +24,9 @@ jobs:
       - name: Show current branch
         run: git branch --show-current
 
+      # issue_comment requires us to checkout the branch
+      # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
       - name: Checkout pull request branch
-        # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
         run: hub pr checkout ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +63,7 @@ jobs:
             versionProcess.stdout.pipe(process.stdout)
             await versionProcess
 
-            const releaseProcess = execa.command('npm run release -- --no-git-tags --snapshot')
+            const releaseProcess = execa.command('npm run release -- --no-git-tags --snapshot --tag snapshot-release')
             releaseProcess.stdout.pipe(process.stdout)
 
             const {stdout} = await releaseProcess
@@ -77,7 +78,7 @@ jobs:
               const multiple = newTags.length > 1
               const body = (
                 `**Thanks @${context.actor}! ` +
-                `Your snapshot${multiple ? 's have' : ' has'} been shipped. 🚢**\n` +
+                `Your snapshot${multiple ? 's have' : ' has'} been shipped. 🚢**\n\n` +
                 `Test the snapshot${multiple ? 's' : ''} by updating your \`package.json\` ` +
                 `with the newly published version${multiple ? 's' : ''}:\n` +
                 newTags.map(tag => (
