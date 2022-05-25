@@ -5,21 +5,27 @@ on:
     types: [created]
 
 jobs:
-  snapshot:
+  check-org:
     name: Check org
     if:
       ${{ github.event.issue.pull_request && github.event.comment.body ==
       '/check-org' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Create and publish snapshot release
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Check org
         uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const results = await github.rest.orgs.checkMembershipForUser({
-              'aaronccasanova',
-              'aaronccasanova',
+              org: 'Shopify',
+              username: 'aaronccasanova',
             })
+            
             console.log('results: ', results)
