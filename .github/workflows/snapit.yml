@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Checkout pull request branch
+        # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
         run: hub pr checkout ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -50,21 +51,26 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Publish snapshots
+        # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
         id: publish_snapshots
         run: |
           # Runs the snapshot release script and redirects to stdout and variable
-          # https://unix.stackexchange.com/a/526905
+          # https://community.atlassian.com/t5/Bamboo-questions/How-to-print-to-stdout-and-save-to-variable-dev-tty-No-such/qaq-p/672317#M16270
           exec 5>&1
           publish_snapshots_stdout=$(
             npm run release -- --no-git-tags --snapshot |
             tee /dev/fd/5 |
             grep "New tag:"
           )
-          echo $publish_snapshots_stdout
           echo "::set-output name=stdout::${publish_snapshots_stdout}"
           
-      - name: Log publish_snapshots output
-        run: echo '${{ steps.publish_snapshots.outputs.stdout }}'
+#       - name: Log publish_snapshots output
+#         run: echo '${{ steps.publish_snapshots.outputs.stdout }}'
+
+      - name: View context attributes
+        uses: actions/github-script@v6
+        with:
+          script: console.log(context)
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
