@@ -18,8 +18,8 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
-      - name: Log pull_request head ref
-        run: echo '${{ toJSON(github.event.client_payload) }}'
+      - name: Log github.event
+        run: echo '${{ toJSON(github.event) }}'
 
       - name: Checkout Repo
         uses: actions/checkout@v2
