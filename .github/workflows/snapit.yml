@@ -18,18 +18,13 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
-      - name: Log things
-        run: |
-          echo 'ref ${{ github.ref }}'
-          echo 'head_ref ${{ github.head_ref }}'
-          echo 'ref_name ${{ github.ref_name }}'
-          echo 'action_ref ${{ github.action_ref }}'
-          echo 'base_ref ${{ github.base_ref }}'
-
-      - name: Checkout Repo
+      - name: Checkout default branch
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.ref_name }}
+
+      - name: Checkout pull request branch
+        run: hub pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create snapshot release
         id: changesets
