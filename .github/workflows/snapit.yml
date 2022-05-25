@@ -54,7 +54,11 @@ jobs:
         run: |
           # Runs the snapshot release script and redirects to stdout and variable
           # https://unix.stackexchange.com/a/526905
-          publish_snapshots_stdout=$(npm run release -- --no-git-tags --snapshot 2>&1 | tee /dev/tty)
+          exec 5>&1
+          publish_snapshots_stdout=$(
+            npm run release -- --no-git-tags --snapshot |
+            tee /dev/fd/5
+          )
           echo "::set-output name=stdout::$publish_snapshots_stdout"
           
       - name: Log publish_snapshots output
