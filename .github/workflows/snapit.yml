@@ -69,12 +69,13 @@ jobs:
 
       - name: View context attributes
         uses: actions/github-script@v6
-        env:
-          NEW_TAGS: ${{ steps.publish_snapshots.outputs.new_tags }}
+#         env:
+#           NEW_TAGS: ${{ steps.publish_snapshots.outputs.new_tags }}
         with:
           script: |
-            const newTags = process.env.NEW_TAGS
-            console.log(newTags.split('\n'))
+            // const newTags = process.env.NEW_TAGS
+            // console.log(newTags.split('\n'))
+            console.log('jobs: ', jobs)
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
