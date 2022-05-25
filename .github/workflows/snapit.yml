@@ -76,7 +76,7 @@ jobs:
         with:
           script: |
             const newTags = process.env.NEW_TAGS
-            console.log(newTags.split('\n'))
+            console.log(newTags)
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
