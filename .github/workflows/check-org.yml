@@ -20,6 +20,7 @@ jobs:
           script: |
             const results = await github.rest.orgs.checkMembershipForUser({
               'aaronccasanova',
-              'aaronccasanova',
+              'aaronccasanova'
             })
-            console.log('results: ', results)
+
+            console.log(results)
