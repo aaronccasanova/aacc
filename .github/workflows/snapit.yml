@@ -57,16 +57,13 @@ jobs:
           # Runs the snapshot release script and redirects to stdout and variable
           # https://community.atlassian.com/t5/Bamboo-questions/How-to-print-to-stdout-and-save-to-variable-dev-tty-No-such/qaq-p/672317#M16270
           exec 5>&1
-          publish_snapshots_new_tags=$(
-            npm run release -- --no-git-tags --snapshot |
-            tee /dev/fd/5
-          )
+          publish_snapshots_new_tags=$(npm run release -- --no-git-tags --snapshot | tee /dev/fd/5)
           # publish_snapshots_new_tags=$(
           #   npm run release -- --no-git-tags --snapshot |
           #     tee /dev/fd/5 |
           #     grep "New tag:"
           #  )
-          echo "::set-output name=new_tags::${publish_snapshots_new_tags}"
+          echo "::set-output name=new_tags::$publish_snapshots_new_tags"
           
 #       - name: Log publish_snapshots output
 #         run: echo '${{ steps.publish_snapshots.outputs.stdout }}'
