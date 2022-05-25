@@ -34,12 +34,19 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+      
+      - name: Create an .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create snapshot release
         run: |
           npm run version-packages -- --snapshot snapshot-release
-          git diff
-        # npm run release -- --no-git-tags --snapshot
+          npm run release -- --no-git-tags --snapshot
         env:
           # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
