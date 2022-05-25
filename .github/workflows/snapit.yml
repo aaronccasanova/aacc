@@ -68,10 +68,18 @@ jobs:
             )
 
             if (newTags.length) {
+              function formatTag(tag) {
+                return (
+                  '```sh\n' +
+                  `npm i ${tag}\n` +
+                  '```'
+                )
+              }
+
               const body = (
                 `**Thanks author_name your snapshot has been shipped! 🚢**\n` +
                 `Test your changes with:\n` +
-                newTags.map(formatTag)
+                newTags.map(formatTag).join('\n')
               )
 
               await github.rest.issues.createComment({
@@ -80,14 +88,6 @@ jobs:
                 repo: context.repo.repo,
                 body,
               })
-
-              function formatTag(tag) {
-                return (
-                  '\`\`\`sh\n' +
-                  `npm i ${tag}\n` +
-                  '\`\`\`\n'
-                )
-              }
 
               return true
             }
