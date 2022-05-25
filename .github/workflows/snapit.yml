@@ -63,19 +63,20 @@ jobs:
             grep "New tag:"
           )
           echo "::set-output name=new_tags::${publish_snapshots_new_tags}"
+          echo "======================"
+          echo $publish_snapshots_new_tags
           
 #       - name: Log publish_snapshots output
 #         run: echo '${{ steps.publish_snapshots.outputs.stdout }}'
 
       - name: View context attributes
         uses: actions/github-script@v6
-#         env:
-#           NEW_TAGS: ${{ steps.publish_snapshots.outputs.new_tags }}
+        env:
+          NEW_TAGS: ${{ steps.publish_snapshots.outputs.new_tags }}
         with:
           script: |
-            // const newTags = process.env.NEW_TAGS
-            // console.log(newTags.split('\n'))
-            console.log('jobs: ', jobs)
+            const newTags = process.env.NEW_TAGS
+            console.log(newTags.split('\n'))
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
