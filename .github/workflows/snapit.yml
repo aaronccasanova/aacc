@@ -43,13 +43,22 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Create snapshot release
+      - name: Create snapshot versions
         run: |
           npm run version-packages -- --snapshot snapshot-release
-          npm run release -- --no-git-tags --snapshot
         env:
-          # NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Publish snapshots
+        id: publish_snapshots
+        run: |
+          echo "::set-output name=new_tags::$(
+            npm run release -- --no-git-tags --snapshot |
+            grep -E 'New tag:'
+          )"
+          
+      - name: Log publish_snapshots output
+        run: echo '${{ steps.publish_snapshots.outputs.new_tags }}'
 
       - name: Add final reaction
         uses: peter-evans/create-or-update-comment@v2
