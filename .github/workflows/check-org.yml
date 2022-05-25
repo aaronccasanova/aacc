@@ -23,4 +23,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            console.log('hi')
+            const results = await github.rest.orgs.checkMembershipForUser({
+              org: 'aaronccasanova',
+              username: 'aaronccasanova',
+            })
+            
+            console.log('results: ', results)
