@@ -69,10 +69,11 @@ jobs:
 
       - name: View context attributes
         uses: actions/github-script@v6
+        env:
+          NEW_TAGS: ${{ steps.publish_snapshots.outputs.new_tags }}
         with:
-          new_tags: ${{ steps.publish_snapshots.outputs.new_tags }}
           script: |
-            const newTags = core.getInput('new_tags')
+            const newTags = process.env.NEW_TAGS
             console.log(newTags.split('\n'))
 
       - name: Add final reaction
