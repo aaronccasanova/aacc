@@ -21,11 +21,17 @@ jobs:
       - name: Checkout default branch
         uses: actions/checkout@v2
 
+      - name: Show current branch
+        run: git branch --show-current
+
       - name: Checkout pull request branch
         # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
         run: hub pr checkout ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Show current branch
+        run: git branch --show-current
 
       - name: Setup Node.js 16
         uses: actions/setup-node@v3
@@ -68,18 +74,14 @@ jobs:
             )
 
             if (newTags.length) {
-              function formatTag(tag) {
-                return (
-                  '```sh\n' +
-                  `npm i ${tag}\n` +
-                  '```'
-                )
-              }
-
               const body = (
                 `**Thanks @${context.actor} your snapshot has been shipped! 🚢**\n` +
                 `Test your changes with:\n` +
-                newTags.map(formatTag).join('\n')
+                newTags.map(tag => (
+                  '```sh\n' +
+                  `yarn add ${tag}\n` +
+                  '```'
+                )).join('\n')
               )
 
               await github.rest.issues.createComment({
