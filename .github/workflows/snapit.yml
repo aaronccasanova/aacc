@@ -1,0 +1,107 @@
+name: Snapit
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  snapshot:
+    name: Snapshot release
+    if: |
+      github.event.issue.pull_request &&
+      github.event.comment.body == '/snapit'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add initial reaction
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: eyes
+
+      - name: Checkout default branch
+        uses: actions/checkout@v2
+
+      - name: Show current branch
+        run: git branch --show-current
+
+      # issue_comment requires us to checkout the branch
+      # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
+      - name: Checkout pull request branch
+        run: hub pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Show current branch
+        run: git branch --show-current
+
+      - name: Setup Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create an .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create and publish snapshot release
+        uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          script: |
+            const execa = require('execa')
+
+            const versionProcess = execa.command('npm run version-packages -- --snapshot snapshot-release')
+            versionProcess.stdout.pipe(process.stdout)
+            await versionProcess
+
+            const releaseProcess = execa.command('npm run release -- --no-git-tags --snapshot --tag snapshot-release')
+            releaseProcess.stdout.pipe(process.stdout)
+
+            const {stdout} = await releaseProcess
+
+            const newTags = Array.from(
+              stdout.matchAll(/New tag:\s+([^\s\n]+)/g),
+            ).map(
+              ([_, tag]) => tag,
+            )
+
+            if (newTags.length) {
+              const multiple = newTags.length > 1
+              const body = (
+                `**Thanks @${context.actor}! ` +
+                `Your snapshot${multiple ? 's have' : ' has'} been shipped. 🚢**\n\n` +
+                `Test the snapshot${multiple ? 's' : ''} by updating your \`package.json\` ` +
+                `with the newly published version${multiple ? 's' : ''}:\n` +
+                newTags.map(tag => (
+                  '```sh\n' +
+                  `npm i ${tag}\n` +
+                  '```'
+                )).join('\n')
+              )
+
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body,
+              })
+
+              return true
+            }
+
+            return false
+
+      - name: Add final reaction
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ github.event.comment.id }}
+          reactions: rocket
