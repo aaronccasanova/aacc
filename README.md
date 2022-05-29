@@ -61,3 +61,4 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 - Integrate eslint-config in all packages
 - Add prettier-config package
 - Integrate prettier-config in all packages
+- Add storybook
