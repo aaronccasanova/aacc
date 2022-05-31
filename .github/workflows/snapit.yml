@@ -59,9 +59,7 @@ jobs:
           script: |
             const execa = require('execa')
 
-            const versionProcess = execa.command('npm run version-packages -- --snapshot snapshot-release')
-            versionProcess.stdout.pipe(process.stdout)
-            await versionProcess
+            await execa.command('npm run version-packages -- --snapshot snapshot-release', { stdio: 'inherit' })
 
             const releaseProcess = execa.command('npm run release -- --no-git-tags --snapshot --tag snapshot-release')
             releaseProcess.stdout.pipe(process.stdout)
