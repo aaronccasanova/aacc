@@ -30,6 +30,9 @@ jobs:
         run: hub pr checkout ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create temporary snapshot-release branch
+        run: git checkout -b snapshot-release-$(date +%s)
           
       - name: Show current branch
         run: git branch --show-current
