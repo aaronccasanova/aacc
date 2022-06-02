@@ -21,9 +21,6 @@ jobs:
       - name: Checkout default branch
         uses: actions/checkout@v2
 
-      - name: Show current branch
-        run: git branch --show-current
-
       # issue_comment requires us to checkout the branch
       # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
       - name: Checkout pull request branch
@@ -34,10 +31,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create temporary snapshot-release branch
-        run: git checkout -b snapshot-release-$(date +%s)
-
-      - name: Revert select files if changeset-release/main branch
+      # Because changeset entries are consumed and removed on the
+      # 'changeset-release/main' branch, we need to reset the files
+      # so the following 'changeset version --snapshot' command will
+      # regenerate the package version bumps with the snapshot releases
+      - name: Reset changeset entries on changeset-release/main branch
         if: steps.checkout_pr.outputs.branch == 'changeset-release/main'
         run: git checkout origin/main -- .changeset
 
