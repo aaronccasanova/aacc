@@ -27,15 +27,19 @@ jobs:
       # issue_comment requires us to checkout the branch
       # https://github.com/actions/checkout/issues/331#issuecomment-1120113003
       - name: Checkout pull request branch
-        run: hub pr checkout ${{ github.event.issue.number }}
+        id: checkout_pr
+        run: |
+          hub pr checkout ${{ github.event.issue.number }}
+          echo "::set-output name=branch::$(git branch --show-current)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create temporary snapshot-release branch
         run: git checkout -b snapshot-release-$(date +%s)
-          
-      - name: Show current branch
-        run: git branch --show-current
+
+      - name: Revert select files if changeset-release/main branch
+        if: steps.checkout_pr.outputs.branch == 'changeset-release/main'
+        run: git checkout origin/main -- .changeset
 
       - name: Setup Node.js 16
         uses: actions/setup-node@v3
