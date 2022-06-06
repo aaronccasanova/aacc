@@ -25,18 +25,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const request = {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-            }
-            core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
             try {
-              const pullRequest = await github.rest.pulls.get(request)
-
-              core.info(`context.repo.full_name: ${context.repo.full_name}`)
-              core.info(`pr.data.head.repo.full_name: ${pullRequest.data.head.repo.full_name}`)
-              core.info(`context.payload.repository.full_name: ${context.payload.repository.full_name}`)
+              const pullRequest = await github.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+              })
               
               // Pull request from fork
               if (context.payload.repository.full_name !== pullRequest.data.head.repo.full_name) {
