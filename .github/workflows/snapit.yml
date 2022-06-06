@@ -18,9 +18,11 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
-      - name: Get pull request data
+      - name: Validate and get pull request data
         uses: actions/github-script@v3
         id: pr_data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const request = {
@@ -36,14 +38,12 @@ jobs:
               if (context.repo.full_name !== result.data.head.repo.full_name) {
                 const errorMessage = '`/snapit` is not supported on pull requests from forked repositories.'
 
-                // await github.rest.issues.createComment({
-                //  issue_number: context.issue.number,
-                //  owner: context.repo.owner,
-                //  repo: context.repo.repo,
-                //  body: errorMessage,
-                // })
-                
-                console.log(errorMessage)
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: errorMessage,
+                })
 
                 core.setFailed(errorMessage)
                 return
