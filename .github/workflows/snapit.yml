@@ -34,8 +34,11 @@ jobs:
             try {
               const pullRequest = await github.rest.pulls.get(request)
               
+              core.info(`context.repo.owner: ${context.repo.owner}`)
+              core.info(`context.repo.repo: ${context.repo.repo}`)
               core.info(`context.repo.full_name: ${context.repo.full_name}`)
               core.info(`pr.data.head.repo.full_name: ${pullRequest.data.head.repo.full_name}`)
+              core.info(`context.repository: ${context.repository}`)
               
               // Pull request from fork
               if (context.repo.full_name !== pullRequest.data.head.repo.full_name) {
