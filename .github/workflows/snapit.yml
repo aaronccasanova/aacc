@@ -33,7 +33,7 @@ jobs:
               const result = await github.pulls.get(request)
               
               // Pull request from fork
-              if (context.repo.full_name !== result.data.repo.full_name) {
+              if (context.repo.full_name !== result.data.head.repo.full_name) {
                 const errorMessage = '`/snapit` is not supported on pull requests from forked repositories.'
 
                 await github.rest.issues.createComment({
