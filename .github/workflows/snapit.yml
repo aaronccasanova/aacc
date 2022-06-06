@@ -32,10 +32,10 @@ jobs:
             }
             core.info(`Getting PR #${request.pull_number} from ${request.owner}/${request.repo}`)
             try {
-              const result = await github.pulls.get(request)
+              const pullRequest = await github.rest.pulls.get(request)
               
               // Pull request from fork
-              if (context.repo.full_name !== result.data.head.repo.full_name) {
+              if (context.repo.full_name !== pullRequest.data.head.repo.full_name) {
                 const errorMessage = '`/snapit` is not supported on pull requests from forked repositories.'
                 
                 await github.rest.issues.createComment({
@@ -49,8 +49,8 @@ jobs:
                 return
               }
 
-              core.setOutput('repoFullName', result.data.head.repo.full_name)
-              core.setOutput('headSha', result.data.head.sha)
+              core.setOutput('repoFullName', pullRequest.data.head.repo.full_name)
+              core.setOutput('headSha', pullRequest.data.head.sha)
             } catch (err) {
               core.setFailed(`Request failed with error ${err}`)
             }
