@@ -37,13 +37,17 @@ jobs:
               // Pull request from fork
               if (context.repo.full_name !== result.data.head.repo.full_name) {
                 const errorMessage = '`/snapit` is not supported on pull requests from forked repositories.'
-
+                
+                console.log('github.rest: ', github.rest)
+                console.log('issues in github.rest: ', 'issues' in github.rest)
+                /*
                 await github.rest.issues.createComment({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   body: errorMessage,
                 })
+                */
 
                 core.setFailed(errorMessage)
                 return
