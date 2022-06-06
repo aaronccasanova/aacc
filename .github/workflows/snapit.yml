@@ -36,6 +36,11 @@ jobs:
               core.setFailed(`Request failed with error ${err}`)
             }
 
+      - name: Log PR data
+        run: |
+          echo '${{ toJSON(github) }}'
+          echo '${{ toJSON(steps.pr_data.outputs.result) }}'
+
       # issue_comment requires us to checkout the branch
       # https://github.com/actions/checkout/issues/331#issuecomment-707103442
       - name: Checkout pull request branch
