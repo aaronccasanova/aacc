@@ -38,7 +38,7 @@ jobs:
               core.info(`context.repo.repo: ${context.repo.repo}`)
               core.info(`context.repo.full_name: ${context.repo.full_name}`)
               core.info(`pr.data.head.repo.full_name: ${pullRequest.data.head.repo.full_name}`)
-              core.info(`context.event.comment.issue.repository: ${context.event.comment.issue.repository.full_name}`)
+              core.info(`context: ${context}`)
               
               // Pull request from fork
               if (context.event.comment.issue.repository.full_name !== pullRequest.data.head.repo.full_name) {
