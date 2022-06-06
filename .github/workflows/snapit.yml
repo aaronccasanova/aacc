@@ -18,9 +18,6 @@ jobs:
           comment-id: ${{ github.event.comment.id }}
           reactions: eyes
 
-      - name: Checkout default branch
-        uses: actions/checkout@v2
-
       - name: Get pull request data
         uses: actions/github-script@v3
         id: pr_data
@@ -39,6 +36,8 @@ jobs:
               core.setFailed(`Request failed with error ${err}`)
             }
 
+      # issue_comment requires us to checkout the branch
+      # https://github.com/actions/checkout/issues/331#issuecomment-707103442
       - name: Checkout pull request branch
         uses: actions/checkout@v2
         with:
