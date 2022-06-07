@@ -6,8 +6,7 @@
 
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2020",
-    "lib": ["es2020", "dom"],
-    "moduleResolution": "node"
+    "target": "es2020", // Node.js 14
+    "lib": ["es2020", "dom"]
   }
 }

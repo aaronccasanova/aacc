@@ -5,8 +5,8 @@
   "extends": "./base.json",
 
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2020",
+    "module": "node16",
+    "target": "es2020", // Node.js 14
     "lib": ["es2020"]
   }
 }
