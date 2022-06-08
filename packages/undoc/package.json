@@ -1,0 +1,82 @@
+{
+  "name": "aacc-undoc",
+  "displayName": "UNDoc",
+  "description": "Easily copy JSDoc selections without leading `*` stars.",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "publisher": "aaronccasanova",
+  "license": "MIT",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.67.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:undoc.copySelection",
+    "onCommand:undoc.updateSelection"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "title": "UNDoc - Copy Selection",
+        "command": "undoc.copySelection"
+      },
+      {
+        "title": "UNDoc - Update Selection",
+        "command": "undoc.updateSelection"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "undoc.copySelection",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "undoc.updateSelection",
+          "when": "editorHasSelection"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "undoc.copySelection",
+          "group": "9_cutcopypaste",
+          "when": "editorHasSelection"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "dev": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.67.0",
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.16.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.0.0",
+    "typescript": "^4.7.2",
+    "@vscode/test-electron": "^2.1.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/undoc"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/undoc/README.md"
+}
