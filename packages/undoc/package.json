@@ -5,8 +5,9 @@
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "publisher": "aaronccasanova",
   "license": "MIT",
-  "private": true,
   "version": "0.0.1",
+  "private": true,
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.67.0"
   },
