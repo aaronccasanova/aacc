@@ -1,5 +1,5 @@
 /**
- * Mock JSDoc comment with code examples.
+ * Easily copy JSDoc selections without leading `*` stars.
  *
  * @example
  * function greet() {
