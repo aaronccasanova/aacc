@@ -1,6 +1,6 @@
 {
   "name": "truuu",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Generates a truth table from a JavaScript condition",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
