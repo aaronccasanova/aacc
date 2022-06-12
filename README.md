@@ -62,3 +62,5 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 - Add prettier-config package
 - Integrate prettier-config in all packages
 - Add storybook
+- Move non-npm packages to a `recipes` directory
+- Add CI workflow
