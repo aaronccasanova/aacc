@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /* eslint-disable no-console */
 import { table } from 'table'
 import chalk from 'chalk'

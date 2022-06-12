@@ -1,4 +1,4 @@
-# TRUUU
+# truuu
 
 Generates a truth table from a JavaScript condition.
 
@@ -12,6 +12,9 @@ npm i -g truuu
 
 ```sh
 $ truuu 'isFoo && !isBar'
+```
+
+```
 ╔══════════════════════════════════════════════╗
 ║        _____ ____  _   _ _   _ _   _         ║
 ║       |_   _|  _ \| | | | | | | | | |        ║
