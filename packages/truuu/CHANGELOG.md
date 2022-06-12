@@ -1,5 +1,13 @@
 # truuu
 
+## 0.0.4
+
+### Patch Changes
+
+- [`1dd2b84`](https://github.com/aaronccasanova/aacc/commit/1dd2b84c09f07e438f1d1f96563e315abbada814)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Updated
+  identifiers matcher and invalid/unsupported condition error message
+
 ## 0.0.3
 
 ### Patch Changes
