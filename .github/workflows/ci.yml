@@ -27,7 +27,7 @@ jobs:
       - name: Restore cache
         uses: actions/cache@v2
         with:
-         path: |
+          path: |
             **/.eslintcache
             **/.turbo
             node_modules/.cache/turbo
