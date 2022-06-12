@@ -1,48 +1,50 @@
 #!/usr/bin/env node
 
 /* eslint-disable no-console */
+import vm from 'node:vm'
+
 import { table } from 'table'
 import chalk from 'chalk'
 import figlet from 'figlet'
 
 const input = process.argv[2]
 
-if (typeof input !== 'string') {
-  console.log(chalk.red('Please enter a string'))
-  process.exit(1)
-}
+if (typeof input !== 'string') exit('Please enter a JavaScript condition')
 
-// Extract unique words from input condition
-const words = dedupe(
-  Array.from(input.matchAll(/\w+/g)).map(([word]) => word ?? ''),
+// Extract unique identifiers from the input condition
+const identifiers = Array.from(
+  new Set([...input.matchAll(/\w+/g)].map(([identifier]) => identifier ?? '')),
 )
 
-if (!words.length) {
-  console.log(chalk.red('No words found'))
-  process.exit(1)
-}
+if (!identifiers.length) exit('Error: No variables found in the condition')
 
-// Build true/false permutations table for each word
-const permutations: (boolean | string)[][] = getBinaryPermutations(words.length)
+// Build a true/false permutations table for each identifier
+const permutations: (boolean | string)[][] = getBinaryPermutations(
+  identifiers.length,
+)
 
 // Evaluate each permutation and update the permutations table
 for (const permutation of permutations) {
-  const condition = words.reduce<string>(
-    // Replace each word with the corresponding true/false permutation
-    (newInput, word, i) =>
-      newInput.replace(new RegExp(word, 'g'), String(permutation[i])),
+  const condition = identifiers.reduce(
+    // Replace each identifier in the input with the corresponding true/false permutation
+    (prevInput, identifier, i) =>
+      prevInput.replace(new RegExp(identifier, 'g'), String(permutation[i])),
     input,
   )
 
-  // eslint-disable-next-line no-eval
-  const result: unknown = eval(condition)
+  const errorMessage = `Error: Invalid JavaScript condition ${chalk.red(
+    `'${input}'`,
+  )}`
 
-  if (typeof result !== 'boolean') {
-    console.log(chalk.red('Invalid condition'))
-    process.exit(1)
+  try {
+    const result: unknown = vm.runInNewContext(condition)
+
+    if (typeof result !== 'boolean') exit(errorMessage)
+
+    permutation.push(result ? chalk.green(result) : chalk.red(result))
+  } catch {
+    exit(errorMessage)
   }
-
-  permutation.push(color(result))
 }
 
 const header = figlet.textSync('TRUUU')
@@ -57,11 +59,11 @@ const numOfColumns = permutations[0]?.length ?? 1
 console.log(
   table(
     [
-      // Ex: |           Header                |
+      // Ex: |                    Header                         |
       [header, ...Array.from({ length: numOfColumns - 1 })],
-      // Ex: | word | word  | word | condition |
-      [...words, input],
-      // Ex: | true | false | true |   false   |
+      // Ex: | identifier | identifier  | identifier | condition |
+      [...identifiers, input],
+      // Ex: |    true    |    false    |    true    |   false   |
       ...permutations,
     ],
     {
@@ -97,10 +99,7 @@ function getBinaryPermutations(n: number) {
   return binaryPermutations
 }
 
-function dedupe(arr: string[]) {
-  return Array.from(new Set(arr))
-}
-
-function color(bool: boolean) {
-  return bool ? chalk.green(bool) : chalk.red(bool)
+function exit(message: string): never {
+  console.log(message)
+  process.exit(1)
 }
