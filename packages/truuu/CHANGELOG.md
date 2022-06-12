@@ -1,5 +1,13 @@
 # truuu
 
+## 0.0.3
+
+### Patch Changes
+
+- [`f5fcabe`](https://github.com/aaronccasanova/aacc/commit/f5fcabea8c22290799492d6b65d6edbb75952906)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Replaced `eval`
+  with `node:vm`
+
 ## 0.0.2
 
 ### Patch Changes

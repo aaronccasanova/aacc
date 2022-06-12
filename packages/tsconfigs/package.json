@@ -1,12 +1,12 @@
 {
   "name": "@aacc/tsconfigs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "description": "A collection of typescript configuration files to extend",
   "author": "Aaron Casanova",
   "engines": {
-		"node": ">=14"
-	},
+    "node": ">=14"
+  },
   "publishConfig": {
     "access": "public",
     "@aacc:registry": "https://registry.npmjs.org"
