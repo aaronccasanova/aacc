@@ -1,5 +1,13 @@
 # @aacc/tsconfigs
 
+## 0.0.2
+
+### Patch Changes
+
+- [`558e0fc`](https://github.com/aaronccasanova/aacc/commit/558e0fc3a2c9d19010e14e7764ba83552b5f37c1)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Updated to
+  support Node v14
+
 ## 0.0.1
 
 ### Patch Changes
