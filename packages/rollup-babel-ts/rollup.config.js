@@ -39,6 +39,7 @@ export default {
   ],
   plugins: [
     // Allows node_modules resolution
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     nodeResolve({ extensions }),
     // Allow bundling cjs modules. Rollup doesn't understand cjs
     commonjs(),
