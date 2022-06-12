@@ -54,7 +54,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "dev": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts"
+    "lint": "TIMING=1 eslint src --ext ts"
   },
   "devDependencies": {
     "@types/vscode": "^1.67.0",
