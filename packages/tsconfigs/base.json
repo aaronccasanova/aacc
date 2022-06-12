@@ -41,7 +41,8 @@
 
     // Convenience
     "resolveJsonModule": true,
-    "moduleResolution": "nodenext", // Required for json resolution
+    "moduleResolution": "node16", // Required for json resolution
+    "moduleDetection": "force",
     "jsx": "react",
     "pretty": true
 
