@@ -1,5 +1,14 @@
 # truuu
 
+## 0.0.2
+
+### Patch Changes
+
+- [#14](https://github.com/aaronccasanova/aacc/pull/14)
+  [`7a3e998`](https://github.com/aaronccasanova/aacc/commit/7a3e998e8721bd4d8250df5fb9eb9a843b94e1f6)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Added shebang
+  to truuu cli
+
 ## 0.0.1
 
 ### Patch Changes
