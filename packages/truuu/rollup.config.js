@@ -44,6 +44,7 @@ export default {
     }),
   ],
   external: [
+    'node:vm',
     ...Object.keys(pkg.dependencies ?? {}),
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

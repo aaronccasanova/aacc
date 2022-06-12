@@ -13,7 +13,13 @@ if (typeof input !== 'string') exit('Please enter a JavaScript condition')
 
 // Extract unique identifiers from the input condition
 const identifiers = Array.from(
-  new Set([...input.matchAll(/\w+/g)].map(([identifier]) => identifier ?? '')),
+  new Set(
+    // https://regex101.com/r/ueqoAD/1
+    // https://stackoverflow.com/a/2108007
+    [...input.matchAll(/(?!true|false\b)\b[\w.]+/g)].map(
+      ([identifier]) => identifier ?? '',
+    ),
+  ),
 )
 
 if (!identifiers.length) exit('Error: No variables found in the condition')
@@ -32,7 +38,7 @@ for (const permutation of permutations) {
     input,
   )
 
-  const errorMessage = `Error: Invalid JavaScript condition ${chalk.red(
+  const errorMessage = `Error: Invalid or unsupported JavaScript condition ${chalk.red(
     `'${input}'`,
   )}`
 
