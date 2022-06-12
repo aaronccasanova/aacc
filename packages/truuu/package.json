@@ -1,7 +1,7 @@
 {
   "name": "truuu",
   "version": "0.0.4",
-  "description": "Generates a truth table from a JavaScript condition!",
+  "description": "Generates a truth table from a JavaScript condition",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "bin": "dist/cjs/index.js",
