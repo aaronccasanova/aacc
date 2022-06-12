@@ -49,18 +49,18 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 
 #### TODO:
 
-- Add `babel-{ts,js}` package
-- Add `rollup-{ts,js}` package
-- Add `webpack-{ts,js}` package
-- Add `esbuild-{ts,js}` package
-- Add `vite-{ts,js}` package
-- Move TypeScript build and type-check up to the root of the monorepo. AC:
-  - Single `typescript` dependency
-  - Use TypeScript project references
-- Add eslint-config package
-- Integrate eslint-config in all packages
-- Add prettier-config package
-- Integrate prettier-config in all packages
-- Add storybook
-- Move non-npm packages to a `recipes` directory
-- Add CI workflow
+- [ ] Move non-npm packages to a `recipes` directory
+- [ ] Add `vite-{ts,js}` package
+- [ ] Move TypeScript build and type-check up to the root of the monorepo. AC:
+  - [ ] Single `typescript` dependency
+  - [ ] Use TypeScript project references
+- [ ] Add storybook
+- [x] Add `babel-{ts,js}` package
+- [x] Add `rollup-{ts,js}` package
+- [x] Add `webpack-{ts,js}` package
+- [x] Add `esbuild-{ts,js}` package
+- [x] Add eslint-config package
+- [x] Integrate eslint-config in all packages
+- [x] Add prettier-config package
+- [x] Integrate prettier-config in all packages
+- [x] Add CI workflow
