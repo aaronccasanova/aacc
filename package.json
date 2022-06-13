@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "recipes/*"
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",
@@ -11,7 +12,7 @@
     "test": "turbo run test",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
-    "clean": "rm -rf node_modules && rm -rf packages/*/{node_modules,dist,.turbo,.eslintcache}",
+    "clean": "rm -rf node_modules && rm -rf {packages,recipes}/*/{node_modules,dist,.turbo,.eslintcache}",
     "format": "prettier --write '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'",
     "changeset": "changeset",
     "version-packages": "changeset version",

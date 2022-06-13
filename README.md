@@ -49,7 +49,6 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 
 #### TODO:
 
-- [ ] Move non-npm packages to a `recipes` directory
 - [ ] Add `vite-{ts,js}` package
 - [ ] Move TypeScript build and type-check up to the root of the monorepo. AC:
   - [ ] Single `typescript` dependency
@@ -64,3 +63,4 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 - [x] Add prettier-config package
 - [x] Integrate prettier-config in all packages
 - [x] Add CI workflow
+- [x] Move non-npm packages to a `recipes` directory
