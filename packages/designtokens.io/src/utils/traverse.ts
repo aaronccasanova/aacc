@@ -3,6 +3,7 @@ import type {
   DesignTokens,
   DesignToken,
   DesignTokenAlias,
+  DesignTokenComposite,
   DesignTokenGroup,
 } from '../types'
 
@@ -35,19 +36,24 @@ function walk(tokens: DesignTokens, cb: WalkCallback) {
 export interface TraverseOptions {
   onToken?: (token: DesignToken, context: TraverseContext) => void
   onAlias?: (alias: DesignTokenAlias, context: TraverseContext) => void
+  onComposite?: (
+    composite: DesignTokenComposite,
+    context: TraverseContext,
+  ) => void
   onGroup?: (group: DesignTokenGroup, context: TraverseContext) => void
 }
 
 export function traverse(tokens: DesignTokens, options: TraverseOptions): void {
   walk(tokens, (node, context) => {
     if (isDesignToken(node)) {
-      if (isAliasToken(node)) {
-        // Alias token
-        options?.onAlias?.(node, createContext({ tokens, context }))
-      } else {
-        // Design token
-        options?.onToken?.(node, createContext({ tokens, context }))
-      }
+      // Design token
+      options?.onToken?.(node, createContext({ tokens, context }))
+    } else if (isAliasToken(node)) {
+      // Alias token
+      options?.onAlias?.(node, createContext({ tokens, context }))
+    } else if (isCompositeToken(node)) {
+      // Composite token
+      options?.onComposite?.(node, createContext({ tokens, context }))
     } else if (isTokenGroup(node)) {
       // Token group
       options?.onGroup?.(node, createContext({ tokens, context }))
@@ -58,19 +64,51 @@ export function traverse(tokens: DesignTokens, options: TraverseOptions): void {
 export function isDesignToken(
   tokenOrGroup: AllDesignTokens,
 ): tokenOrGroup is DesignToken {
-  return Boolean((tokenOrGroup as DesignToken)?.$value)
+  if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
+
+  const tokenOrAlias = tokenOrGroup as DesignToken | DesignTokenAlias
+
+  if (typeof tokenOrAlias.$value === 'number') return true
+
+  if (
+    typeof tokenOrAlias.$value === 'string' &&
+    !tokenOrAlias.$value.startsWith('{')
+  ) {
+    return true
+  }
+
+  return false
 }
 
 export function isAliasToken(
   tokenOrGroup: AllDesignTokens,
 ): tokenOrGroup is DesignTokenAlias {
-  if (isDesignToken(tokenOrGroup)) {
-    const designToken = tokenOrGroup
+  if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
 
-    return (
-      typeof designToken.$value === 'string' &&
-      designToken.$value.startsWith('{')
-    )
+  const tokenOrAlias = tokenOrGroup as DesignToken | DesignTokenAlias
+
+  if (
+    typeof tokenOrAlias.$value === 'string' &&
+    tokenOrAlias.$value.startsWith('{')
+  ) {
+    return true
+  }
+
+  return false
+}
+
+export function isCompositeToken(
+  tokenOrGroup: AllDesignTokens,
+): tokenOrGroup is DesignTokenComposite {
+  if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
+
+  const tokenOrComposite = tokenOrGroup as DesignToken | DesignTokenComposite
+
+  if (
+    typeof tokenOrComposite.$value === 'object' &&
+    tokenOrComposite.$value !== null
+  ) {
+    return true
   }
 
   return false
@@ -90,14 +128,14 @@ export interface TraverseContext {
    */
   name: string
   /**
-   * Path of the current token.
+   * Path of the current token, alias, or group.
    *
    * Note: This path has been filtered to exclude the `$tokens` property.
    * Helpful for composing token names such as CSS custom properties.
    */
   path: string[]
   /**
-   * Raw path of the current token.
+   * Raw path of the current token, alias, or group.
    *
    * Note: This path has not been filtered and contains the full path to
    * the current token from the root of the design tokens object.
@@ -122,7 +160,10 @@ export interface TraverseContext {
   /**
    * Resolved $value of the current alias token.
    */
-  getAliasValue: (aliasToken: DesignTokenAlias) => string | number
+  getAliasValue: (
+    aliasToken: DesignTokenAlias,
+    tokens: DesignTokens,
+  ) => string | number
 }
 
 interface CreateContextOptions {
@@ -132,66 +173,73 @@ interface CreateContextOptions {
 
 function createContext(options: CreateContextOptions): TraverseContext {
   return {
+    name: options.context.path[options.context.path.length - 1]!,
     path: options.context.path.filter((p) => p !== '$tokens'),
     rawPath: options.context.path,
-    name: options.context.path[options.context.path.length - 1]!,
-    /**
-     * Parse an alias token $value into an array of design token path segments.
-     *
-     * @example
-     * const alias = { $value: '{colors.blue.500}'}
-     * ctx.getAliasPath(alias) // ['colors', 'blue', '500]
-     */
-    getAliasPath(aliasToken: DesignTokenAlias) {
-      if (!isAliasToken(aliasToken)) {
-        throw new Error('`getAliasPath` can only be called on an alias token.')
-      }
-
-      return aliasToken.$value.trim().slice(1, -1).split('.')
-    },
-    /**
-     * Parse an alias token $value into an array of the full design token path segments.
-     *
-     * @example
-     * const alias = { $value: '{colors.blue.500}'}
-     * ctx.getAliasRawPath(alias) // ['colors', '$tokens', 'blue', '$tokens', '500]
-     */
-    getAliasRawPath(aliasToken: DesignTokenAlias) {
-      if (!isAliasToken(aliasToken)) {
-        throw new Error(
-          '`getAliasRawPath` can only be called on an alias token.',
-        )
-      }
-
-      return aliasToken.$value
-        .trim()
-        .slice(1, -1)
-        .replace(/\./g, '.$tokens.')
-        .split('.')
-    },
-    /**
-     * Retrieves the alias token $value from the design tokens object.
-     *
-     * @example
-     * const alias = { $value: '{colors.blue.500}'}
-     * ctx.getAliasValue(alias) // #0000ff
-     */
-    getAliasValue(aliasToken: DesignTokenAlias) {
-      if (!isAliasToken(aliasToken)) {
-        throw new Error('`getAliasValue` can only be called on an alias token.')
-      }
-
-      const rawPath = this.getAliasRawPath(aliasToken)
-
-      let $value: any = options.tokens
-
-      // TODO: https://github.com/angus-c/just/tree/master/packages/object-safe-get
-      for (const key of rawPath) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-        $value = $value[key]
-      }
-
-      return $value as DesignToken['$value']
-    },
+    getAliasPath,
+    getAliasRawPath,
+    getAliasValue,
   }
+}
+
+/**
+ * Parse an alias token $value into an array of design token path segments.
+ *
+ * @example
+ * const alias = { $value: '{colors.blue.500}'}
+ * ctx.getAliasPath(alias) // ['colors', 'blue', '500]
+ */
+export function getAliasPath(aliasToken: DesignTokenAlias) {
+  if (!isAliasToken(aliasToken)) {
+    throw new Error('`getAliasPath` can only be called on an alias token.')
+  }
+
+  return aliasToken.$value.trim().slice(1, -1).split('.')
+}
+
+/**
+ * Parse an alias token $value into an array of the full design token path segments.
+ *
+ * @example
+ * const alias = { $value: '{colors.blue.500}'}
+ * ctx.getAliasRawPath(alias) // ['colors', '$tokens', 'blue', '$tokens', '500]
+ */
+export function getAliasRawPath(aliasToken: DesignTokenAlias) {
+  if (!isAliasToken(aliasToken)) {
+    throw new Error('`getAliasRawPath` can only be called on an alias token.')
+  }
+
+  return aliasToken.$value
+    .trim()
+    .slice(1, -1)
+    .replace(/\./g, '.$tokens.')
+    .split('.')
+}
+
+/**
+ * Retrieves the alias token $value from the design tokens object.
+ *
+ * @example
+ * const alias = { $value: '{colors.blue.500}'}
+ * ctx.getAliasValue(alias, designTokens) // #0000ff
+ */
+export function getAliasValue(
+  aliasToken: DesignTokenAlias,
+  tokens: DesignTokens,
+) {
+  if (!isAliasToken(aliasToken)) {
+    throw new Error('`getAliasValue` can only be called on an alias token.')
+  }
+
+  const rawPath = getAliasRawPath(aliasToken)
+
+  let $value: any = tokens
+
+  // TODO: https://github.com/angus-c/just/tree/master/packages/object-safe-get
+  for (const key of rawPath) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+    $value = $value[key]
+  }
+
+  return $value as DesignToken['$value']
 }
