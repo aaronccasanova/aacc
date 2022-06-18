@@ -19,6 +19,12 @@ export interface DesignTokenAlias extends DesignTokenProperties {
   $value: string
 }
 
+export interface DesignTokenComposite extends DesignTokenProperties {
+  $value: {
+    [subValues: string]: string
+  }
+}
+
 /**
  * Design Token Group: https://design-tokens.github.io/community-group/format/#groups-0
  */
@@ -28,14 +34,15 @@ export interface DesignTokenGroup {
   // whether or not the current token is a DesignToken or DesignTokenGroup.
   // Note: This is the only place we deviate from the Design Tokens Format Module.
   $tokens: {
-    [tokenOrGroupName: string]:
-      | DesignToken
-      | DesignTokenAlias
-      | DesignTokenGroup
+    [tokenOrGroupName: string]: AllDesignTokens
   }
 }
 
-export type AllDesignTokens = DesignToken | DesignTokenAlias | DesignTokenGroup
+export type AllDesignTokens =
+  | DesignToken
+  | DesignTokenAlias
+  | DesignTokenComposite
+  | DesignTokenGroup
 
 /** Root Design Tokens Type */
 export type DesignTokens = {
