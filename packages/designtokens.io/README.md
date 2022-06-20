@@ -185,7 +185,7 @@ await fs.promises.writeFile(
 ### `traverse(designTokens: DesignTokens, options: TraverseOptions)`
 
 Traverses the design tokens and executes synchronous callbacks for each token
-type defined in the options config.
+type defined in the `TraverseOptions`.
 
 - `designTokens`: The design tokens to traverse.
 - `options`: The traversal options.
@@ -222,7 +222,7 @@ helper methods and metadata about the current token.
     resolving an alias token's `$value` property.
 - `getPathFromAlias(alias: DesignTokenAlias)`: Retrieves the path to the token
   referenced in the alias token `$value`.
-- `getTokenFromAlias(alias: DesignTokenAlias)`: Retrieves the raw path to the
+- `getRawPathFromAlias(alias: DesignTokenAlias)`: Retrieves the raw path to the
   token referenced in the alias token `$value`.
 - `getTokenFromAlias(alias: DesignTokenAlias, tokens: DesignTokens)`: Retrieves
   the token referenced in the alias token `$value` from the design tokens
