@@ -12,20 +12,21 @@ import {
 
 const designTokens = createDesignTokens({
   tokenName1: {
-    $value: 'one',
+    $value: 't1',
   },
   tokenAlias: {
     $value: '{tokenGroup.tokenName2}',
   },
   tokenComposite: {
     $value: {
-      tokenName3: 'three',
+      property1: 'p2',
+      property2: '{tokenGroup.tokenName2}',
     },
   },
   tokenGroup: {
     $tokens: {
       tokenName2: {
-        $value: 'two',
+        $value: 't2',
       },
     },
   },
