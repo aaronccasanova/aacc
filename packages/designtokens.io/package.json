@@ -1,7 +1,7 @@
 {
   "name": "designtokens.io",
   "version": "0.0.3",
-  "description": "A collection of parsers and utilities for design tokens",
+  "description": "A collection of transforms and utilities for design tokens",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "main": "dist/cjs/index.js",
