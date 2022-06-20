@@ -3,45 +3,59 @@ import { toCSSVars } from '../toCSSVars'
 
 const designTokens = createDesignTokens({
   tokenName1: {
-    $value: 'one',
-  },
-  tokenGroup: {
-    $tokens: {
-      tokenName2: {
-        $value: 'two',
-      },
-    },
+    $value: 't1',
   },
   tokenAlias: {
     $value: '{tokenGroup.tokenName2}',
   },
+  tokenComposite: {
+    $value: {
+      property1: 'p2',
+      property2: '{tokenGroup.tokenName2}',
+    },
+  },
+  tokenGroup: {
+    $tokens: {
+      tokenName2: {
+        $value: 't2',
+      },
+    },
+  },
 })
 
 const cssVarsFixture = `
---tokenName1: one;
---tokenGroup-tokenName2: two;
+--tokenName1: t1;
 --tokenAlias: var(--tokenGroup-tokenName2);
+--tokenComposite-property1: p2;
+--tokenComposite-property2: var(--tokenGroup-tokenName2);
+--tokenGroup-tokenName2: t2;
 `.trim()
 
 const defaultCSSVarsFixture = `
 :root {
-  --tokenName1: one;
-  --tokenGroup-tokenName2: two;
+  --tokenName1: t1;
   --tokenAlias: var(--tokenGroup-tokenName2);
+  --tokenComposite-property1: p2;
+  --tokenComposite-property2: var(--tokenGroup-tokenName2);
+  --tokenGroup-tokenName2: t2;
 }`.trim()
 
 const customCSSVarsFixture = `
 .custom {
-  --tokenName1: one;
-  --tokenGroup-tokenName2: two;
+  --tokenName1: t1;
   --tokenAlias: var(--tokenGroup-tokenName2);
+  --tokenComposite-property1: p2;
+  --tokenComposite-property2: var(--tokenGroup-tokenName2);
+  --tokenGroup-tokenName2: t2;
 }`.trim()
 
 const prefixedCSSVarsFixture = `
 :root {
-  --dt-tokenName1: one;
-  --dt-tokenGroup-tokenName2: two;
+  --dt-tokenName1: t1;
   --dt-tokenAlias: var(--dt-tokenGroup-tokenName2);
+  --dt-tokenComposite-property1: p2;
+  --dt-tokenComposite-property2: var(--dt-tokenGroup-tokenName2);
+  --dt-tokenGroup-tokenName2: t2;
 }`.trim()
 
 describe('toCSSVars', () => {

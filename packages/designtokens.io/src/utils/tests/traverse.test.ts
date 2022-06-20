@@ -5,9 +5,9 @@ import {
   isAliasToken,
   isCompositeToken,
   isTokenGroup,
-  getAliasPath,
-  getAliasRawPath,
-  getAliasValue,
+  getPathFromAlias,
+  getRawPathFromAlias,
+  getTokenFromAlias,
 } from '../traverse'
 
 const designTokens = createDesignTokens({
@@ -110,15 +110,15 @@ describe('isTokenGroup type-guard', () => {
   })
 })
 
-describe('getAliasPath', () => {
+describe('getPathFromAlias', () => {
   it('returns the path of the alias token value', () => {
-    expect(getAliasPath(aliasTokenFixture)).toStrictEqual(['foo', 'bar'])
+    expect(getPathFromAlias(aliasTokenFixture)).toStrictEqual(['foo', 'bar'])
   })
 })
 
 describe('getRawAliasPath', () => {
   it('returns the raw path of the alias token value', () => {
-    expect(getAliasRawPath(aliasTokenFixture)).toStrictEqual([
+    expect(getRawPathFromAlias(aliasTokenFixture)).toStrictEqual([
       'foo',
       '$tokens',
       'bar',
@@ -126,10 +126,10 @@ describe('getRawAliasPath', () => {
   })
 })
 
-describe('getAliasValue', () => {
+describe('getTokenFromAlias', () => {
   it('returns the design token referenced in the alias token value', () => {
-    expect(getAliasValue(designTokens.tokenAlias, designTokens)).toStrictEqual({
-      $value: 'two',
-    })
+    expect(
+      getTokenFromAlias(designTokens.tokenAlias, designTokens),
+    ).toStrictEqual(designTokens.tokenGroup.$tokens.tokenName2)
   })
 })

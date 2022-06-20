@@ -3,30 +3,40 @@ import { toSCSSVars } from '../toSCSSVars'
 
 const designTokens = createDesignTokens({
   tokenName1: {
-    $value: 'one',
-  },
-  tokenGroup: {
-    $tokens: {
-      tokenName2: {
-        $value: 'two',
-      },
-    },
+    $value: 't1',
   },
   tokenAlias: {
     $value: '{tokenGroup.tokenName2}',
   },
+  tokenComposite: {
+    $value: {
+      property1: 'p1',
+      property2: '{tokenGroup.tokenName2}',
+    },
+  },
+  tokenGroup: {
+    $tokens: {
+      tokenName2: {
+        $value: 't2',
+      },
+    },
+  },
 })
 
 const scssVarsFixture = `
-$tokenName1: one;
-$tokenGroup-tokenName2: two;
+$tokenName1: t1;
 $tokenAlias: $tokenGroup-tokenName2;
+$tokenComposite-property1: p1;
+$tokenComposite-property2: $tokenGroup-tokenName2;
+$tokenGroup-tokenName2: t2;
 `.trim()
 
 const prefixedSCSSVarsFixture = `
-$dt-tokenName1: one;
-$dt-tokenGroup-tokenName2: two;
+$dt-tokenName1: t1;
 $dt-tokenAlias: $dt-tokenGroup-tokenName2;
+$dt-tokenComposite-property1: p1;
+$dt-tokenComposite-property2: $dt-tokenGroup-tokenName2;
+$dt-tokenGroup-tokenName2: t2;
 `.trim()
 
 describe('toSCSSVars', () => {

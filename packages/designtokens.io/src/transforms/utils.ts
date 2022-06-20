@@ -4,15 +4,15 @@ export interface CreatorOptions {
 }
 
 /**
- * Creates a CSS custom property name from an array of design token segments.
+ * Creates a CSS custom property name from an array of names leading to a design token.
  *
  * @example
  * createCSSVar(['colors', 'blue', '500'], {prefix: 'dt'}) // '--dt-colors-blue-500'
  */
-export function createCSSVar(segments: string[], options: CreatorOptions = {}) {
+export function createCSSVar(path: string[], options: CreatorOptions = {}) {
   const { prefix = '', delimiter = '-' } = options
 
-  return `--${[...(prefix ? [prefix] : []), ...segments].join(delimiter)}`
+  return `--${[...(prefix ? [prefix] : []), ...path].join(delimiter)}`
 }
 
 /**
@@ -24,22 +24,19 @@ export function createCSSVar(segments: string[], options: CreatorOptions = {}) {
  * createCSSVar(['colors', 'red', '500']) // '--dt_colors_red_500'
  */
 export function cssVarCreator(options?: CreatorOptions) {
-  return (segments: string[]) => createCSSVar(segments, options)
+  return (path: string[]) => createCSSVar(path, options)
 }
 
 /**
- * Creates a SCSS variable name from an array of design token segments.
+ * Creates a SCSS variable name from an array of names leading to a design token.
  *
  * @example
  * createSCSSVar(['colors', 'blue', '500'], {prefix: 'dt'}) // '$dt-colors-blue-500'
  */
-export function createSCSSVar(
-  segments: string[],
-  options: CreatorOptions = {},
-) {
+export function createSCSSVar(path: string[], options: CreatorOptions = {}) {
   const { prefix = '', delimiter = '-' } = options
 
-  return `$${[...(prefix ? [prefix] : []), ...segments].join(delimiter)}`
+  return `$${[...(prefix ? [prefix] : []), ...path].join(delimiter)}`
 }
 
 /**
@@ -51,5 +48,5 @@ export function createSCSSVar(
  * createSCSSVar(['colors', 'red', '500']) // '$dt_colors_red_500'
  */
 export function scssVarCreator(options?: CreatorOptions) {
-  return (segments: string[]) => createSCSSVar(segments, options)
+  return (path: string[]) => createSCSSVar(path, options)
 }
