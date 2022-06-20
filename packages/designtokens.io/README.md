@@ -109,14 +109,18 @@ interface ToDocsOptions {
 export function toDocs(designTokens: DesignTokens, options: ToDocsOptions) {
   const sections = [`# ${options.title}`]
 
-  function createSection(token, ctx, alias = false) {
+  function createSection(token, ctx) {
+    const isAliasToken = ctx.isAliasToken(token)
+
     return [
-      `## \`${ctx.path.join('.')}\``,
-      token.$description,
+      `## ${ctx.path.join('.')}`,
+      token.$description && `> ${token.$description}`,
       `**Value:** ${
-        alias ? ctx.getTokenFromAlias(token, ctx.tokens).$value : token.$value
+        isAliasToken
+          ? ctx.getTokenFromAlias(token, ctx.tokens).$value
+          : token.$value
       }`,
-      alias && `**Alias:** ${token.$value}`,
+      isAliasToken && `**Alias:** ${token.$value}`,
     ]
       .filter(Boolean)
       .join('\n\n')
@@ -127,7 +131,7 @@ export function toDocs(designTokens: DesignTokens, options: ToDocsOptions) {
       sections.push(createSection(token, ctx))
     },
     onAlias: (alias, ctx) => {
-      sections.push(createSection(alias, ctx, true))
+      sections.push(createSection(alias, ctx))
     },
   })
 
@@ -152,23 +156,23 @@ await fs.promises.writeFile(
 
 # Design Tokens
 
-## `tokenName`
+## tokenName
 
-Design token description
+> Design token description
 
 **Value:** foo
 
-## `tokenAlias`
+## tokenAlias
 
-Alias token description
+> Alias token description
 
 **Value:** bar
 
 **Alias:** {tokenGroup.tokenName}
 
-## `tokenGroup.tokenName`
+## tokenGroup.tokenName
 
-Grouped token description
+> Grouped token description
 
 **Value:** bar
 
