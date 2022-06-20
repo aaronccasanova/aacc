@@ -154,6 +154,7 @@ await fs.promises.writeFile(
 <details>
   <summary>Example output of <code>toDocs</code></summary>
 
+```md
 # Design Tokens
 
 ## tokenName
@@ -175,6 +176,7 @@ await fs.promises.writeFile(
 > Grouped token description
 
 **Value:** bar
+```
 
 </details>
 
