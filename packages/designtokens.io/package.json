@@ -26,10 +26,7 @@
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {
-    "redent": "^3.0.0",
-    "type-fest": "^2.13.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@aacc/babel-preset": "*",
     "@aacc/browserslist-config": "*",
