@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Web Library",
+  "display": "Web App",
 
   "extends": "./base.json",
 
