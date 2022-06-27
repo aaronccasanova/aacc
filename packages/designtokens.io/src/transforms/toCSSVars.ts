@@ -16,7 +16,7 @@ export interface ToCSSVarsOptions extends CreatorOptions {
  * @property [options.selector] - The selector wrapping the CSS variables. Set to `null` to disable.
  * @property [options.prefix] - The prefix added to each CSS variable name.
  * @property [options.delimiter] - The delimiter used when joining a design token path to create CSS variable names. Defaults to `-`.
- * @property [options.indent] - The indentation used for each CSS variable when wrapped in a `selector`.
+ * @property [options.indent] - The indentation used for each CSS variable.
  * @returns A string of CSS variables.
  */
 export const toCSSVars = (
@@ -24,8 +24,12 @@ export const toCSSVars = (
   options: ToCSSVarsOptions = {},
 ) => {
   const createCSSVar = cssVarCreator(options)
-  const selector = options.selector ?? ':root'
-  const indent = options.indent ?? ' '.repeat(2)
+
+  const selector =
+    options.selector === null ? null : options.selector ?? ':root'
+
+  const defaultIndent = selector ? ' '.repeat(2) : ''
+  const indent = options.indent ?? defaultIndent
 
   const cssVars: string[] = []
 
@@ -65,9 +69,9 @@ export const toCSSVars = (
     },
   })
 
-  return options.selector === null
-    ? cssVars.join('\n')
-    : [`${selector} {`, cssVars.map((cssVar) => `${indent}${cssVar}`), '}']
-        .flat()
-        .join('\n')
+  const indentedCSSVars = cssVars.map((cssVar) => `${indent}${cssVar}`)
+
+  return selector
+    ? [`${selector} {`, indentedCSSVars, '}'].flat().join('\n')
+    : indentedCSSVars.join('\n')
 }

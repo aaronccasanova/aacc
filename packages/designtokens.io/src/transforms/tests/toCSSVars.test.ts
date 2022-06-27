@@ -31,6 +31,14 @@ const cssVarsFixture = `
 --tokenGroup-tokenName2: t2;
 `.trim()
 
+const indent = ' '.repeat(2)
+
+const indentedCSSVarsFixture = `${indent}--tokenName1: t1;
+${indent}--tokenAlias: var(--tokenGroup-tokenName2);
+${indent}--tokenComposite-property1: p2;
+${indent}--tokenComposite-property2: var(--tokenGroup-tokenName2);
+${indent}--tokenGroup-tokenName2: t2;`
+
 const defaultCSSVarsFixture = `
 :root {
   --tokenName1: t1;
@@ -71,6 +79,12 @@ describe('toCSSVars', () => {
 
   it('transforms design tokens to css vars without a selector', () => {
     expect(toCSSVars(designTokens, { selector: null })).toBe(cssVarsFixture)
+  })
+
+  it('transforms design tokens to indented css vars without a selector', () => {
+    expect(toCSSVars(designTokens, { selector: null, indent })).toBe(
+      indentedCSSVarsFixture,
+    )
   })
 
   it('transforms design tokens to prefixed css vars', () => {

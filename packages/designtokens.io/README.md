@@ -249,8 +249,8 @@ helper methods and metadata about the current token.
   - `prefix`: The prefix added to each CSS variable.
   - `delimiter`: The delimiter used when joining a design token path to create
     CSS variable names. Defaults to `-`.
-  - `indent`: The indentation used for each CSS variable when wrapped in a
-    `selector`. Defaults to 2 space characters.
+  - `indent`: The indentation used for each CSS variable. Defaults to 2 space
+    characters.
 
 ### `toSCSSVars(designTokens: DesignTokens, options: ToSCSSVarsOptions): string`
 
