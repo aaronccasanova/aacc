@@ -13,6 +13,21 @@
       "types": "./dist/types/index.d.ts",
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.js"
+    },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "import": "./dist/themes/index.mjs",
+      "require": "./dist/themes/index.js"
+    },
+    "./json/*": "./dist/json/*",
+    "./css/*": "./dist/css/*",
+    "./scss/*": "./dist/scss/*"
+  },
+  "typesVersions": {
+    "*": {
+      "themes": [
+        "dist/themes"
+      ]
     }
   },
   "scripts": {
