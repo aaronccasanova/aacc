@@ -54,6 +54,8 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
   - [ ] Single `typescript` dependency
   - [ ] Use TypeScript project references
 - [ ] Add storybook
+- [ ] Add jest setup (from designtokens.io) to rollup-babel-ts recipe
+- [ ] Update rollup-babel recipes to match designtokens.io's iife configuration
 - [x] Add `babel-{ts,js}` package
 - [x] Add `rollup-{ts,js}` package
 - [x] Add `webpack-{ts,js}` package
