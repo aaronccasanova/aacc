@@ -25,6 +25,9 @@
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
     "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",

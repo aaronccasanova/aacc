@@ -25,6 +25,9 @@
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
     "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {},
   "dependencies": {
     "the-answer": "^1.0.0"

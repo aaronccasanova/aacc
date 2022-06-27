@@ -26,6 +26,9 @@
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@aacc/babel-preset": "*",
