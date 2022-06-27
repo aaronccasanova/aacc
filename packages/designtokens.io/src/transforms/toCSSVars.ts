@@ -24,8 +24,12 @@ export const toCSSVars = (
   options: ToCSSVarsOptions = {},
 ) => {
   const createCSSVar = cssVarCreator(options)
-  const selector = options.selector ?? ':root'
-  const indent = options.indent ?? ' '.repeat(2)
+
+  const selector =
+    options.selector === null ? null : options.selector ?? ':root'
+
+  const defaultIndent = selector ? ' '.repeat(2) : ''
+  const indent = options.indent ?? defaultIndent
 
   const cssVars: string[] = []
 
@@ -67,13 +71,7 @@ export const toCSSVars = (
 
   const indentedCSSVars = cssVars.map((cssVar) => `${indent}${cssVar}`)
 
-  return options.selector === null
-    ? indentedCSSVars.join('\n')
-    : [
-        `${selector} {`,
-        indentedCSSVars.map((cssVar) => `${indent}${cssVar}`),
-        '}',
-      ]
-        .flat()
-        .join('\n')
+  return selector
+    ? [`${selector} {`, indentedCSSVars, '}'].flat().join('\n')
+    : indentedCSSVars.join('\n')
 }
