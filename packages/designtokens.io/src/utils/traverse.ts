@@ -169,7 +169,7 @@ export interface TraverseContext {
   getTokenFromAlias: (
     aliasToken: DesignTokenAlias,
     tokens: DesignTokens,
-  ) => string | number
+  ) => AllDesignTokens
   isDesignToken: typeof isDesignToken
   isDesignTokenValue: typeof isDesignTokenValue
   isAliasToken: typeof isAliasToken
@@ -262,5 +262,5 @@ export function getTokenFromAlias(
     token = token[path]
   }
 
-  return token as DesignToken['$value']
+  return token as AllDesignTokens
 }
