@@ -1,5 +1,13 @@
 # @aacc/eslint-config
 
+## 0.0.3
+
+### Patch Changes
+
+- [`88859ec`](https://github.com/aaronccasanova/aacc/commit/88859ec6bbedebbe26f430661164ca6e8ad9e091)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Disabled prefer
+  destructuring rules
+
 ## 0.0.2
 
 ### Patch Changes

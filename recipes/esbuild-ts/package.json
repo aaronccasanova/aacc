@@ -1,6 +1,6 @@
 {
   "name": "@aacc/esbuild-ts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Example hybrid ESM/CJS JavaScript build with esbuild",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
