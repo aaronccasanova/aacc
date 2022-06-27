@@ -1,6 +1,6 @@
 {
   "name": "designtokens.io",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A collection of transforms and utilities for design tokens",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
