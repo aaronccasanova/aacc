@@ -3,6 +3,8 @@ import * as path from 'node:path'
 
 import * as dt from 'designtokens.io'
 
+import { prefix } from '../src'
+
 const outputDir = path.join(__dirname, '../dist/css')
 const outputPath = path.join(outputDir, 'design-token-vars.css')
 
@@ -13,6 +15,6 @@ export async function tokensToCSSVars(designTokens: dt.DesignTokens) {
 
   await fs.promises.writeFile(
     outputPath,
-    dt.toCSSVars(designTokens, { prefix: 'aacc' }),
+    dt.toCSSVars(designTokens, { prefix }),
   )
 }
