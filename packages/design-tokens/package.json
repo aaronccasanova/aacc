@@ -7,10 +7,10 @@
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.mjs",
   "browser": "dist/browser/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/types/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/index.d.ts",
+      "types": "./dist/types/src/index.d.ts",
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.js"
     },
@@ -32,10 +32,11 @@
   },
   "scripts": {
     "dev": "npm-run-all --parallel 'build:* -- --watch'",
-    "build": "npm-run-all --parallel build:*",
+    "build": "npm-run-all --parallel 'build:*' 'copy:*'",
     "build:js": "rollup -c",
     "build:assets": "ts-node scripts/build-assets.ts",
     "build:types": "tsc --emitDeclarationOnly",
+    "copy:static-css": "copyfiles --flat static/*.css dist/css",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
@@ -60,6 +61,7 @@
     "@rollup/plugin-node-resolve": "^13.2.1",
     "@types/jest": "^28.1.2",
     "babel-jest": "^28.1.1",
+    "copyfiles": "^2.4.1",
     "jest": "^28.1.1",
     "rollup": "^2.70.2",
     "ts-node": "^10.8.1",

@@ -1,0 +1,12 @@
+{
+  "extends": "@aacc/tsconfigs/web-app.json",
+  "compilerOptions": {
+    // Next.js automatically adds the following:
+    "allowJs": true,
+    "incremental": true,
+    "jsx": "preserve",
+    "moduleResolution": "node"
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}

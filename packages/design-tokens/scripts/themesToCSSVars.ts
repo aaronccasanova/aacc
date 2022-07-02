@@ -4,12 +4,11 @@ import * as path from 'node:path'
 import type * as tf from 'type-fest'
 import * as dt from 'designtokens.io'
 
-import type { Themes } from '../src'
+import { Themes, prefix } from '../src'
 
 const outputDir = path.join(__dirname, '../dist/css')
 const outputPath = path.join(outputDir, 'theme-vars.css')
 
-const prefix = 'aacc'
 const toCSSVarsOptions = {
   prefix,
   selector: null,
