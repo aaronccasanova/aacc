@@ -6,12 +6,7 @@ import type * as tf from 'type-fest'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as ts from 'typescript'
 import set from 'just-safe-set'
-import {
-  traverse,
-  createDesignTokenAlias,
-  TraverseContext,
-  DesignTokenAlias,
-} from 'designtokens.io'
+import * as dt from 'designtokens.io'
 
 import type { DesignTokens, Themes } from '../src'
 
@@ -102,9 +97,9 @@ function toTheme(designTokens: DesignTokens) {
   }
 
   function setThemePropFromAlias(
-    ctx: TraverseContext,
+    ctx: dt.TraverseContext,
     propPath: string[],
-    alias: DesignTokenAlias,
+    alias: dt.DesignTokenAlias,
   ) {
     const token = ctx.getTokenFromAlias(alias, ctx.tokens)
 
@@ -115,7 +110,7 @@ function toTheme(designTokens: DesignTokens) {
     }
   }
 
-  traverse(designTokens, {
+  dt.traverse(designTokens, {
     onToken: (token, ctx) => {
       setThemeProp(ctx.path, token.$value)
     },
@@ -131,7 +126,7 @@ function toTheme(designTokens: DesignTokens) {
         }
         //
         else if (ctx.isAliasTokenValue($value)) {
-          const alias = createDesignTokenAlias({ $value })
+          const alias = dt.createDesignTokenAlias({ $value })
 
           setThemePropFromAlias(ctx, valuePath, alias)
         }

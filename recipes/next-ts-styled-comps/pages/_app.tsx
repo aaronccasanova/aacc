@@ -2,6 +2,7 @@ import React from 'react'
 
 import '@aacc/design-tokens/css/reset.css'
 import '@aacc/design-tokens/css/theme-vars.css'
+import '@aacc/design-tokens/css/type-classes.css'
 import '../styles/globals.css'
 
 import type { AppProps } from 'next/app'
