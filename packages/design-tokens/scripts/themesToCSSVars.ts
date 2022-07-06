@@ -5,6 +5,7 @@ import type * as tf from 'type-fest'
 import * as dt from 'designtokens.io'
 
 import { Themes, prefix } from '../src'
+import { createCSSClass } from './utils'
 
 const outputDir = path.join(__dirname, '../dist/css')
 const outputPath = path.join(outputDir, 'theme-vars.css')
@@ -36,10 +37,10 @@ ${Object.entries(themes)
   .map((entry) => {
     const [themeKey, designTokens] = entry as tf.Entry<Themes>
 
-    const selector = `.${prefix}-${themeKey}`
+    const themeClass = createCSSClass(themeKey, { prefix })
     const cssVars = dt.toCSSVars(designTokens, toCSSVarsOptions)
 
-    return `${selector} {\n${cssVars}\n}`
+    return `${themeClass} {\n${cssVars}\n}`
   })
   .join('\n\n')}
 `
