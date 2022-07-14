@@ -56,6 +56,9 @@ prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 - [ ] Add storybook
 - [ ] Add jest setup (from designtokens.io) to rollup-babel-ts recipe
 - [ ] Update rollup-babel recipes to match designtokens.io's iife configuration
+- [ ] Create Typography classes transform
+- [ ] Experiment with xs to xl type scales
+- [ ] Create css baseline stylesheet
 - [x] Add `babel-{ts,js}` package
 - [x] Add `rollup-{ts,js}` package
 - [x] Add `webpack-{ts,js}` package
