@@ -7,7 +7,6 @@ import {
   chromaticNotes,
   dotIndices,
   stringNotes,
-  allNotes,
 } from './constants'
 
 const Root = styled.div<{ numberOfFrets: number }>`
@@ -20,16 +19,6 @@ const Root = styled.div<{ numberOfFrets: number }>`
   display: grid;
   grid-template-columns: repeat(${(props) => props.numberOfFrets}, 1fr);
   grid-template-rows: repeat(${stringNotes.length + 1}, 1fr);
-`
-
-const SelectContainer = styled.div`
-  display: grid;
-  gap: 10px;
-
-  label {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-  }
 `
 
 interface FretProps {
@@ -121,8 +110,18 @@ const Dot = styled.div<DotProps>`
 
 type Display = 'notes' | 'degrees'
 
+interface SelectedNote {
+  note: string
+  interval: string
+  selected: boolean
+}
+
 interface FretboardProps {
   numberOfFrets?: number
+  display: Display
+  intervals: string[]
+  notes: string[]
+  selectedNotes: SelectedNote[]
 }
 
 type FretDots = 0 | 1 | 2
@@ -140,145 +139,8 @@ type StringFrets = FretAttrs[]
 
 type Board = StringFrets[]
 
-interface SelectedNote {
-  note: string
-  interval: string
-  selected: boolean
-}
-
-interface State {
-  rootNote: string
-  scaleName: string
-  display: Display
-  intervals: string[]
-  notes: string[]
-  selectedNotes: SelectedNote[]
-}
-
-type Action =
-  | { type: 'SCALE_NAME'; payload: string }
-  | { type: 'ROOT_NOTE'; payload: string }
-  | { type: 'DISPLAY'; payload: Display }
-  | { type: 'INTERVALS'; payload: string[] }
-  | { type: 'NOTES'; payload: string[] }
-  | { type: 'SELECTED_NOTES'; payload: number }
-
-const defaultDisplay = 'notes'
-const defaultRootNote = 'C'
-const defaultScaleName = 'major'
-
-function getIntervals(scaleName: string) {
-  return tonal.ScaleType.get(scaleName).intervals
-}
-
-function getNotes(rootNote: string, intervals: string[]) {
-  return intervals.map(tonal.Note.transposeFrom(rootNote))
-}
-
-function getSelectedNotes(notes: string[], intervals: string[]) {
-  return notes.map((note, index) => ({
-    note,
-    selected: true,
-    interval: intervals[index]!,
-  }))
-}
-
-const initializer = (state: Partial<State>): State => {
-  const display = state.display || defaultDisplay
-  const rootNote = state.rootNote || defaultRootNote
-  const scaleName = state.scaleName || defaultScaleName
-
-  const intervals = getIntervals(scaleName)
-  const notes = getNotes(rootNote, intervals)
-
-  return {
-    display,
-    rootNote,
-    scaleName,
-    intervals,
-    notes,
-    selectedNotes: getSelectedNotes(notes, intervals),
-  }
-}
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'DISPLAY':
-      return { ...state, display: action.payload }
-    case 'ROOT_NOTE': {
-      const rootNote = action.payload
-      const scaleName = state.scaleName
-
-      const intervals = getIntervals(scaleName)
-      const notes = getNotes(rootNote, intervals)
-
-      return {
-        ...state,
-        rootNote,
-        scaleName,
-        intervals,
-        notes,
-        selectedNotes: getSelectedNotes(notes, intervals),
-      }
-    }
-    case 'SCALE_NAME': {
-      const rootNote = state.rootNote
-      const scaleName = action.payload
-
-      const intervals = getIntervals(scaleName)
-      const notes = getNotes(rootNote, intervals)
-
-      return {
-        ...state,
-        rootNote,
-        scaleName,
-        intervals,
-        notes,
-        selectedNotes: getSelectedNotes(notes, intervals),
-      }
-    }
-    case 'SELECTED_NOTES': {
-      const rootNote = state.rootNote
-      const scaleName = state.scaleName
-
-      const intervals = getIntervals(scaleName)
-      const notes = getNotes(rootNote, intervals)
-
-      const index = action.payload
-
-      const selectedNotes = Array.from(state.selectedNotes).map(
-        (selectedNote, i) =>
-          i === index
-            ? { ...selectedNote, selected: !selectedNote.selected }
-            : selectedNote,
-      )
-
-      return {
-        ...state,
-        rootNote,
-        scaleName,
-        intervals,
-        notes,
-        selectedNotes,
-      }
-    }
-    default:
-      return state
-  }
-}
-
 export function Fretboard(props: FretboardProps) {
-  const { numberOfFrets = 13 } = props
-
-  const [state, dispatch] = React.useReducer(
-    reducer,
-    {
-      display: defaultDisplay,
-      rootNote: defaultRootNote,
-      scaleName: defaultScaleName,
-    },
-    initializer,
-  )
+  const { numberOfFrets = 13, display, intervals, notes, selectedNotes } = props
 
   const fretboard: Board = React.useMemo(() => {
     const board: Board = []
@@ -300,17 +162,12 @@ export function Fretboard(props: FretboardProps) {
           stringFrets[fretIndex] = {
             stringNote,
             id: `${stringNote}${fretIndex + 1}`,
-            note:
-              state.notes.find((note) => isSameNote(fretNote, note)) ??
-              fretNote,
+            note: notes.find((note) => isSameNote(fretNote, note)) ?? fretNote,
             scaleDegree:
-              state.intervals[
-                state.notes.findIndex((note) => isSameNote(fretNote, note))
-              ],
-            active: state.notes.some(
+              intervals[notes.findIndex((note) => isSameNote(fretNote, note))],
+            active: notes.some(
               (note, i) =>
-                isSameNote(fretNote, note) &&
-                state.selectedNotes?.[i]?.selected,
+                isSameNote(fretNote, note) && selectedNotes?.[i]?.selected,
             ),
             dots: getDots({
               stringIndex,
@@ -322,112 +179,38 @@ export function Fretboard(props: FretboardProps) {
       })
 
     return board
-  }, [numberOfFrets, state])
+  }, [intervals, notes, numberOfFrets, selectedNotes])
 
   return (
-    <>
-      <SelectContainer>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label>
-          <span>Display: </span>
-          <select
-            defaultValue={state.display}
-            value={state.display}
-            onChange={(e) =>
-              dispatch({ type: 'DISPLAY', payload: e.target.value as Display })
-            }
-          >
-            {['notes', 'degrees'].map((value) => (
-              <option
-                key={value}
-                value={value}
-              >
-                {value}
-              </option>
-            ))}
-          </select>
-        </label>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label>
-          <span>Root note: </span>
-          <select
-            defaultValue={state.rootNote}
-            value={state.rootNote}
-            onChange={(e) =>
-              dispatch({ type: 'ROOT_NOTE', payload: e.target.value })
-            }
-          >
-            {allNotes.map((note) => (
-              <option value={note}>{note}</option>
-            ))}
-          </select>
-        </label>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label>
-          <span>Scale name: </span>
-          <select
-            defaultValue={state.scaleName}
-            value={state.scaleName}
-            onChange={(e) =>
-              dispatch({ type: 'SCALE_NAME', payload: e.target.value })
-            }
-          >
-            {tonal.ScaleType.names().map((name) => (
-              <option value={name}>{name}</option>
-            ))}
-          </select>
-        </label>
-      </SelectContainer>
-      <br />
-      <div>
-        {state.selectedNotes.map(({ selected, note, interval }, index) => (
-          // eslint-disable-next-line jsx-a11y/label-has-associated-control
-          <label
-            key={note}
-            style={{ marginRight: 8 }}
-          >
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={() =>
-                dispatch({ type: 'SELECTED_NOTES', payload: index })
-              }
-            />
-            {state.display === 'notes' ? note : interval}
-          </label>
-        ))}
-      </div>
-      <br />
-      <Root numberOfFrets={numberOfFrets}>
-        {fretboard.map((stringFrets) =>
-          stringFrets.map((fretAttr, fretIndex) => {
-            const firstFret = fretIndex === 0
-            const content =
-              state.display === 'notes' ? fretAttr.note : fretAttr.scaleDegree
+    <Root numberOfFrets={numberOfFrets}>
+      {fretboard.map((stringFrets) =>
+        stringFrets.map((fretAttr, fretIndex) => {
+          const firstFret = fretIndex === 0
+          const content =
+            display === 'notes' ? fretAttr.note : fretAttr.scaleDegree
 
-            return (
-              <Fret
-                key={fretAttr.id}
-                withString={!firstFret}
-                withBackground={!firstFret}
-              >
-                {/* Always render string note */}
-                {firstFret && <Dot>{content}</Dot>}
+          return (
+            <Fret
+              key={fretAttr.id}
+              withString={!firstFret}
+              withBackground={!firstFret}
+            >
+              {/* Always render string note */}
+              {firstFret && <Dot>{content}</Dot>}
 
-                {!firstFret && fretAttr.active && <Dot>{content}</Dot>}
+              {!firstFret && fretAttr.active && <Dot>{content}</Dot>}
 
-                {Array.from({ length: fretAttr.dots }, (_, i) => (
-                  <FretDot key={i} />
-                ))}
-              </Fret>
-            )
-          }),
-        )}
-        {Array.from({ length: numberOfFrets }, (_, i) =>
-          i === 0 ? <div /> : <FretMarker key={i}>{i}</FretMarker>,
-        )}
-      </Root>
-    </>
+              {Array.from({ length: fretAttr.dots }, (_, i) => (
+                <FretDot key={i} />
+              ))}
+            </Fret>
+          )
+        }),
+      )}
+      {Array.from({ length: numberOfFrets }, (_, i) =>
+        i === 0 ? <div key={i} /> : <FretMarker key={i}>{i}</FretMarker>,
+      )}
+    </Root>
   )
 }
 
