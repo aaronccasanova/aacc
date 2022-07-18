@@ -84,6 +84,9 @@ const defaultDisplay = 'notes'
 const defaultRootNote = 'C'
 const defaultScaleName = 'major'
 
+const urlStateKey = 'fretboards'
+const initialState: FretboardsState = [getFretboard()]
+
 function getIntervals(scaleName: string) {
   return tonal.ScaleType.get(scaleName).intervals
 }
@@ -189,17 +192,7 @@ function reducer(
     }
   })()
 
-  // Encode a subset of the state in the url so that the page can be shared
-  window.location.hash = window.btoa(
-    JSON.stringify(
-      nextState.map((fretboard) => ({
-        display: fretboard.display,
-        rootNote: fretboard.rootNote,
-        scaleName: fretboard.scaleName,
-        selectedNotes: fretboard.selectedNotes,
-      })),
-    ),
-  )
+  setUrlState(nextState)
 
   return nextState
 }
@@ -208,19 +201,15 @@ const Home: NextPage = function Home() {
   // const { themeKey, themeKeys, setThemeKey } = useRootTheme()
 
   const [loading, setLoading] = React.useState(true)
-  const [fretboards, dispatch] = React.useReducer(reducer, [getFretboard()])
+  const [fretboards, dispatch] = React.useReducer(reducer, initialState)
 
   React.useEffect(() => {
-    if (window.location.hash) {
-      const hash = window.location.hash.slice(1)
-      const encodedPartial = window.atob(hash)
-      const decodedPartial = JSON.parse(
-        encodedPartial,
-      ) as UndefinedPartial<FretboardState>[]
+    const urlState = getUrlState()
 
+    if (urlState) {
       dispatch({
         type: 'SET_FRETBOARDS',
-        payload: decodedPartial.map(getFretboard),
+        payload: urlState,
       })
     }
 
@@ -242,7 +231,14 @@ const Home: NextPage = function Home() {
       </Head>
 
       <Header>
-        <h1>AACC Scales</h1>
+        <button
+          type="button"
+          onClick={() =>
+            dispatch({ type: 'SET_FRETBOARDS', payload: initialState })
+          }
+        >
+          AACC Scales
+        </button>
       </Header>
 
       <Main>
@@ -396,6 +392,50 @@ const Home: NextPage = function Home() {
         </Text> */}
       </Main>
     </Container>
+  )
+}
+
+function getUrlState(): null | FretboardsState {
+  const searchParams = new URLSearchParams(window.location.search)
+  const hash = searchParams.get(urlStateKey)
+
+  if (hash) {
+    const encodedPartial = window.atob(decodeURIComponent(hash))
+    const decodedPartial = JSON.parse(
+      encodedPartial,
+    ) as UndefinedPartial<FretboardState>[]
+
+    // TODO: Add zod validation
+    return decodedPartial.map(getFretboard)
+  }
+
+  return null
+}
+
+function setUrlState(state: FretboardsState) {
+  const searchParams = new URLSearchParams(window.location.search)
+
+  searchParams.set(
+    urlStateKey,
+    encodeURIComponent(
+      window.btoa(
+        JSON.stringify(
+          // Encode a subset of the state in the url so that the page can be shared
+          state.map((fretboard) => ({
+            display: fretboard.display,
+            rootNote: fretboard.rootNote,
+            scaleName: fretboard.scaleName,
+            selectedNotes: fretboard.selectedNotes,
+          })),
+        ),
+      ),
+    ),
+  )
+
+  window.history.replaceState(
+    {},
+    '',
+    `${window.location.pathname}?${searchParams.toString()}`,
   )
 }
 
