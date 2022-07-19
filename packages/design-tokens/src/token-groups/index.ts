@@ -1,4 +1,5 @@
 export * from './breakpoints'
 export * from './colors'
+export * from './shape'
 export * from './spacing'
 export * from './typography'

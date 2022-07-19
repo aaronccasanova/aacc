@@ -38,5 +38,23 @@ export const colors = createDesignTokenGroup({
         A700: { $value: '#00bfa5' },
       },
     },
+    brown: {
+      $tokens: {
+        50: { $value: '#efebe9' },
+        100: { $value: '#d7ccc8' },
+        200: { $value: '#bcaaa4' },
+        300: { $value: '#a1887f' },
+        400: { $value: '#8d6e63' },
+        500: { $value: '#795548' },
+        600: { $value: '#6d4c41' },
+        700: { $value: '#5d4037' },
+        800: { $value: '#4e342e' },
+        900: { $value: '#3e2723' },
+        A100: { $value: '#d7ccc8' },
+        A200: { $value: '#bcaaa4' },
+        A400: { $value: '#8d6e63' },
+        A700: { $value: '#5d4037' },
+      },
+    },
   },
 })

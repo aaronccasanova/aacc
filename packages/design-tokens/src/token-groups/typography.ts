@@ -109,5 +109,32 @@ export const typography = createDesignTokenGroup({
         lineHeight: '1.5',
       },
     },
+    buttonLarge: {
+      $type: 'typography',
+      $value: {
+        fontFamily: '{typography.fontFamily.sans}',
+        fontSize: '{typography.fontSize.3}',
+        fontWeight: '400',
+        lineHeight: '1.5',
+      },
+    },
+    buttonMedium: {
+      $type: 'typography',
+      $value: {
+        fontFamily: '{typography.fontFamily.sans}',
+        fontSize: '{typography.fontSize.2}',
+        fontWeight: '400',
+        lineHeight: '1.5',
+      },
+    },
+    buttonSmall: {
+      $type: 'typography',
+      $value: {
+        fontFamily: '{typography.fontFamily.sans}',
+        fontSize: '{typography.fontSize.1}',
+        fontWeight: '400',
+        lineHeight: '1.5',
+      },
+    },
   },
 })

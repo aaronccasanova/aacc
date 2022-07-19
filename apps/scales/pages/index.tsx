@@ -5,14 +5,17 @@ import * as tonal from '@tonaljs/tonal'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
-// import { isThemeKey } from '@aacc/design-tokens'
+import { isThemeKey } from '@aacc/design-tokens'
 
-// import { useRootTheme } from '../src/providers'
-import { Fretboard } from '../src/components'
+import { useRootTheme } from '../src/providers'
+import { Fretboard, Button } from '../src/components'
 
 import { allNotes } from '../src/components/constants'
 
 const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--aacc-spacing-4);
 `
 
@@ -30,15 +33,6 @@ const Main = styled.main`
   align-items: center;
 `
 
-// const Text = styled.span`
-//   font-size: 1.5rem;
-//   margin-bottom: 1rem;
-// `
-
-// const Heading = styled(Text)`
-//   color: var(--aacc-colors-primary-main);
-// `
-
 const SelectContainer = styled.div`
   display: grid;
   gap: 10px;
@@ -47,6 +41,13 @@ const SelectContainer = styled.div`
     display: grid;
     grid-template-columns: 2fr 3fr;
   }
+`
+
+const FretboardContainer = styled.div`
+  background-color: var(--aacc-colors-background-surface);
+  padding: var(--aacc-spacing-4);
+  margin-bottom: var(--aacc-spacing-4);
+  border-radius: var(--aacc-shape-borderRadius-medium);
 `
 
 type Display = 'notes' | 'degrees'
@@ -198,7 +199,7 @@ function reducer(
 }
 
 const Home: NextPage = function Home() {
-  // const { themeKey, themeKeys, setThemeKey } = useRootTheme()
+  const { themeKey, themeKeys, setThemeKey } = useRootTheme()
 
   const [loading, setLoading] = React.useState(true)
   const [fretboards, dispatch] = React.useReducer(reducer, initialState)
@@ -231,14 +232,35 @@ const Home: NextPage = function Home() {
       </Head>
 
       <Header>
-        <button
+        <Button
           type="button"
           onClick={() =>
             dispatch({ type: 'SET_FRETBOARDS', payload: initialState })
           }
         >
           AACC Scales
-        </button>
+        </Button>
+        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+        <label className="aacc-type-buttonMedium">
+          Theme:{' '}
+          <select
+            value={themeKey}
+            onChange={(e) =>
+              isThemeKey(e.target.value)
+                ? setThemeKey(e.target.value)
+                : themeKey
+            }
+          >
+            {themeKeys.map((theme) => (
+              <option
+                key={theme}
+                value={theme}
+              >
+                {theme}
+              </option>
+            ))}
+          </select>
+        </label>
       </Header>
 
       <Main>
@@ -246,7 +268,7 @@ const Home: NextPage = function Home() {
           ? 'loading...'
           : fretboards.map((fretboard, fretboardIndex) => (
               // eslint-disable-next-line react/no-array-index-key
-              <React.Fragment key={fretboardIndex}>
+              <FretboardContainer key={fretboardIndex}>
                 <SelectContainer>
                   {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
                   <label>
@@ -362,34 +384,16 @@ const Home: NextPage = function Home() {
                   notes={fretboard.notes}
                   selectedNotes={fretboard.selectedNotes}
                 />
-              </React.Fragment>
+              </FretboardContainer>
             ))}
-        <button
+        <Button
           type="button"
+          variant="outlined"
+          size="small"
           onClick={() => dispatch({ type: 'ADD_FRETBOARD' })}
         >
           Add fretboard
-        </button>
-        {/* <Heading as="h1">Scales</Heading> */}
-        {/* <Text as="h2">
-          Select theme:{' '}
-          <select
-            onChange={(e) =>
-              isThemeKey(e.target.value)
-                ? setThemeKey(e.target.value)
-                : themeKey
-            }
-          >
-            {themeKeys.map((theme) => (
-              <option
-                key={theme}
-                value={theme}
-              >
-                {theme}
-              </option>
-            ))}
-          </select>
-        </Text> */}
+        </Button>
       </Main>
     </Container>
   )

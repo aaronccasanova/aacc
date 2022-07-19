@@ -18,13 +18,14 @@ export const lightTheme = createDesignTokens(
           $description: 'Primary theme colors.',
           $tokens: {
             main: { $value: '{colors.teal.500}' },
+            on: { $value: '{colors.grey.900}' },
           },
         },
         background: {
           $description: 'Background colors.',
           $tokens: {
-            default: { $value: '{colors.grey.100}' },
-            surface: { $value: '{colors.grey.50}' },
+            default: { $value: '{colors.grey.50}' },
+            surface: { $value: '{colors.grey.300}' },
           },
         },
         text: {

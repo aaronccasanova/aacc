@@ -18,6 +18,7 @@ export const darkTheme = createDesignTokens(
           $description: 'Primary color intention.',
           $tokens: {
             main: { $value: '{colors.teal.300}' },
+            on: { $value: '{colors.grey.900}' },
           },
         },
         background: {

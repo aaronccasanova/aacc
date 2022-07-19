@@ -28,9 +28,7 @@ interface FretProps {
 
 const Fret = styled.div<FretProps>`
   background-color: ${(props) =>
-    props.withBackground
-      ? 'var(--aacc-colors-background-surface)'
-      : 'transparent'};
+    props.withBackground ? 'var(--aacc-colors-brown-700)' : 'transparent'};
 
   // FretBar
   border-right: var(--fret-bar-width) solid var(--fret-bar-color);

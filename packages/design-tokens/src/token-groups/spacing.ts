@@ -1,6 +1,6 @@
 import { createDesignTokenGroup } from 'designtokens.io'
 
-const base = 4
+export const base = 4
 
 export const spacing = createDesignTokenGroup({
   $tokens: {
