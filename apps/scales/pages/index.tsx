@@ -2,6 +2,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import * as tonal from '@tonaljs/tonal'
+import { z } from 'zod'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -50,35 +51,47 @@ const FretboardContainer = styled.div`
   border-radius: var(--aacc-shape-borderRadius-medium);
 `
 
-type Display = 'notes' | 'degrees'
+const DisplaySchema = z.union([z.literal('notes'), z.literal('degrees')])
 
-interface SelectedNote {
-  note: string
-  interval: string
-  selected: boolean
-}
+type Display = z.infer<typeof DisplaySchema>
 
-interface FretboardState {
-  rootNote: string
-  scaleName: string
-  display: Display
-  intervals: string[]
-  notes: string[]
-  selectedNotes: SelectedNote[]
-}
+const FretboardStateSchema = z.object({
+  rootNote: z.string(),
+  scaleName: z.string(),
+  display: DisplaySchema,
+  intervals: z.string().array(),
+  notes: z.string().array(),
+  selectedNotes: z
+    .object({
+      note: z.string(),
+      interval: z.string(),
+      selected: z.boolean(),
+    })
+    .array(),
+})
 
-type FretboardsState = FretboardState[]
+const PartialFretboardStateSchema = FretboardStateSchema.partial()
 
-type CommonAction = {
+const FretboardsStateSchema = FretboardStateSchema.array()
+const PartialFretboardsStateSchema = PartialFretboardStateSchema.array()
+
+type FretboardState = z.infer<typeof FretboardStateSchema>
+type PartialFretboardState = z.infer<typeof PartialFretboardStateSchema>
+type FretboardsState = z.infer<typeof FretboardsStateSchema>
+
+type CommonActionPayload = {
   fretboardIndex: number
 }
 
 type FretboardAction =
-  | { type: 'SCALE_NAME'; payload: { scaleName: string } & CommonAction }
-  | { type: 'ROOT_NOTE'; payload: { rootNote: string } & CommonAction }
-  | { type: 'DISPLAY'; payload: { display: Display } & CommonAction }
-  | { type: 'SELECTED_NOTES'; payload: { noteIndex: number } & CommonAction }
   | { type: 'ADD_FRETBOARD' }
+  | { type: 'DISPLAY'; payload: { display: Display } & CommonActionPayload }
+  | { type: 'ROOT_NOTE'; payload: { rootNote: string } & CommonActionPayload }
+  | { type: 'SCALE_NAME'; payload: { scaleName: string } & CommonActionPayload }
+  | {
+      type: 'SELECTED_NOTES'
+      payload: { noteIndex: number } & CommonActionPayload
+    }
   | { type: 'SET_FRETBOARDS'; payload: FretboardsState }
 
 const defaultDisplay = 'notes'
@@ -104,13 +117,7 @@ function getSelectedNotes(notes: string[], intervals: string[]) {
   }))
 }
 
-type UndefinedPartial<T> = {
-  [K in keyof T]?: T[K] | undefined
-}
-
-function getFretboard(
-  state?: UndefinedPartial<FretboardState>,
-): FretboardState {
+function getFretboard(state?: PartialFretboardState): FretboardState {
   const display = state?.display ?? defaultDisplay
   const rootNote = state?.rootNote ?? defaultRootNote
   const scaleName = state?.scaleName ?? defaultScaleName
@@ -131,7 +138,7 @@ function getFretboard(
 const updateFretboard = (
   fretboardIndex: number,
   fretboards: FretboardsState,
-  next: Partial<FretboardState> = {},
+  next: PartialFretboardState = {},
 ): FretboardsState => {
   const nextFretboards = Array.from(fretboards)
 
@@ -401,16 +408,18 @@ const Home: NextPage = function Home() {
 
 function getUrlState(): null | FretboardsState {
   const searchParams = new URLSearchParams(window.location.search)
-  const hash = searchParams.get(urlStateKey)
+  const urlStateHash = searchParams.get(urlStateKey)
 
-  if (hash) {
-    const encodedPartial = window.atob(decodeURIComponent(hash))
-    const decodedPartial = JSON.parse(
-      encodedPartial,
-    ) as UndefinedPartial<FretboardState>[]
+  if (urlStateHash) {
+    try {
+      const partialFretboardsState = PartialFretboardsStateSchema.parse(
+        JSON.parse(window.atob(decodeURIComponent(urlStateHash))),
+      )
 
-    // TODO: Add zod validation
-    return decodedPartial.map(getFretboard)
+      return partialFretboardsState.map(getFretboard)
+    } catch {
+      return null
+    }
   }
 
   return null
@@ -419,22 +428,18 @@ function getUrlState(): null | FretboardsState {
 function setUrlState(state: FretboardsState) {
   const searchParams = new URLSearchParams(window.location.search)
 
-  searchParams.set(
-    urlStateKey,
-    encodeURIComponent(
-      window.btoa(
-        JSON.stringify(
-          // Encode a subset of the state in the url so that the page can be shared
-          state.map((fretboard) => ({
-            display: fretboard.display,
-            rootNote: fretboard.rootNote,
-            scaleName: fretboard.scaleName,
-            selectedNotes: fretboard.selectedNotes,
-          })),
-        ),
-      ),
-    ),
+  const partialFretboardsState = PartialFretboardsStateSchema.parse(
+    state.map((fretboard) => ({
+      display: fretboard.display,
+      rootNote: fretboard.rootNote,
+      scaleName: fretboard.scaleName,
+      selectedNotes: fretboard.selectedNotes,
+    })),
   )
+
+  const urlStateHash = window.btoa(JSON.stringify(partialFretboardsState))
+
+  searchParams.set(urlStateKey, encodeURIComponent(urlStateHash))
 
   window.history.replaceState(
     {},
