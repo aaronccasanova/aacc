@@ -1,15 +1,26 @@
 import React from 'react'
 
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 import * as tonal from '@tonaljs/tonal'
 import { z } from 'zod'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { isThemeKey } from '@aacc/design-tokens'
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@mui/material'
 
 import { useRootTheme } from '../src/providers'
-import { Fretboard, Button } from '../src/components'
+import { Fretboard } from '../src/components'
 
 import { allNotes } from '../src/components/constants'
 
@@ -34,19 +45,16 @@ const Main = styled.main`
   align-items: center;
 `
 
-const SelectContainer = styled.div`
+const FormControls = styled.div`
   display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
-
-  label {
-    display: grid;
-    grid-template-columns: 2fr 3fr;
-  }
 `
 
 const FretboardContainer = styled.div`
   background-color: var(--aacc-colors-background-surface);
   padding: var(--aacc-spacing-4);
+  padding-bottom: 0;
   margin-bottom: var(--aacc-spacing-4);
   border-radius: var(--aacc-shape-borderRadius-medium);
 `
@@ -230,7 +238,7 @@ const Home: NextPage = function Home() {
         <title>Home</title>
         <meta
           name="description"
-          content="Next.js - TypeScript - Styled Components recipe"
+          content="Guitar scale generator for notes and intervals training"
         />
         <link
           rel="icon"
@@ -240,18 +248,22 @@ const Home: NextPage = function Home() {
 
       <Header>
         <Button
-          type="button"
           onClick={() =>
             dispatch({ type: 'SET_FRETBOARDS', payload: initialState })
           }
         >
           AACC Scales
         </Button>
-        {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-        <label className="aacc-type-buttonMedium">
-          Theme:{' '}
-          <select
+        <FormControl
+          sx={{ minWidth: 120 }}
+          size="small"
+        >
+          <InputLabel id="aacc-theme-select-label">Theme</InputLabel>
+          <Select
+            labelId="aacc-theme-select-label"
+            id="aacc-theme-select"
             value={themeKey}
+            label="Theme"
             onChange={(e) =>
               isThemeKey(e.target.value)
                 ? setThemeKey(e.target.value)
@@ -259,15 +271,15 @@ const Home: NextPage = function Home() {
             }
           >
             {themeKeys.map((theme) => (
-              <option
+              <MenuItem
                 key={theme}
                 value={theme}
               >
                 {theme}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </label>
+          </Select>
+        </FormControl>
       </Header>
 
       <Main>
@@ -276,12 +288,19 @@ const Home: NextPage = function Home() {
           : fretboards.map((fretboard, fretboardIndex) => (
               // eslint-disable-next-line react/no-array-index-key
               <FretboardContainer key={fretboardIndex}>
-                <SelectContainer>
-                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                  <label>
-                    <span>Display: </span>
-                    <select
+                <FormControls>
+                  <FormControl
+                    sx={{ minWidth: 120 }}
+                    size="small"
+                  >
+                    <InputLabel id="aacc-display-select-label">
+                      Display
+                    </InputLabel>
+                    <Select
+                      labelId="aacc-display-select-label"
+                      id="aacc-display-select"
                       value={fretboard.display}
+                      label="Display"
                       onChange={(e) =>
                         dispatch({
                           type: 'DISPLAY',
@@ -293,20 +312,27 @@ const Home: NextPage = function Home() {
                       }
                     >
                       {['notes', 'degrees'].map((value) => (
-                        <option
+                        <MenuItem
                           key={value}
                           value={value}
                         >
                           {value}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                  </label>
-                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                  <label>
-                    <span>Root note: </span>
-                    <select
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    sx={{ minWidth: 120 }}
+                    size="small"
+                  >
+                    <InputLabel id="aacc-root-note-select-label">
+                      Root note
+                    </InputLabel>
+                    <Select
+                      labelId="aacc-root-note-select-label"
+                      id="aacc-root-note-select"
                       value={fretboard.rootNote}
+                      label="Root note"
                       onChange={(e) =>
                         dispatch({
                           type: 'ROOT_NOTE',
@@ -318,20 +344,27 @@ const Home: NextPage = function Home() {
                       }
                     >
                       {allNotes.map((note) => (
-                        <option
+                        <MenuItem
                           key={note}
                           value={note}
                         >
                           {note}
-                        </option>
+                        </MenuItem>
                       ))}
-                    </select>
-                  </label>
-                  {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-                  <label>
-                    <span>Scale name: </span>
-                    <select
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    sx={{ minWidth: 120 }}
+                    size="small"
+                  >
+                    <InputLabel id="aacc-scale-name-select-label">
+                      Root note
+                    </InputLabel>
+                    <Select
+                      labelId="aacc-scale-name-select-label"
+                      id="aacc-scale-name-select"
                       value={fretboard.scaleName}
+                      label="Root note"
                       onChange={(e) =>
                         dispatch({
                           type: 'SCALE_NAME',
@@ -345,28 +378,34 @@ const Home: NextPage = function Home() {
                       {tonal.ScaleType.names()
                         .sort()
                         .map((name) => (
-                          <option
+                          <MenuItem
                             key={name}
                             value={name}
                           >
                             {name}
-                          </option>
+                          </MenuItem>
                         ))}
-                    </select>
-                  </label>
-                </SelectContainer>
+                    </Select>
+                  </FormControl>
+                </FormControls>
                 <br />
-                <div>
-                  {fretboard.selectedNotes.map(
-                    ({ selected, note, interval }, noteIndex) => (
-                      // eslint-disable-next-line jsx-a11y/label-has-associated-control
-                      <label
-                        key={note}
-                        style={{ marginRight: 8 }}
-                      >
-                        <input
-                          type="checkbox"
+                <FormControl component="fieldset">
+                  <FormLabel component="legend">
+                    Select {fretboard.display}
+                  </FormLabel>
+                  <FormGroup
+                    row
+                    aria-label="selected notes"
+                  >
+                    {fretboard.selectedNotes.map(
+                      ({ selected, note, interval }, noteIndex) => (
+                        <FormControlLabel
+                          key={note}
+                          label={
+                            fretboard.display === 'notes' ? note : interval
+                          }
                           checked={selected}
+                          control={<Checkbox />}
                           onChange={() =>
                             dispatch({
                               type: 'SELECTED_NOTES',
@@ -377,11 +416,11 @@ const Home: NextPage = function Home() {
                             })
                           }
                         />
-                        {fretboard.display === 'notes' ? note : interval}
-                      </label>
-                    ),
-                  )}
-                </div>
+                      ),
+                    )}
+                  </FormGroup>
+                </FormControl>
+                <br />
                 <br />
                 <Fretboard
                   // eslint-disable-next-line react/no-array-index-key
@@ -394,7 +433,6 @@ const Home: NextPage = function Home() {
               </FretboardContainer>
             ))}
         <Button
-          type="button"
           variant="outlined"
           size="small"
           onClick={() => dispatch({ type: 'ADD_FRETBOARD' })}
