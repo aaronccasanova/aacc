@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styled from 'styled-components'
+import styled from '@emotion/styled'
 
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -40,7 +40,7 @@ const Home: NextPage = function Home() {
         <title>Home</title>
         <meta
           name="description"
-          content="Next.js - TypeScript - Styled Components recipe"
+          content="Next.js - TypeScript - Emotion recipe"
         />
         <link
           rel="icon"
@@ -49,7 +49,7 @@ const Home: NextPage = function Home() {
       </Head>
 
       <Main>
-        <Heading as="h1">Next.js - TypeScript - Styled Components</Heading>
+        <Heading as="h1">Next.js - TypeScript - Emotion</Heading>
         <Text as="h2">
           Select theme:{' '}
           <select
