@@ -9,14 +9,14 @@ import Head from 'next/head'
 import { isThemeKey } from '@aacc/design-tokens'
 import {
   Button,
-  FormControl,
-  FormLabel,
-  FormGroup,
   Checkbox,
+  FormControl,
   FormControlLabel,
+  FormGroup,
+  FormLabel,
   InputLabel,
-  Select,
   MenuItem,
+  Select,
 } from '@mui/material'
 
 import { useRootTheme } from '../src/providers'
@@ -47,7 +47,7 @@ const Main = styled.main`
 
 const FormControls = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
 `
 
@@ -69,6 +69,7 @@ const FretboardStateSchema = z.object({
   display: DisplaySchema,
   intervals: z.string().array(),
   notes: z.string().array(),
+  numberOfFrets: z.number(),
   selectedNotes: z
     .object({
       note: z.string(),
@@ -94,6 +95,10 @@ type CommonActionPayload = {
 type FretboardAction =
   | { type: 'ADD_FRETBOARD' }
   | { type: 'DISPLAY'; payload: { display: Display } & CommonActionPayload }
+  | {
+      type: 'NUMBER_OF_FRETS'
+      payload: { numberOfFrets: number } & CommonActionPayload
+    }
   | { type: 'ROOT_NOTE'; payload: { rootNote: string } & CommonActionPayload }
   | { type: 'SCALE_NAME'; payload: { scaleName: string } & CommonActionPayload }
   | {
@@ -103,6 +108,7 @@ type FretboardAction =
   | { type: 'SET_FRETBOARDS'; payload: FretboardsState }
 
 const defaultDisplay = 'notes'
+const defaultNumberOfFrets = 12
 const defaultRootNote = 'C'
 const defaultScaleName = 'major'
 
@@ -127,6 +133,7 @@ function getSelectedNotes(notes: string[], intervals: string[]) {
 
 function getFretboard(state?: PartialFretboardState): FretboardState {
   const display = state?.display ?? defaultDisplay
+  const numberOfFrets = state?.numberOfFrets ?? defaultNumberOfFrets
   const rootNote = state?.rootNote ?? defaultRootNote
   const scaleName = state?.scaleName ?? defaultScaleName
 
@@ -135,6 +142,7 @@ function getFretboard(state?: PartialFretboardState): FretboardState {
 
   return {
     display,
+    numberOfFrets,
     rootNote,
     scaleName,
     intervals,
@@ -154,6 +162,7 @@ const updateFretboard = (
 
   nextFretboards[fretboardIndex] = getFretboard({
     display: next.display ?? fretboard?.display,
+    numberOfFrets: next.numberOfFrets ?? fretboard?.numberOfFrets,
     rootNote: next.rootNote ?? fretboard?.rootNote,
     scaleName: next.scaleName ?? fretboard?.scaleName,
   })
@@ -170,6 +179,10 @@ function reducer(
       case 'DISPLAY':
         return updateFretboard(action.payload.fretboardIndex, state, {
           display: action.payload.display,
+        })
+      case 'NUMBER_OF_FRETS':
+        return updateFretboard(action.payload.fretboardIndex, state, {
+          numberOfFrets: action.payload.numberOfFrets,
         })
       case 'ROOT_NOTE':
         return updateFretboard(action.payload.fretboardIndex, state, {
@@ -293,38 +306,6 @@ const Home: NextPage = function Home() {
                     sx={{ minWidth: 120 }}
                     size="small"
                   >
-                    <InputLabel id="aacc-display-select-label">
-                      Display
-                    </InputLabel>
-                    <Select
-                      labelId="aacc-display-select-label"
-                      id="aacc-display-select"
-                      value={fretboard.display}
-                      label="Display"
-                      onChange={(e) =>
-                        dispatch({
-                          type: 'DISPLAY',
-                          payload: {
-                            fretboardIndex,
-                            display: e.target.value as Display,
-                          },
-                        })
-                      }
-                    >
-                      {['notes', 'degrees'].map((value) => (
-                        <MenuItem
-                          key={value}
-                          value={value}
-                        >
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl
-                    sx={{ minWidth: 120 }}
-                    size="small"
-                  >
                     <InputLabel id="aacc-root-note-select-label">
                       Root note
                     </InputLabel>
@@ -387,6 +368,71 @@ const Home: NextPage = function Home() {
                         ))}
                     </Select>
                   </FormControl>
+                  <FormControl
+                    sx={{ minWidth: 120 }}
+                    size="small"
+                  >
+                    <InputLabel id="aacc-display-select-label">
+                      Display
+                    </InputLabel>
+                    <Select
+                      labelId="aacc-display-select-label"
+                      id="aacc-display-select"
+                      value={fretboard.display}
+                      label="Display"
+                      onChange={(e) =>
+                        dispatch({
+                          type: 'DISPLAY',
+                          payload: {
+                            fretboardIndex,
+                            display: e.target.value as Display,
+                          },
+                        })
+                      }
+                    >
+                      {['notes', 'degrees'].map((value) => (
+                        <MenuItem
+                          key={value}
+                          value={value}
+                        >
+                          {value}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    sx={{ minWidth: 120 }}
+                    size="small"
+                  >
+                    <InputLabel id="aacc-number-of-frets-select-label">
+                      Number of frets
+                    </InputLabel>
+                    <Select
+                      labelId="aacc-number-of-frets-select-label"
+                      id="aacc-number-of-frets-select"
+                      value={fretboard.numberOfFrets}
+                      label="Number of frets"
+                      onChange={(e) =>
+                        dispatch({
+                          type: 'NUMBER_OF_FRETS',
+                          payload: {
+                            fretboardIndex,
+                            numberOfFrets: Number(e.target.value),
+                          },
+                        })
+                      }
+                    >
+                      {Array.from({ length: 24 }).map((_, num) => (
+                        <MenuItem
+                          // eslint-disable-next-line react/no-array-index-key
+                          key={num}
+                          value={num}
+                        >
+                          {num}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </FormControls>
                 <br />
                 <FormControl component="fieldset">
@@ -426,6 +472,7 @@ const Home: NextPage = function Home() {
                   // eslint-disable-next-line react/no-array-index-key
                   key={`${fretboard.rootNote}-${fretboard.scaleName}-${fretboardIndex}`}
                   display={fretboard.display}
+                  numberOfFrets={fretboard.numberOfFrets}
                   intervals={fretboard.intervals}
                   notes={fretboard.notes}
                   selectedNotes={fretboard.selectedNotes}
@@ -469,6 +516,7 @@ function setUrlState(state: FretboardsState) {
   const partialFretboardsState = PartialFretboardsStateSchema.parse(
     state.map((fretboard) => ({
       display: fretboard.display,
+      numberOfFrets: fretboard.numberOfFrets,
       rootNote: fretboard.rootNote,
       scaleName: fretboard.scaleName,
       selectedNotes: fretboard.selectedNotes,

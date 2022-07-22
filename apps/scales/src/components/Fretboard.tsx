@@ -115,7 +115,7 @@ interface SelectedNote {
 }
 
 interface FretboardProps {
-  numberOfFrets?: number
+  numberOfFrets: number
   display: Display
   intervals: string[]
   notes: string[]
@@ -138,7 +138,16 @@ type StringFrets = FretAttrs[]
 type Board = StringFrets[]
 
 export function Fretboard(props: FretboardProps) {
-  const { numberOfFrets = 13, display, intervals, notes, selectedNotes } = props
+  const {
+    numberOfFrets: numberOfFretsProp,
+    display,
+    intervals,
+    notes,
+    selectedNotes,
+  } = props
+
+  // Add one to always render the open string grid cells
+  const numberOfFrets = numberOfFretsProp + 1
 
   const fretboard: Board = React.useMemo(() => {
     const board: Board = []
