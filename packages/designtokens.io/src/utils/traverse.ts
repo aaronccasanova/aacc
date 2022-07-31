@@ -1,28 +1,33 @@
 import type {
-  AllDesignTokens,
-  DesignTokens,
-  DesignToken,
-  DesignTokenAlias,
-  DesignTokenComposite,
-  DesignTokenGroup,
+  ParseDesignTokenOrGroup,
+  ParseDesignTokens,
+  ParseDesignToken,
+  ParseDesignTokenBase,
+  ParseDesignTokenAlias,
+  ParseDesignTokenComposite,
+  ParseDesignTokenGroup,
+  JsonObject,
+  ExtractDesignTokenBase,
+  ExtractDesignTokenValue,
+  ExtractDesignTokenAlias,
 } from '../types'
 
 type WalkContext = {
   path: string[]
 }
 
-type WalkCallback = (node: AllDesignTokens, context: WalkContext) => void
+type WalkCallback = (node: JsonObject, context: WalkContext) => void
 
-function walk(tokens: DesignTokens, cb: WalkCallback) {
+function walk<T>(tokens: ParseDesignTokens<T>, cb: WalkCallback) {
   function walkInner(
-    tokensInner: DesignTokens | AllDesignTokens,
+    tokensInner: JsonObject,
     cbInner: WalkCallback,
     _path: string[] = [],
   ) {
-    for (const entry of Object.entries(tokensInner)) {
-      const [key, node] = entry as [string, AllDesignTokens]
+    for (const [key, n] of Object.entries(tokensInner)) {
+      if (typeof n === 'object' && n !== null) {
+        const node = n as JsonObject
 
-      if (typeof node === 'object' && node !== null) {
         const path = [..._path, key]
         cbInner(node, { path })
         walkInner(node, cb, path)
@@ -30,40 +35,77 @@ function walk(tokens: DesignTokens, cb: WalkCallback) {
     }
   }
 
-  walkInner(tokens, cb)
+  // TODO: Try to remove this cast..
+  walkInner(tokens as JsonObject, cb)
 }
 
-export interface TraverseOptions {
-  onToken?: (token: DesignToken, context: TraverseContext) => void
-  onAlias?: (alias: DesignTokenAlias, context: TraverseContext) => void
-  onComposite?: (
-    composite: DesignTokenComposite,
-    context: TraverseContext,
+export interface TraverseOptions<T> {
+  onToken?: (
+    token: ExtractDesignTokenBase<T>,
+    context: TraverseContext<T>,
   ) => void
-  onGroup?: (group: DesignTokenGroup, context: TraverseContext) => void
+  // onAlias?: (alias: T, context: TraverseContext<T>) => void
+  // onComposite?: (composite: T, context: TraverseContext<T>) => void
+  // onGroup?: (group: T, context: TraverseContext<T>) => void
 }
 
-export function traverse(tokens: DesignTokens, options: TraverseOptions): void {
+export function traverse<T>(
+  tokens: ParseDesignTokens<T>,
+  options: TraverseOptions<T>,
+): void {
   walk(tokens, (node, context) => {
     if (isDesignToken(node)) {
       // Design token
+
       options?.onToken?.(node, createContext({ tokens, context }))
-    } else if (isAliasToken(node)) {
-      // Alias token
-      options?.onAlias?.(node, createContext({ tokens, context }))
-    } else if (isCompositeToken(node)) {
-      // Composite token
-      options?.onComposite?.(node, createContext({ tokens, context }))
-    } else if (isTokenGroup(node)) {
-      // Token group
-      options?.onGroup?.(node, createContext({ tokens, context }))
     }
+    // } else if (isAliasToken(node)) {
+    // //   // Alias token
+    // //   options?.onAlias?.(node, createContext({ tokens, context }))
+    // // } else if (isCompositeToken(node)) {
+    // //   // Composite token
+    // //   options?.onComposite?.(node, createContext({ tokens, context }))
+    // // } else if (isTokenGroup(node)) {
+    // //   // Token group
+    // //   options?.onGroup?.(node, createContext({ tokens, context }))
+    // // }
   })
 }
 
-export function isDesignTokenValue(
-  value: unknown,
-): value is DesignToken['$value'] {
+traverse(
+  {
+    $description: 'hi',
+    token: {
+      $value: 'hi',
+    },
+    // token2: {
+    //   $value: 4,
+    // },
+    // tokens: {
+    //   token: {
+    //     $value: 'by',
+    //   },
+    // },
+  },
+  {
+    onToken: (token, context) => {
+      const val = token.$value
+
+      console.log(val)
+    },
+  },
+)
+
+// function getDesignTokenTypeGuards<T>(tokens: ParseDesignTokens<T>) {
+//   return {
+//     isDesignToken: token => isDesignToken<ExtractDesignTokenBase<T>>(token),
+//     isAliasToken: isAliasToken<ExtractDesignTokenAlias<T>>(tokens),
+//     isDesignToken: isDesignTokenValue<ExtractDesignTokenValue<T>>(tokens),
+//     isDesignToken: isDesignTokenValue<ExtractDesignTokenValue<T>>(tokens),
+//   }
+// }
+
+export function isDesignTokenValue(value: unknown) {
   if (typeof value === 'number') return true
 
   if (typeof value === 'string' && !value.startsWith('{')) {
@@ -73,17 +115,13 @@ export function isDesignTokenValue(
   return false
 }
 
-export function isDesignToken(
-  tokenOrGroup: unknown,
-): tokenOrGroup is DesignToken {
+export function isDesignToken(tokenOrGroup: unknown) {
   if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
 
-  return isDesignTokenValue((tokenOrGroup as DesignToken).$value)
+  return isDesignTokenValue((tokenOrGroup as { $value: any }).$value)
 }
 
-export function isAliasTokenValue(
-  value: unknown,
-): value is DesignTokenAlias['$value'] {
+export function isAliasTokenValue<T>(value: unknown): value is T {
   if (typeof value === 'string' && value.startsWith('{')) {
     return true
   }
@@ -91,20 +129,16 @@ export function isAliasTokenValue(
   return false
 }
 
-export function isAliasToken(
-  tokenOrGroup: AllDesignTokens,
-): tokenOrGroup is DesignTokenAlias {
+export function isAliasToken<T>(tokenOrGroup: unknown): tokenOrGroup is T {
   if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
 
-  return isAliasTokenValue((tokenOrGroup as DesignTokenAlias).$value)
+  return isAliasTokenValue((tokenOrGroup as { $value: any }).$value)
 }
 
-export function isCompositeToken(
-  tokenOrGroup: AllDesignTokens,
-): tokenOrGroup is DesignTokenComposite {
+export function isCompositeToken<T>(tokenOrGroup: unknown): tokenOrGroup is T {
   if (!Object.hasOwnProperty.call(tokenOrGroup, '$value')) return false
 
-  const tokenOrComposite = tokenOrGroup as DesignToken | DesignTokenComposite
+  const tokenOrComposite = tokenOrGroup as { $value: any }
 
   if (
     typeof tokenOrComposite.$value === 'object' &&
@@ -116,13 +150,12 @@ export function isCompositeToken(
   return false
 }
 
-export function isTokenGroup(
-  tokenOrGroup: AllDesignTokens,
-): tokenOrGroup is DesignTokenGroup {
-  return Boolean((tokenOrGroup as DesignTokenGroup)?.$tokens)
+export function isTokenGroup<T>(tokenOrGroup: unknown): tokenOrGroup is T {
+  // TODO: This ain't right.. composite tokens would also match
+  return !(tokenOrGroup as { $value: any })?.$value
 }
 
-export interface TraverseContext {
+export interface TraverseContext<T> {
   /**
    * Name of the current token, alias, or group.
    *
@@ -132,14 +165,14 @@ export interface TraverseContext {
   /**
    * Reference to the root design tokens object.
    */
-  tokens: DesignTokens
+  tokens: T
   /**
    * An array of token names leading to the current token.
    *
    * Note: This path has been filtered to exclude the `$tokens` property.
    * Helpful for composing token names such as CSS custom properties.
    */
-  path: string[]
+  // path: string[]
   /**
    * Raw path of the current token, alias, or group.
    *
@@ -147,14 +180,14 @@ export interface TraverseContext {
    * the current token from the root of the design tokens object.
    * Helpful for resolving an alias token's `$value` property.
    */
-  rawPath: string[]
+  // rawPath: string[]
   /**
    * Retrieves the path to the token referenced in the alias token $value.
    *
    * Note: This path has been filtered to exclude the `$tokens` property.
    * Helpful for composing token names such as CSS custom properties.
    */
-  getPathFromAlias: (aliasToken: DesignTokenAlias) => string[]
+  // getPathFromAlias: (aliasToken: DesignTokenAlias) => string[]
   /**
    * Retrieves the raw path to the token referenced in an alias token $value
    *
@@ -162,42 +195,44 @@ export interface TraverseContext {
    * the current token from the root of the design tokens object.
    * Helpful for resolving an alias token's `$value` property.
    */
-  getRawPathFromAlias: (aliasToken: DesignTokenAlias) => string[]
+  // getRawPathFromAlias: (aliasToken: DesignTokenAlias) => string[]
   /**
    * Retrieves the token referenced in the alias token $value from the design tokens object.
    */
-  getTokenFromAlias: (
-    aliasToken: DesignTokenAlias,
-    tokens: DesignTokens,
-  ) => AllDesignTokens
-  isDesignToken: typeof isDesignToken
-  isDesignTokenValue: typeof isDesignTokenValue
-  isAliasToken: typeof isAliasToken
-  isAliasTokenValue: typeof isAliasTokenValue
-  isCompositeToken: typeof isCompositeToken
-  isTokenGroup: typeof isTokenGroup
+  // getTokenFromAlias: (
+  //   aliasToken: DesignTokenAlias,
+  //   tokens: DesignTokens,
+  // ) => AllDesignTokens
+  // isDesignToken: typeof isDesignToken
+  // isDesignTokenValue: typeof isDesignTokenValue
+  // isAliasToken: typeof isAliasToken
+  // isAliasTokenValue: typeof isAliasTokenValue
+  // isCompositeToken: typeof isCompositeToken
+  // isTokenGroup: typeof isTokenGroup
 }
 
-interface CreateContextOptions {
-  tokens: DesignTokens
+interface CreateContextOptions<T> {
+  tokens: ParseDesignTokens<T>
   context: WalkContext
 }
 
-function createContext(options: CreateContextOptions): TraverseContext {
+function createContext<T>(
+  options: CreateContextOptions<T>,
+): TraverseContext<T> {
   return {
     name: options.context.path[options.context.path.length - 1]!,
     tokens: options.tokens,
-    path: options.context.path.filter((p) => p !== '$tokens'),
-    rawPath: options.context.path,
-    getPathFromAlias,
-    getRawPathFromAlias,
-    getTokenFromAlias,
-    isDesignToken,
-    isDesignTokenValue,
-    isAliasToken,
-    isAliasTokenValue,
-    isCompositeToken,
-    isTokenGroup,
+    // path: options.context.path.filter((p) => p !== '$tokens'),
+    // rawPath: options.context.path,
+    // getPathFromAlias,
+    // getRawPathFromAlias,
+    // getTokenFromAlias,
+    // isDesignToken,
+    // isDesignTokenValue,
+    // isAliasToken,
+    // isAliasTokenValue,
+    // isCompositeToken,
+    // isTokenGroup,
   }
 }
 
@@ -208,13 +243,13 @@ function createContext(options: CreateContextOptions): TraverseContext {
  * const alias = { $value: '{colors.blue.500}'}
  * ctx.getPathFromAlias(alias) // ['colors', 'blue', '500]
  */
-export function getPathFromAlias(aliasToken: DesignTokenAlias) {
-  if (!isAliasToken(aliasToken)) {
-    throw new Error('`getPathFromAlias` can only be called on an alias token.')
-  }
+// export function getPathFromAlias(aliasToken: DesignTokenAlias) {
+//   if (!isAliasToken(aliasToken)) {
+//     throw new Error('`getPathFromAlias` can only be called on an alias token.')
+//   }
 
-  return aliasToken.$value.trim().slice(1, -1).split('.')
-}
+//   return aliasToken.$value.trim().slice(1, -1).split('.')
+// }
 
 /**
  * Retrieves the raw path to the token referenced in an alias token $value
@@ -223,19 +258,19 @@ export function getPathFromAlias(aliasToken: DesignTokenAlias) {
  * const alias = { $value: '{colors.blue.500}'}
  * ctx.getRawPathFromAlias(alias) // ['colors', '$tokens', 'blue', '$tokens', '500]
  */
-export function getRawPathFromAlias(aliasToken: DesignTokenAlias) {
-  if (!isAliasToken(aliasToken)) {
-    throw new Error(
-      '`getRawPathFromAlias` can only be called on an alias token.',
-    )
-  }
+// export function getRawPathFromAlias(aliasToken: DesignTokenAlias) {
+//   if (!isAliasToken(aliasToken)) {
+//     throw new Error(
+//       '`getRawPathFromAlias` can only be called on an alias token.',
+//     )
+//   }
 
-  return aliasToken.$value
-    .trim()
-    .slice(1, -1)
-    .replace(/\./g, '.$tokens.')
-    .split('.')
-}
+//   return aliasToken.$value
+//     .trim()
+//     .slice(1, -1)
+//     .replace(/\./g, '.$tokens.')
+//     .split('.')
+// }
 
 /**
  * Retrieves the token referenced in the alias token $value from the design tokens object.
@@ -244,23 +279,23 @@ export function getRawPathFromAlias(aliasToken: DesignTokenAlias) {
  * const alias = { $value: '{colors.blue.500}'}
  * ctx.getTokenFromAlias(alias, designTokens) // #0000ff
  */
-export function getTokenFromAlias(
-  aliasToken: DesignTokenAlias,
-  tokens: DesignTokens,
-) {
-  if (!isAliasToken(aliasToken)) {
-    throw new Error('`getTokenFromAlias` can only be called on an alias token.')
-  }
+// export function getTokenFromAlias(
+//   aliasToken: DesignTokenAlias,
+//   tokens: DesignTokens,
+// ) {
+//   if (!isAliasToken(aliasToken)) {
+//     throw new Error('`getTokenFromAlias` can only be called on an alias token.')
+//   }
 
-  const rawPath = getRawPathFromAlias(aliasToken)
+//   const rawPath = getRawPathFromAlias(aliasToken)
 
-  let token: any = tokens
+//   let token: any = tokens
 
-  // TODO: https://github.com/angus-c/just/tree/master/packages/object-safe-get
-  for (const path of rawPath) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
-    token = token[path]
-  }
+//   // TODO: https://github.com/angus-c/just/tree/master/packages/object-safe-get
+//   for (const path of rawPath) {
+//     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+//     token = token[path]
+//   }
 
-  return token as AllDesignTokens
-}
+//   return token as AllDesignTokens
+// }
