@@ -1,5 +1,13 @@
 # @aacc/eslint-config
 
+## 0.0.4
+
+### Patch Changes
+
+- [`a8d34ec`](https://github.com/aaronccasanova/aacc/commit/a8d34ece3d0b6d81fa44ac3f60271f982ca5aa72)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Path all the
+  things
+
 ## 0.0.3
 
 ### Patch Changes
