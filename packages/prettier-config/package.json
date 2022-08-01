@@ -1,7 +1,7 @@
 {
   "name": "@aacc/prettier-config",
   "version": "0.0.1",
-  "description": "Shared Prettier config",
+  "description": "Shared Prettier config.",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "main": "index.js",

@@ -2,7 +2,7 @@
   "name": "@aacc/tsconfigs",
   "version": "0.0.2",
   "license": "MIT",
-  "description": "A collection of typescript configuration files to extend",
+  "description": "A collection of typescript configuration files to extend.",
   "author": "Aaron Casanova",
   "engines": {
     "node": ">=14"

@@ -1,7 +1,7 @@
 {
   "name": "@aacc/browserslist-config",
   "version": "0.0.1",
-  "description": "A collection of browserslist configurations",
+  "description": "A collection of browserslist configurations.",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "main": "index.js",

@@ -1,7 +1,7 @@
 {
   "name": "chtsht",
   "version": "0.2.0",
-  "description": "Display or execute your own custom cheat sheet!",
+  "description": "Display or execute your own custom cheat sheet",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "bin": "dist/cjs/cli.js",

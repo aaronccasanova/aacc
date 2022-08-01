@@ -2,7 +2,7 @@
   "name": "@aacc/eslint-config",
   "version": "0.0.3",
   "license": "MIT",
-  "description": "Shared ESLint configs",
+  "description": "Shared ESLint configs.",
   "author": "Aaron Casanova",
   "main": "configs/base.js",
   "exports": {

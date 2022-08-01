@@ -1,7 +1,7 @@
 {
   "name": "@aacc/babel-preset",
   "version": "0.0.2",
-  "description": "Shared Babel preset",
+  "description": "Shared Babel preset.",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "main": "index.js",
