@@ -1,6 +1,6 @@
 {
   "name": "@aacc/prettier-config",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Shared Prettier config.",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
