@@ -36,10 +36,13 @@
     "@aacc/browserslist-config": "*",
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
+    "@babel/parser": "^7.18.11",
+    "@babel/traverse": "^7.18.11",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
     "@types/figlet": "^1.5.4",
+    "globby": "^11.1.0",
     "rollup": "^2.70.2",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "typescript": "^4.7.3"

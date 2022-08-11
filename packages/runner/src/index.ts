@@ -1,19 +1,27 @@
+// @ts-nocheck
 import * as path from 'node:path'
+import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as wt from 'worker_threads'
+import pMap from 'p-map'
 
 import * as Comlink from 'comlink'
 import nodeEndpoint from 'comlink/dist/umd/node-adapter'
 
-import type { WorkerApi, Processor } from './worker'
+import type { WorkerApi, WorkerResult, ProcessorImport } from './worker'
 
 interface RunnerOptions {
+  // TODO: Remove this flag. It's only used for comparing workers and concurrent pending promises.
+  withWorkers?: boolean
   workers?: number
   files: string[]
-  processor: Processor
+  processor: string
+  onProcessed?: <T extends any = null>(result: WorkerResult) => Promise<T> | T
 }
 
-export async function runner(options: RunnerOptions) {
+export async function runner(options: RunnerOptions): Promise<WorkerResult> {
+  const startTime = process.hrtime()
+
   const numOfWorkers = Math.min(
     options.files.length,
     options.workers
@@ -21,44 +29,76 @@ export async function runner(options: RunnerOptions) {
       : os.cpus().length,
   )
 
-  const workers = []
+  if (options.withWorkers ?? true) {
+    console.log(
+      `Processing ${options.files.length} files with ${numOfWorkers} workers`,
+    )
 
-  for (let i = 0; i < numOfWorkers; i += 1) {
-    const worker = new wt.Worker(path.join(__dirname, './worker.js'))
-    workers.push(Comlink.wrap<WorkerApi>(nodeEndpoint(worker)))
-  }
+    const workers = []
 
-  let currentFile = 0
+    for (let i = 0; i < numOfWorkers; i += 1) {
+      const worker = new wt.Worker(path.join(__dirname, './worker.js'))
+      // const worker = new wt.Worker(
+      //   url.fileURLToPath(new URL('./worker.js', import.meta.url)),
+      // )
+      workers.push(Comlink.wrap<WorkerApi>(nodeEndpoint(worker)))
+    }
 
-  await Promise.all(
-    workers.map(async (worker) => {
-      while (currentFile < options.files.length) {
-        // eslint-disable-next-line no-plusplus
-        const fileIndex = currentFile++
+    let currentFile = 0
+
+    await Promise.all(
+      workers.map(async (worker) => {
+        await worker.loadProcessor(options.processor)
+
+        while (currentFile < options.files.length) {
+          // eslint-disable-next-line no-plusplus
+          const fileIndex = currentFile++
+
+          // eslint-disable-next-line no-await-in-loop
+          const state = await worker.processFile({
+            filePath: options.files[fileIndex]!,
+          })
+
+          // eslint-disable-next-line no-await-in-loop
+          await options?.onProcessed(state)
+        }
+
+        worker[Comlink.releaseProxy]()
+
+        return worker
+      }),
+    )
+  } else {
+    console.log(
+      `Processing ${options.files.length} files with p-map and ${numOfWorkers} concurrent pending promises`,
+    )
+
+    const { default: processor } = (await import(
+      options.processor
+    )) as ProcessorImport
+
+    await pMap(
+      options.files,
+      async (filePath) => {
+        const fileContent = await fs.promises.readFile(filePath, 'utf-8')
+
+        const state = await processor({
+          fileContent,
+          filePath,
+        })
 
         // eslint-disable-next-line no-await-in-loop
-        await worker.processFile(Comlink.proxy(options.processor), {
-          filePath: options.files[fileIndex]!,
-        })
-      }
+        await options?.onProcessed(state ?? null)
+      },
+      {
+        concurrency: numOfWorkers,
+      },
+    )
+  }
 
-      worker[Comlink.releaseProxy]()
+  const endTime = process.hrtime(startTime)
+  const elapsedTime = (endTime[0] + endTime[1] / 1e9).toFixed(3)
 
-      return worker
-    }),
-  )
+  console.log('\n')
+  console.log(`Elapsed time: ${elapsedTime}seconds`)
 }
-
-runner({
-  workers: 2,
-  files: [
-    path.join(__dirname, 'index.js'),
-    path.join(__dirname, 'worker.js'),
-    path.join(__dirname, 'index.js'),
-    path.join(__dirname, 'worker.js'),
-  ],
-  processor: (options) => {
-    console.log('filePath: ', options.filePath)
-    console.log('fileContent: ', options.fileContent.slice(0, 10))
-  },
-}).catch(console.error)

@@ -44,6 +44,7 @@ export default {
     }),
   ],
   external: [
+    'p-map',
     'comlink/dist/umd/node-adapter',
     ...Object.keys(pkg.dependencies ?? {}),
     // @ts-ignore
