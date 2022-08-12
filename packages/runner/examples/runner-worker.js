@@ -37,4 +37,6 @@ module.exports = (options) => {
   } catch (error) {
     // console.error(`Skipping ${options.filePath}`)
   }
+
+  // return result
 }

@@ -16,7 +16,7 @@ async function main() {
       cwd: __dirname,
       absolute: true,
     })
-  ).slice(0, 1500)
+  ).slice(0, 5000)
 
   console.log(`Processing ${files.length} files with ${workers} workers`)
 

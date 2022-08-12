@@ -4,10 +4,12 @@ import * as path from 'node:path'
 import * as os from 'node:os'
 import * as wt from 'worker_threads'
 
-import * as Comlink from 'comlink'
-import nodeEndpoint from 'comlink/dist/umd/node-adapter'
-
-import type { WorkerApi, WorkerResult } from './worker'
+import type {
+  ParentMessage,
+  WorkerData,
+  WorkerMessage,
+  WorkerResult,
+} from './worker'
 
 interface RunnerOptions {
   workers?: number
@@ -17,13 +19,6 @@ interface RunnerOptions {
 }
 
 export async function runner(options: RunnerOptions): Promise<WorkerResult> {
-  const numOfWorkers = Math.min(
-    options.files.length,
-    options.workers
-      ? Math.min(options.workers, os.cpus().length)
-      : os.cpus().length,
-  )
-
   const chunkedFiles: string[][] = []
   const chunkSize = 50
 
@@ -31,34 +26,70 @@ export async function runner(options: RunnerOptions): Promise<WorkerResult> {
     chunkedFiles.push(options.files.slice(i, i + chunkSize))
   }
 
+  const numOfWorkers = Math.min(
+    chunkedFiles.length,
+    options.workers
+      ? Math.min(options.workers, os.cpus().length)
+      : os.cpus().length,
+  )
+
   const workers = []
+  const workerData: WorkerData = {
+    processor: options.processor,
+  }
 
   for (let i = 0; i < numOfWorkers; i += 1) {
-    const worker = new wt.Worker(path.join(__dirname, './worker.js'))
-
-    workers.push(Comlink.wrap<WorkerApi>(nodeEndpoint(worker)))
+    workers.push(
+      new wt.Worker(path.join(__dirname, './worker.js'), { workerData }),
+    )
   }
 
   let currentChunk = 0
+  function nextChunk() {
+    const chunkIndex = currentChunk
+    currentChunk += 1
+
+    return chunkedFiles[chunkIndex] ?? null
+  }
 
   await Promise.all(
-    workers.map(async (worker) => {
-      await worker.loadProcessor(options.processor)
+    workers.map(
+      (worker) =>
+        new Promise((resolve, reject) => {
+          postMessage(worker, { action: 'process', filePaths: nextChunk() })
 
-      while (currentChunk < chunkedFiles.length) {
-        const chunkIndex = currentChunk
-        currentChunk += 1
+          worker.on('error', reject)
+          worker.on('exit', (code) =>
+            code !== 0
+              ? reject(new Error('Failed to process file'))
+              : resolve(),
+          )
 
-        const results = await worker.processFiles({
-          filePaths: chunkedFiles[chunkIndex]!,
-        })
+          // TODO: Fix this.. Don't believe async/await in event emitters is encouraged.
+          // eslint-disable-next-line @typescript-eslint/no-misused-promises
+          worker.on('message', async (message: WorkerMessage) => {
+            switch (message.action) {
+              case 'processed':
+              default: {
+                const filePaths = nextChunk()
 
-        if (options.onProcessed) {
-          await options?.onProcessed(results)
-        }
-      }
+                if (filePaths) {
+                  postMessage(worker, { action: 'process', filePaths })
+                } else {
+                  postMessage(worker, { action: 'exit' })
+                }
 
-      worker[Comlink.releaseProxy]()
-    }),
+                if (options.onProcessed) {
+                  await options.onProcessed(results)
+                }
+              }
+            }
+          })
+        }),
+    ),
   )
+}
+
+function postMessage(worker: wt.Worker, message: ParentMessage) {
+  worker.postMessage(message)
 }
