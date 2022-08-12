@@ -2,7 +2,7 @@
 // @ts-nocheck
 import * as path from 'node:path'
 import * as os from 'node:os'
-import * as wt from 'worker_threads'
+import * as cp from 'node:child_process'
 
 import type {
   ParentMessage,
@@ -40,7 +40,7 @@ export async function runner(options: RunnerOptions): Promise<WorkerResult> {
 
   for (let i = 0; i < numOfWorkers; i += 1) {
     workers.push(
-      new wt.Worker(path.join(__dirname, './worker.js'), { workerData }),
+      cp.fork(path.join(__dirname, './worker.js'), [workerData.processor]),
     )
   }
 
@@ -90,6 +90,6 @@ export async function runner(options: RunnerOptions): Promise<WorkerResult> {
   )
 }
 
-function postMessage(worker: wt.Worker, message: ParentMessage) {
-  worker.postMessage(message)
+function postMessage(worker: cp.ChildProcess, message: ParentMessage) {
+  worker.send(message)
 }

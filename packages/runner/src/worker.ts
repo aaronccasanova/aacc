@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // @ts-nocheck
-import * as wt from 'node:worker_threads'
 import * as fs from 'node:fs'
 
-if (!wt.parentPort) throw new Error('This is not a worker thread')
-
-const workerData = wt.workerData as WorkerData
-
 // eslint-disable-next-line import/no-dynamic-require
-const processor: Processor = require(workerData.processor)
+const processor: Processor = require(process.argv[2])
 
 export interface WorkerData {
   processor: string
@@ -34,7 +29,7 @@ export type Processor<T extends any = null> = (
 
 // TODO: Fix this.. Don't believe async/await in event emitters is encouraged.
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-wt.parentPort.on('message', async (message: ParentMessage) => {
+process.on('message', async (message: ParentMessage) => {
   if (message.action === 'exit') process.exit()
 
   if (!processor) throw new Error('No processor loaded')
@@ -52,7 +47,7 @@ wt.parentPort.on('message', async (message: ParentMessage) => {
     }),
   )
 
-  wt.parentPort!.postMessage({ action: 'processed' })
+  process.send({ action: 'processed' })
 
   // return results ?? []
 })
