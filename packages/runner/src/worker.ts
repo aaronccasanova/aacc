@@ -25,6 +25,9 @@ export interface WorkerApi {
   processFile: <T extends any = null>(options: {
     filePath: string
   }) => Promise<T>
+  processFiles: <T extends any = null>(options: {
+    filePaths: string[]
+  }) => Promise<T>
 }
 
 const workerApi: WorkerApi = {
@@ -34,17 +37,38 @@ const workerApi: WorkerApi = {
 
     this.processor = processor
   },
+  /**
+   * @deprecated Use `processFiles` instead.
+   */
   async processFile(options) {
     if (!this.processor) throw new Error('No processor loaded')
 
     const fileContent = await fs.promises.readFile(options.filePath, 'utf-8')
 
-    const state = await this.processor({
+    const result = await this.processor({
       fileContent,
       filePath: options.filePath,
     })
 
-    return state ?? null
+    return result ?? null
+  },
+  async processFiles(options) {
+    if (!this.processor) throw new Error('No processor loaded')
+
+    await Promise.all(
+      options.filePaths.map(async (filePath) => {
+        const fileContent = await fs.promises.readFile(filePath, 'utf-8')
+
+        const result = await this.processor({
+          fileContent,
+          filePath: options.filePath,
+        })
+
+        return result ?? null
+      }),
+    )
+
+    // return results ?? []
   },
 }
 

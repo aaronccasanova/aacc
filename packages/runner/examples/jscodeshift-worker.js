@@ -8,17 +8,17 @@ const traverse = require('@babel/traverse').default
  * }} Result
  */
 
-/** @type {import('./dist/types/worker').Processor<Result>} */
+/** @type {(options: {path: string; source: string;}) => void} */
 module.exports = (options) => {
   const result = {
     lines: 0,
     imports: 0,
   }
 
-  result.lines += options.fileContent.split('\n').length
+  result.lines += options.source.split('\n').length
 
   try {
-    const ast = parse(options.fileContent, {
+    const ast = parse(options.source, {
       sourceType: 'module',
       plugins: [
         ['decorators', { decoratorsBeforeExport: true }],
@@ -37,5 +37,6 @@ module.exports = (options) => {
     // console.error(`Skipping ${options.filePath}`)
   }
 
-  return result
+  // IMPORTANT:
+  // Do not add a return to this function.. or else..
 }

@@ -8,5 +8,10 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: 'tsconfig.eslint.json',
   },
-  ignorePatterns: ['node_modules', 'dist'],
+  ignorePatterns: [
+    'node_modules',
+    'dist',
+    // TODO: Remove after benchmarking..
+    'examples',
+  ],
 }
