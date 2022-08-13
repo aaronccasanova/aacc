@@ -44,7 +44,6 @@ export default {
     }),
   ],
   external: [
-    'comlink/dist/umd/node-adapter',
     ...Object.keys(pkg.dependencies ?? {}),
     // @ts-ignore
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

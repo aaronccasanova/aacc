@@ -2,12 +2,10 @@
 // @ts-nocheck
 import * as path from 'node:path'
 import * as os from 'node:os'
-import * as wt from 'worker_threads'
 
-import * as Comlink from 'comlink'
-import nodeEndpoint from 'comlink/dist/umd/node-adapter'
+import Piscina from 'piscina'
 
-import type { WorkerApi, WorkerResult } from './worker'
+import type { WorkerResult } from './worker'
 
 interface RunnerOptions {
   workers?: number
@@ -17,13 +15,6 @@ interface RunnerOptions {
 }
 
 export async function runner(options: RunnerOptions): Promise<WorkerResult> {
-  const numOfWorkers = Math.min(
-    options.files.length,
-    options.workers
-      ? Math.min(options.workers, os.cpus().length)
-      : os.cpus().length,
-  )
-
   const chunkedFiles: string[][] = []
   const chunkSize = 50
 
@@ -31,25 +22,30 @@ export async function runner(options: RunnerOptions): Promise<WorkerResult> {
     chunkedFiles.push(options.files.slice(i, i + chunkSize))
   }
 
-  const workers = []
+  const numOfWorkers = Math.min(
+    chunkedFiles.length,
+    options.workers
+      ? Math.min(options.workers, os.cpus().length)
+      : os.cpus().length,
+  )
 
-  for (let i = 0; i < numOfWorkers; i += 1) {
-    const worker = new wt.Worker(path.join(__dirname, './worker.js'))
-
-    workers.push(Comlink.wrap<WorkerApi>(nodeEndpoint(worker)))
-  }
+  const piscina = new Piscina({
+    filename: path.resolve(__dirname, './worker.js'),
+    minThreads: numOfWorkers,
+    maxThreads: numOfWorkers,
+  })
 
   let currentChunk = 0
 
   await Promise.all(
-    workers.map(async (worker) => {
-      await worker.loadProcessor(options.processor)
-
+    Array.from({ length: numOfWorkers }).map(async () => {
       while (currentChunk < chunkedFiles.length) {
         const chunkIndex = currentChunk
         currentChunk += 1
 
-        const results = await worker.processFiles({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const results = await piscina.run({
+          processor: options.processor,
           filePaths: chunkedFiles[chunkIndex]!,
         })
 
@@ -57,8 +53,6 @@ export async function runner(options: RunnerOptions): Promise<WorkerResult> {
           await options?.onProcessed(results)
         }
       }
-
-      worker[Comlink.releaseProxy]()
     }),
   )
 }
