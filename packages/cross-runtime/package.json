@@ -20,7 +20,16 @@
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "deno-runtime": "deno run examples/runtime.js",
+    "node-runtime": "node examples/runtime.js",
+    "runtime-example": "npm run deno-runtime && npm run node-runtime",
+    "deno-readFile": "deno run --allow-read examples/readFile.js",
+    "node-readFile": "node examples/readFile.js",
+    "readFile-example": "npm run deno-readFile && npm run node-readFile",
+    "deno-writeFile": "deno run --allow-write examples/writeFile.js",
+    "node-writeFile": "node examples/writeFile.js",
+    "writeFile-example": "npm run deno-writeFile && npm run node-writeFile"
   },
   "files": [
     "src",

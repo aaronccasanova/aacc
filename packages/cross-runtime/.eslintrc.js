@@ -10,6 +10,7 @@ module.exports = {
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: 'tsconfig.eslint.json',
+    sourceType: 'module',
   },
   ignorePatterns: ['node_modules', 'dist'],
 }
