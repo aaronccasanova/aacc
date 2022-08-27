@@ -4,6 +4,7 @@
   "description": "Collection of cross runtime constants and utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
+  "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
   "types": "dist/types/index.d.ts",
