@@ -1,0 +1,47 @@
+{
+  "name": "cross-platform",
+  "version": "0.0.0",
+  "description": "Collection of cross platform constants and utilities",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./src/index.js",
+      "require": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@aacc/eslint-config": "*",
+    "@aacc/tsconfigs": "*",
+    "typescript": "^4.7.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/cross-platform"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/cross-platform/README.md"
+}
