@@ -1,7 +1,7 @@
 {
-  "name": "cross-platform",
+  "name": "cross-runtime",
   "version": "0.0.0",
-  "description": "Collection of cross platform constants and utilities",
+  "description": "Collection of cross runtime constants and utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
@@ -38,10 +38,10 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aaronccasanova/aacc.git",
-    "directory": "packages/cross-platform"
+    "directory": "packages/cross-runtime"
   },
   "bugs": {
     "url": "https://github.com/aaronccasanova/aacc/issues"
   },
-  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/cross-platform/README.md"
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/cross-runtime/README.md"
 }

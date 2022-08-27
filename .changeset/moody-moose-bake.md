@@ -1,5 +1,5 @@
 ---
-'cross-platform': patch
+'cross-runtime': patch
 ---
 
-Initial cross-platform constants
+Initial cross-runtime constants
