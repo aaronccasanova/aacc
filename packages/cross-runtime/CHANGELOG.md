@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.3
+
+### Patch Changes
+
+- [`9058f7d`](https://github.com/aaronccasanova/aacc/commit/9058f7d4f281cf6ad694e0d4056534634ec61161)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Experimental
+  read/write file support
+
 ## 0.0.2
 
 ### Patch Changes
