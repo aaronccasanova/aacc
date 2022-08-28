@@ -24,6 +24,11 @@ jobs:
           node_version: ${{ matrix.node_version }}
           cache: npm
 
+      - name: Install dependencies
+        run: npm ci
+
+      # Test hypothesis
+      # https://github.com/vercel/turborepo/issues/451#issuecomment-1190876871
       - name: Restore cache
         uses: actions/cache@v2
         with:
@@ -31,12 +36,11 @@ jobs:
             **/.eslintcache
             **/.turbo
             node_modules/.cache/turbo
-          key: ${{ runner.os }}-node${{ matrix.node_version }}-test-v1-${{ github.sha }}
+          key:
+            ${{ runner.os }}-node${{ matrix.node_version }}-test-v1-${{
+            github.sha }}
           restore-keys: |
             ${{ runner.os }}-node${{ matrix.node_version }}-test-v1-
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Build packages
         run: npm run build
