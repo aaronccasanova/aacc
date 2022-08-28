@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.6
+
+### Patch Changes
+
+- [`fbee6c1`](https://github.com/aaronccasanova/aacc/commit/fbee6c1443643fc3826610d97914e54925feb997)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Initial Web
+  Workers support
+
 ## 0.0.5
 
 ### Patch Changes
