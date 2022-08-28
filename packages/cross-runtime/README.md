@@ -44,6 +44,17 @@ console.log(`Hello ${cr.getRuntime()}!`)
 // Hello deno!
 ```
 
+## Runtime Support Table
+
+| API                       | Deno | Node.js | Browser | Cloudflare Workers | Bun  |
+| ------------------------- | ---- | ------- | ------- | ------------------ | ---- |
+| [isDeno](#isdeno)         | ✅   | ✅      | ✅      | TODO               | TODO |
+| [isNode](#isnode)         | ✅   | ✅      | ✅      | TODO               | TODO |
+| [getRuntime](#getruntime) | ✅   | ✅      | PARTIAL | TODO               | TODO |
+| [writeFile](#writefile)   | ✅   | ✅      | N/A     | N/A                | TODO |
+| [readFile](#readfile)     | ✅   | ✅      | N/A     | N/A                | TODO |
+| [Worker](#worker)         | ✅   | ✅      | ✅      | ?                  | TODO |
+
 ## APIs
 
 The following APIs are available in all supported runtimes:
@@ -153,13 +164,14 @@ const worker = new cr.Worker(new URL('./worker.js', import.meta.url), {
 })
 ```
 
-## Runtime Support Table
+> - The Node.js API is an alias to the
+>   [`web-worker`](https://www.npmjs.com/package/web-worker) library
+> - The Deno API is an alias to the Web `Worker` API on the `globalThis` context
 
-| API          | Deno | Node.js | Browser | Cloudflare Workers | Bun  |
-| ------------ | ---- | ------- | ------- | ------------------ | ---- |
-| `isDeno`     | ✅   | ✅      | ✅      | TODO               | TODO |
-| `isNode`     | ✅   | ✅      | ✅      | TODO               | TODO |
-| `getRuntime` | ✅   | ✅      | PARTIAL | TODO               | TODO |
-| `writeFile`  | ✅   | ✅      | N/A     | N/A                | TODO |
-| `readFile`   | ✅   | ✅      | N/A     | N/A                | TODO |
-| `Worker`     | ✅   | ✅      | ✅      | ?                  | TODO |
+## Project Goals
+
+The sole purpose of this library is to bridge the gap between different
+JavaScript runtime APIs. All APIs are ESM only in an effort to create a write
+once run anywhere experience. The library will only include APIs that differ
+between runtimes with the intention of removing APIs as they become available
+across all supported runtimes.
