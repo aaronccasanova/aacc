@@ -4,7 +4,22 @@
 // Add isBun
 // Add isCloudflareWorker
 
-/** @typedef {'node' | 'deno'} Runtime */
+/** @typedef {'browser' | 'deno' | 'node'} Runtime */
+
+/**
+ * Detects if the current runtime is the browser.
+ */
+export const isBrowser = () =>
+  !!(
+    typeof globalThis !== 'undefined' &&
+    globalThis.document &&
+    globalThis.document.createElement
+  )
+
+/**
+ * Detects if the current runtime is Deno.
+ */
+export const isDeno = () => Boolean('Deno' in globalThis)
 
 /**
  * Detects if the current runtime is Node.js.
@@ -14,26 +29,29 @@
 export const isNode = () => Boolean(globalThis.process?.versions?.node)
 
 /**
- * Detects if the current runtime is Deno.
- */
-export const isDeno = () => Boolean('Deno' in globalThis)
-
-/**
  * Returns the current runtime.
- * @returns {Runtime | 'unknown'}
+ * @returns {Runtime | null}
  */
 export const getRuntime = () => {
+  if (isBrowser()) {
+    return 'browser'
+  }
+  if (isDeno()) {
+    return 'deno'
+  }
   if (isNode()) {
     return 'node'
   }
 
-  if (isDeno()) {
-    return 'deno'
-  }
-
-  return 'unknown'
+  return null
 }
 
+/**
+ * Throws an error if the current runtime is not supported.
+ *
+ * @example
+ * if (!getRuntime()) throw new UnknownRuntimeError()
+ */
 export class UnknownRuntimeError extends Error {
   constructor() {
     super()
@@ -47,6 +65,8 @@ export class UnsupportedRuntimeAPIError extends Error {
   constructor(api) {
     super()
     this.name = 'UnsupportedRuntimeAPIError'
-    this.message = `Unsupported API [${api}] for the current runtime [${getRuntime()}]`
+    this.message = `Unsupported API [${api}] for the current runtime [${
+      getRuntime() ?? 'unknown'
+    }]`
   }
 }

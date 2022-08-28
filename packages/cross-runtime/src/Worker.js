@@ -1,4 +1,9 @@
-import { isDeno, isNode, UnsupportedRuntimeAPIError } from './utils.js'
+import {
+  isBrowser,
+  isDeno,
+  isNode,
+  UnsupportedRuntimeAPIError,
+} from './utils.js'
 
 /**
  * Private var to lazy assign the cross-runtime `Worker` class.
@@ -10,7 +15,7 @@ if (isNode()) {
   const webWorker = await import('web-worker')
   _Worker = webWorker.default
   ///
-} else if (isDeno()) {
+} else if (isDeno() || isBrowser()) {
   _Worker = globalThis.Worker
   ///
 } else {
