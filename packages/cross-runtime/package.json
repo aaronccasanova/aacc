@@ -35,7 +35,9 @@
     "src",
     "dist"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "web-worker": "^1.2.0"
+  },
   "devDependencies": {
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",

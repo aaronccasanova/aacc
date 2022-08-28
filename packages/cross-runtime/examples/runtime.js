@@ -1,5 +1,5 @@
-import { isDeno, isNode, getRuntime } from '../src/index.js'
+import * as cr from '../src/index.js'
 
-console.log('getRuntime:', getRuntime())
-console.log('isDeno:', isDeno())
-console.log('isNode:', isNode())
+console.log('getRuntime:', cr.getRuntime())
+console.log('isDeno:', cr.isDeno())
+console.log('isNode:', cr.isNode())

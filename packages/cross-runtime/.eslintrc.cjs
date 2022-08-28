@@ -20,4 +20,12 @@ module.exports = {
     'no-underscore-dangle': 'off',
     '@typescript-eslint/naming-convention': 'off',
   },
+  overrides: [
+    {
+      files: ['examples/**/*'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+  ],
 }

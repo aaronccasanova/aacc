@@ -136,6 +136,23 @@ import * as cr from 'cross-runtime'
 console.log(await cr.readFile(new URL('./hello.txt', import.meta.url)))
 ```
 
+## `Worker`
+
+Cross runtime Web `Worker` API. (See the
+[runtime support table](#runtime-support-table))
+
+```ts
+type Worker = typeof globalThis.Worker
+```
+
+```js
+import * as cr from 'cross-runtime'
+
+const worker = new cr.Worker(new URL('./worker.js', import.meta.url), {
+  type: 'module',
+})
+```
+
 ## Runtime Support Table
 
 | API          | Deno | Node.js | Browser | Cloudflare Workers | Bun  |
@@ -145,3 +162,4 @@ console.log(await cr.readFile(new URL('./hello.txt', import.meta.url)))
 | `getRuntime` | ✅   | ✅      | PARTIAL | TODO               | TODO |
 | `writeFile`  | ✅   | ✅      | N/A     | N/A                | TODO |
 | `readFile`   | ✅   | ✅      | N/A     | N/A                | TODO |
+| `Worker`     | ✅   | ✅      | ✅      | ?                  | TODO |

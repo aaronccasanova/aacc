@@ -1,10 +1,10 @@
-import { writeFile, getRuntime } from '../src/index.js'
+import * as cr from '../src/index.js'
 
-const runtime = getRuntime()
+const runtime = cr.getRuntime()
 const targetUrl = new URL(`./tmp/hello-${runtime}.txt`, import.meta.url)
 
-await writeFile(targetUrl, 'Hello ')
+await cr.writeFile(targetUrl, 'Hello ')
 
-await writeFile(targetUrl, `${runtime}!`, {
+await cr.writeFile(targetUrl, `${runtime}!`, {
   append: true,
 })
