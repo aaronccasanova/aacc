@@ -1,3 +1,5 @@
+/* eslint-disable max-classes-per-file */
+
 // TODO:
 // Add isBun
 // Add isCloudflareWorker

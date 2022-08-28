@@ -11,15 +11,19 @@ const defaultEncoding = 'utf-8'
 
 /** @typedef {(path: ReadFilePath, options?: ReadFileOptions) => Promise<string>} ReadFile */
 
-/** @type {ReadFile} */
+/**
+ * Private var to lazy assign the cross-runtime `readFile` function.
+ * @type {ReadFile}
+ */
 let _readFile
 
 if (isNode()) {
   const { readFile } = await import('node:fs/promises')
-  _readFile = (path, _options) => readFile(path, { encoding: defaultEncoding })
+  _readFile = (path /* , _options */) =>
+    readFile(path, { encoding: defaultEncoding })
   ///
 } else if (isDeno()) {
-  _readFile = (path, _options) => Deno.readTextFile(path)
+  _readFile = (path /* , _options */) => Deno.readTextFile(path)
   ///
 } else {
   throw new UnsupportedRuntimeAPIError('readFile')

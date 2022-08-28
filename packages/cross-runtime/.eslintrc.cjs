@@ -6,6 +6,7 @@ module.exports = {
   extends: ['@aacc/eslint-config/typescript'],
   globals: {
     globalThis: 'writeable',
+    Deno: 'readable',
   },
   parserOptions: {
     tsconfigRootDir: __dirname,
@@ -13,4 +14,10 @@ module.exports = {
     sourceType: 'module',
   },
   ignorePatterns: ['node_modules', 'dist'],
+  rules: {
+    'import/extensions': ['error', 'always'],
+    // Consider disabling globally. I have no issues using `_` to indicate private or unused
+    'no-underscore-dangle': 'off',
+    '@typescript-eslint/naming-convention': 'off',
+  },
 }

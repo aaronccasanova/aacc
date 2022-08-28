@@ -15,7 +15,10 @@ const defaultCreate = true
 
 /** @typedef {(path: WriteFilePath, data: string, options?: WriteFileOptions) => Promise<void>} WriteFile */
 
-/** @type {WriteFile} */
+/**
+ * Private var to lazy assign the cross-runtime `writeFile` function
+ * @type {WriteFile}
+ */
 let _writeFile
 
 if (isNode()) {
