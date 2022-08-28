@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.4
+
+### Patch Changes
+
+- [`40dbc53`](https://github.com/aaronccasanova/aacc/commit/40dbc532f6c830ce005accf203f395fc79144fcb)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - docs: Initial
+  README
+
 ## 0.0.3
 
 ### Patch Changes
