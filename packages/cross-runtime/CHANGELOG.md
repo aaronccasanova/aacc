@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.5
+
+### Patch Changes
+
+- [`0e20271`](https://github.com/aaronccasanova/aacc/commit/0e20271bd84c400cd6bcd25a6b0f88bf82823325)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - docs: Add
+  Runtime Support Table
+
 ## 0.0.4
 
 ### Patch Changes
