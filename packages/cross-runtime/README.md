@@ -50,7 +50,8 @@ The following APIs are available in all supported runtimes:
 
 ## `isDeno`
 
-Detects if the current runtime is Deno
+Detects if the current runtime is Deno. (See the
+[runtime support table](#runtime-support-table))
 
 ```ts
 type isDeno = () => boolean
@@ -64,11 +65,12 @@ cr.isDeno() && console.log('Hello deno!')
 
 ## `isNode`
 
+Detects if the current runtime is Node.js. (See the
+[runtime support table](#runtime-support-table))
+
 ```ts
 type isNode = () => boolean
 ```
-
-Detects if the current runtime is Node.js
 
 ```ts
 import * as cr from 'cross-runtime'
@@ -78,7 +80,8 @@ cr.isNode() && console.log('Hello node!')
 
 ## `getRuntime`
 
-Returns the current runtime
+Returns the current runtime. (See the
+[runtime support table](#runtime-support-table))
 
 ```ts
 type getRuntime = () => 'node' | 'deno' | 'unknown'
@@ -98,7 +101,8 @@ console.log(`Hello ${cr.getRuntime()}!`)
 
 ## `writeFile`
 
-Cross runtime `writeFile` API inspired by the Node.js and Deno built-ins.
+Cross runtime `writeFile` API inspired by the Node.js and Deno built-ins. (See
+the [runtime support table](#runtime-support-table))
 
 ```ts
 type writeFile = (
@@ -116,7 +120,8 @@ await cr.readFile(new URL('./hello.txt', import.meta.url), 'hello!')
 
 ## `readFile`
 
-Cross runtime `readFile` API inspired by the Node.js and Deno built-ins.
+Cross runtime `readFile` API inspired by the Node.js and Deno built-ins. (See
+the [runtime support table](#runtime-support-table))
 
 ```ts
 type readFile = (
@@ -130,3 +135,13 @@ import * as cr from 'cross-runtime'
 
 console.log(await cr.readFile(new URL('./hello.txt', import.meta.url)))
 ```
+
+## Runtime Support Table
+
+| API          | Deno | Node.js | Browser | Cloudflare Workers | Bun  |
+| ------------ | ---- | ------- | ------- | ------------------ | ---- |
+| `isDeno`     | ✅   | ✅      | ✅      | TODO               | TODO |
+| `isNode`     | ✅   | ✅      | ✅      | TODO               | TODO |
+| `getRuntime` | ✅   | ✅      | PARTIAL | TODO               | TODO |
+| `writeFile`  | ✅   | ✅      | N/A     | N/A                | TODO |
+| `readFile`   | ✅   | ✅      | N/A     | N/A                | TODO |
