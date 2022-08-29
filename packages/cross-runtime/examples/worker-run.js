@@ -32,7 +32,7 @@ await new Promise((resolve, reject) => {
         case 'on':
         default:
           worker.terminate()
-          resolve(`Bye ${runtime}!`)
+          resolve(`Bye ${runtime ?? 'unknown'}!`)
       }
     },
   )

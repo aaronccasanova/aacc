@@ -1,4 +1,4 @@
-import { isDeno, isNode, UnsupportedRuntimeAPIError } from './utils.js'
+import { isDeno, isBun, isNode, UnsupportedRuntimeAPIError } from './utils.js'
 
 /** @typedef {string | URL} WriteFilePath */
 
@@ -37,8 +37,28 @@ if (isNode()) {
       append: options?.append ?? defaultAppend,
       create: options?.create ?? defaultCreate,
     })
+} else if (isBun()) {
+  _writeFile = async (path, data, options) => {
+    // TODO: Polyfill Bun API
+    // - options.append - If true, read file and manually append to it
+    // - options.create - If false, check if file exists and manually throw error
+    if (options?.append) throw new Error('Bun does not support [append] mode')
+    if (options?.create) throw new Error('Bun does not support [create] mode')
+
+    await Bun.write(path, data)
+  }
 } else {
-  throw new UnsupportedRuntimeAPIError('writeFile')
+  const error = new UnsupportedRuntimeAPIError('writeFile')
+
+  // Unsupported API - Throw on call or member access
+  _writeFile = new Proxy(() => Promise.reject(error), {
+    get: () => {
+      throw error
+    },
+    set: () => {
+      throw error
+    },
+  })
 }
 
 /** @type {WriteFile} */

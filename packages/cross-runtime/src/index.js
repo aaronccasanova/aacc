@@ -1,6 +1,7 @@
 export {
   getRuntime,
   isBrowser,
+  isBun,
   isDeno,
   isNode,
   UnknownRuntimeError,

@@ -1,4 +1,4 @@
-import { isDeno, isNode, UnsupportedRuntimeAPIError } from './utils.js'
+import { isDeno, isNode, isBun, UnsupportedRuntimeAPIError } from './utils.js'
 
 /** @typedef {string | URL} ReadFilePath */
 
@@ -17,7 +17,7 @@ const defaultEncoding = 'utf-8'
  */
 let _readFile
 
-if (isNode()) {
+if (isNode() || isBun()) {
   const { readFile } = await import('node:fs/promises')
   _readFile = (path /* , _options */) =>
     readFile(path, { encoding: defaultEncoding })
@@ -26,7 +26,17 @@ if (isNode()) {
   _readFile = (path /* , _options */) => Deno.readTextFile(path)
   ///
 } else {
-  throw new UnsupportedRuntimeAPIError('readFile')
+  const error = new UnsupportedRuntimeAPIError('readFile')
+
+  // Unsupported API - Throw on call or member access
+  _readFile = new Proxy(() => Promise.reject(error), {
+    get: () => {
+      throw error
+    },
+    set: () => {
+      throw error
+    },
+  })
 }
 
 /** @type {ReadFile} */

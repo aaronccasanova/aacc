@@ -46,14 +46,14 @@ console.log(`Hello ${cr.getRuntime()}!`)
 
 ## Runtime Support Table
 
-| API                       | Deno | Node.js | Browser | Cloudflare Workers | Bun  |
-| ------------------------- | ---- | ------- | ------- | ------------------ | ---- |
-| [isDeno](#isdeno)         | ✅   | ✅      | ✅      | TODO               | TODO |
-| [isNode](#isnode)         | ✅   | ✅      | ✅      | TODO               | TODO |
-| [getRuntime](#getruntime) | ✅   | ✅      | PARTIAL | TODO               | TODO |
-| [writeFile](#writefile)   | ✅   | ✅      | N/A     | N/A                | TODO |
-| [readFile](#readfile)     | ✅   | ✅      | N/A     | N/A                | TODO |
-| [Worker](#worker)         | ✅   | ✅      | ✅      | ?                  | TODO |
+| API                       | Deno | Node.js | Browser | Cloudflare Workers | Bun     |
+| ------------------------- | ---- | ------- | ------- | ------------------ | ------- |
+| [isDeno](#isdeno)         | ✅   | ✅      | ✅      | TODO               | ✅      |
+| [isNode](#isnode)         | ✅   | ✅      | ✅      | TODO               | ✅      |
+| [getRuntime](#getruntime) | ✅   | ✅      | PARTIAL | TODO               | ✅      |
+| [writeFile](#writefile)   | ✅   | ✅      | N/A     | N/A                | PARTIAL |
+| [readFile](#readfile)     | ✅   | ✅      | N/A     | N/A                | ✅      |
+| [Worker](#worker)         | ✅   | ✅      | ✅      | ?                  | TODO    |
 
 ## APIs
 
@@ -128,6 +128,9 @@ import * as cr from 'cross-runtime'
 
 await cr.readFile(new URL('./hello.txt', import.meta.url), 'hello!')
 ```
+
+> - The Bun API is missing support for `append` and `create` (See issue
+>   [#564](https://github.com/oven-sh/bun/issues/564))
 
 ## `readFile`
 

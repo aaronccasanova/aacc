@@ -5,8 +5,9 @@ module.exports = {
   root: true,
   extends: ['@aacc/eslint-config/typescript'],
   globals: {
-    globalThis: 'writeable',
+    globalThis: 'readable',
     Deno: 'readable',
+    Bun: 'readable',
   },
   parserOptions: {
     tsconfigRootDir: __dirname,

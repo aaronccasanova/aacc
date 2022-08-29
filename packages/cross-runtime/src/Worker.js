@@ -19,7 +19,25 @@ if (isNode()) {
   _Worker = globalThis.Worker
   ///
 } else {
-  throw new UnsupportedRuntimeAPIError('Worker')
+  const error = new UnsupportedRuntimeAPIError('Worker')
+
+  // Unsupported API - Throw on call or member access
+  // @ts-ignore
+  _Worker = new Proxy(
+    class UnsupportedRuntime {
+      constructor() {
+        throw error
+      }
+    },
+    {
+      get: () => {
+        throw error
+      },
+      set: () => {
+        throw error
+      },
+    },
+  )
 }
 
 /** @type {typeof globalThis.Worker} */

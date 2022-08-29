@@ -4,7 +4,7 @@
 // Add isBun
 // Add isCloudflareWorker
 
-/** @typedef {'browser' | 'deno' | 'node'} Runtime */
+/** @typedef {'browser' | 'bun' | 'deno' | 'node'} Runtime */
 
 /**
  * Detects if the current runtime is the browser.
@@ -17,6 +17,17 @@ export const isBrowser = () =>
   )
 
 /**
+ * Detects if the current runtime is Bun.
+ * - https://stackoverflow.com/a/35813135
+ */
+export const isBun = () =>
+  Boolean(
+    typeof process !== 'undefined' &&
+      typeof process.versions.bun !== 'undefined' &&
+      process.isBun,
+  )
+
+/**
  * Detects if the current runtime is Deno.
  */
 export const isDeno = () => Boolean('Deno' in globalThis)
@@ -25,8 +36,14 @@ export const isDeno = () => Boolean('Deno' in globalThis)
  * Detects if the current runtime is Node.js.
  * - https://github.com/sindresorhus/make-asynchronous/blob/8be62c951084a3a950bc168f6a041c3d1d962cab/index.js#L4
  * - https://deno.com/blog/dnt-oak
+ * - https://stackoverflow.com/a/35813135
  */
-export const isNode = () => Boolean(globalThis.process?.versions?.node)
+export const isNode = () =>
+  typeof process !== 'undefined' &&
+  typeof process.versions.node !== 'undefined' &&
+  // Hacky solution to not falsely detect a Bun runtime.
+  // Reason: Bun's `process.versions.node` includes version and creates false positives.
+  typeof process.versions.bun === 'undefined'
 
 /**
  * Returns the current runtime.
@@ -35,6 +52,9 @@ export const isNode = () => Boolean(globalThis.process?.versions?.node)
 export const getRuntime = () => {
   if (isBrowser()) {
     return 'browser'
+  }
+  if (isBun()) {
+    return 'bun'
   }
   if (isDeno()) {
     return 'deno'
