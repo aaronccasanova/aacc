@@ -13,7 +13,7 @@ Collection of cross runtime APIs and utilities e.g.
 
 ### Node.js
 
-```bash
+```sh
 npm i cross-runtime
 ```
 
@@ -37,11 +37,25 @@ console.log(`Hello ${cr.getRuntime()}!`)
 ```
 
 ```js
-// deno run hello.js
+// deno run --import-map import-map.json hello.js
 import * as cr from 'cross-runtime'
 
 console.log(`Hello ${cr.getRuntime()}!`)
 // Hello deno!
+```
+
+### Bun
+
+```sh
+bun i cross-runtime
+```
+
+```js
+// bun hello.js
+import * as cr from 'cross-runtime'
+
+console.log(`Hello ${cr.getRuntime()}!`)
+// Hello bun!
 ```
 
 ## Runtime Support Table
@@ -50,6 +64,8 @@ console.log(`Hello ${cr.getRuntime()}!`)
 | ------------------------- | ---- | ------- | ------- | ------------------ | ------- |
 | [isDeno](#isdeno)         | ✅   | ✅      | ✅      | TODO               | ✅      |
 | [isNode](#isnode)         | ✅   | ✅      | ✅      | TODO               | ✅      |
+| [isBrowser](#isbrowser)   | ✅   | ✅      | ✅      | TODO               | ✅      |
+| [isBun](#isbun)           | ✅   | ✅      | ✅      | TODO               | ✅      |
 | [getRuntime](#getruntime) | ✅   | ✅      | PARTIAL | TODO               | ✅      |
 | [writeFile](#writefile)   | ✅   | ✅      | N/A     | N/A                | PARTIAL |
 | [readFile](#readfile)     | ✅   | ✅      | N/A     | N/A                | ✅      |
