@@ -1,5 +1,29 @@
 # cross-runtime
 
+## 0.0.7
+
+### Patch Changes
+
+- [`a12a633`](https://github.com/aaronccasanova/aacc/commit/a12a633b2868772ca914c7c2ef8b40b174cacee9)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Restructure
+  README
+
+* [`ab2bc3d`](https://github.com/aaronccasanova/aacc/commit/ab2bc3d94a0c06a0a958525124f3531d684f0e41)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Add browser
+  runtime support for the Web `Worker` API
+
+- [`ab2bc3d`](https://github.com/aaronccasanova/aacc/commit/ab2bc3d94a0c06a0a958525124f3531d684f0e41)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - **breaking
+  change:** `getRuntime` now returns `null` when the runtime is unknown
+
+* [`485d562`](https://github.com/aaronccasanova/aacc/commit/485d5621a3dc1b9d65ea9e0c53b00eb667448f27)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Initial Bun
+  runtime support
+
+- [`ab2bc3d`](https://github.com/aaronccasanova/aacc/commit/ab2bc3d94a0c06a0a958525124f3531d684f0e41)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Update runtime
+  detection utilities to support browsers
+
 ## 0.0.6
 
 ### Patch Changes
