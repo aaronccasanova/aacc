@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.8
+
+### Patch Changes
+
+- [`54bb501`](https://github.com/aaronccasanova/aacc/commit/54bb50106dbc993eaec0fa5d1a0ab6b8e24f328a)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Update support
+  table and add Bun installation example
+
 ## 0.0.7
 
 ### Patch Changes
