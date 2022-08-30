@@ -1,6 +1,7 @@
 # Cross Runtime
 
-Collection of cross runtime APIs and utilities - Write once run anywhere ¯\_(ツ)_/¯
+Collection of cross runtime APIs and utilities - Write once run anywhere ¯\_(ツ
+)\_/¯
 
 - Web Platform APIs
 - File System APIs
@@ -88,7 +89,7 @@ console.log(`Hello ${cr.getRuntime()}!`)
 | [isNode](#isnode)         | ✅   | ✅      | ✅      | TODO               | ✅      |
 | [isBrowser](#isbrowser)   | ✅   | ✅      | ✅      | TODO               | ✅      |
 | [isBun](#isbun)           | ✅   | ✅      | ✅      | TODO               | ✅      |
-| [getRuntime](#getruntime) | ✅   | ✅      | PARTIAL | TODO               | ✅      |
+| [getRuntime](#getruntime) | ✅   | ✅      | ✅      | TODO               | ✅      |
 | [writeFile](#writefile)   | ✅   | ✅      | N/A     | N/A                | PARTIAL |
 | [readFile](#readfile)     | ✅   | ✅      | N/A     | N/A                | ✅      |
 | [Worker](#worker)         | ✅   | ✅      | ✅      | ?                  | TODO    |
@@ -133,7 +134,7 @@ Returns the current runtime. (See the
 [runtime support table](#runtime-support-table))
 
 ```ts
-type getRuntime = () => 'node' | 'deno' | 'unknown'
+type getRuntime = () => 'browser' | 'bun' | 'deno' | 'node' | null
 ```
 
 ```js
