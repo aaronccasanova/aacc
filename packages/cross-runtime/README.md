@@ -58,6 +58,28 @@ console.log(`Hello ${cr.getRuntime()}!`)
 // Hello bun!
 ```
 
+### Browser
+
+```html
+<script
+  async
+  src="https://ga.jspm.io/npm:es-module-shims@1.5.17/dist/es-module-shims.js"
+></script>
+<script type="importmap">
+  {
+    "imports": {
+      "cross-runtime": "https://cdn.skypack.dev/cross-runtime"
+    }
+  }
+</script>
+<script type="module">
+  import * as cr from 'cross-runtime'
+
+  console.log(`Hello ${cr.getRuntime()}!`)
+  // Hello browser!
+</script>
+```
+
 ## Runtime Support Table
 
 | API                       | Deno | Node.js | Browser | Cloudflare Workers | Bun     |
@@ -142,7 +164,7 @@ type writeFile = (
 ```js
 import * as cr from 'cross-runtime'
 
-await cr.readFile(new URL('./hello.txt', import.meta.url), 'hello!')
+await cr.writeFile(new URL('./hello.txt', import.meta.url), 'hello!')
 ```
 
 > - The Bun API is missing support for `append` and `create` (See issue
