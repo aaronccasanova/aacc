@@ -1,5 +1,13 @@
 # cross-runtime
 
+## 0.0.9
+
+### Patch Changes
+
+- [`044380d`](https://github.com/aaronccasanova/aacc/commit/044380da2b18a5de002c400d69fe8d8ced60bcb2)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Add Browser
+  installation example
+
 ## 0.0.8
 
 ### Patch Changes
