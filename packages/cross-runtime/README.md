@@ -1,6 +1,6 @@
 # Cross Runtime
 
-Collection of cross runtime APIs and utilities e.g.
+Collection of cross runtime APIs and utilities - Write once run anywhere ¯\_(ツ)_/¯
 
 - Web Platform APIs
 - File System APIs
