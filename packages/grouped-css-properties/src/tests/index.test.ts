@@ -1,14 +1,21 @@
 import { all as knownCSSProperties } from 'known-css-properties'
 
 import { groupedCSSProperties } from '../index'
+import { unCategorized } from '../groups/un-categorized'
+import { unClassified } from '../groups/un-classified'
 
-const allGroupedCSSProperties = Object.values(groupedCSSProperties).flat()
+const allGroupedCSSProperties = Object.values({
+  ...groupedCSSProperties,
+  unCategorized,
+  unClassified,
+}).flat()
+
 type AllGroupedCSSProperties = typeof allGroupedCSSProperties
 
 /** Number of failing properties to display */
-const numberOfFailures = 20
+const numberOfFailures = Infinity
 
-describe.skip('groupedCSSProperties', () => {
+describe('groupedCSSProperties', () => {
   it('contains all known css properties', () => {
     const missingCSSProperties = knownCSSProperties.filter(
       (property) =>
@@ -21,9 +28,9 @@ describe.skip('groupedCSSProperties', () => {
 
     if (hasMissingCSSProperties) {
       process.stdout.write(
-        `missingCSSProperties: ${missingCSSProperties
+        `missingCSSProperties: '${missingCSSProperties
           .slice(0, numberOfFailures)
-          .join(', ')}\n\n`,
+          .join("', '")}'\n\n`,
       )
     }
 
@@ -39,9 +46,9 @@ describe.skip('groupedCSSProperties', () => {
 
     if (hasInvalidCSSProperties) {
       process.stdout.write(
-        `invalidCSSProperties: ${invalidCSSProperties
+        `invalidCSSProperties: '${invalidCSSProperties
           .slice(0, numberOfFailures)
-          .join(', ')}\n\n`,
+          .join("', '")}'\n\n`,
       )
     }
 
