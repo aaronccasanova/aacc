@@ -1,28 +1,45 @@
 import { isDeno, isBun, isNode, UnsupportedRuntimeAPIError } from './utils.js'
 
-/** @typedef {string | URL} WriteFilePath */
+type WriteFilePath = string | URL
 
-/**
- * @typedef {Object} WriteFileOptions
- * @prop {'utf-8'} [encoding='utf-8'] - Character encoding written to the file.
- * @prop {boolean} [append=false] - If true, append to a file instead of overwriting contents.
- * @prop {boolean} [create=true] - If true, create a file if one doesn't exist
- */
+type WriteFileEncoding = 'utf8' | 'uint8'
+
+interface WriteFileOptions<T extends WriteFileEncoding> {
+  /**
+   * Character encoding written to the file.
+   * @default 'utf8'
+   */
+  encoding?: T
+  /**
+   * If true, append to a file instead of overwriting contents.
+   * @default false
+   */
+  append?: boolean
+  /**
+   * If true, create a file if one doesn't exist.
+   * @default true
+   */
+  create?: boolean
+}
 
 const defaultEncoding = 'utf-8'
 const defaultAppend = false
 const defaultCreate = true
 
-/** @typedef {(path: WriteFilePath, data: string, options?: WriteFileOptions) => Promise<void>} WriteFile */
+type WriteFile<T extends WriteFileEncoding> = (
+  path: WriteFilePath,
+  data: string,
+  options?: WriteFileOptions<T>,
+) => Promise<void>
 
 /**
  * Private var to lazy assign the cross-runtime `writeFile` function
- * @type {WriteFile}
  */
-let _writeFile
+let _writeFile: WriteFile<'utf8'>
 
 if (isNode()) {
   const { writeFile } = await import('node:fs/promises')
+
   _writeFile = (path, data, options) =>
     writeFile(path, data, {
       encoding: defaultEncoding,
@@ -61,5 +78,4 @@ if (isNode()) {
   })
 }
 
-/** @type {WriteFile} */
-export const writeFile = _writeFile
+export const writeFile: WriteFile<'utf8'> = _writeFile

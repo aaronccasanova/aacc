@@ -5,20 +5,17 @@
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
   "type": "module",
-  "main": "src/index.js",
-  "module": "src/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./src/index.js",
-      "require": "./src/index.js"
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
-    "build": "tsc --emitDeclarationOnly",
+    "dev": "npm run build -- --watch",
+    "build": "rm -rf dist/* && tsc",
     "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
     "prepublishOnly": "npm run build",
     "deno-runtime": "deno run examples/runtime.js",

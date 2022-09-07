@@ -1,14 +1,17 @@
 /* eslint-disable max-classes-per-file */
 
 // TODO:
-// Add isBun
 // Add isCloudflareWorker
 
-/** @typedef {'browser' | 'bun' | 'deno' | 'node'} Runtime */
+const runtimes = ['browser', 'bun', 'deno', 'node'] as const
 
-/**
- * Detects if the current runtime is the browser.
- */
+export type Runtime = typeof runtimes[number]
+
+export function isRuntime(runtime?: string | null): runtime is Runtime {
+  return runtimes.includes(runtime as Runtime)
+}
+
+/** Detects if the current runtime is the browser. */
 export const isBrowser = () =>
   !!(
     typeof globalThis !== 'undefined' &&
@@ -27,9 +30,7 @@ export const isBun = () =>
       process.isBun,
   )
 
-/**
- * Detects if the current runtime is Deno.
- */
+/** Detects if the current runtime is Deno. */
 export const isDeno = () => Boolean('Deno' in globalThis)
 
 /**
@@ -45,11 +46,8 @@ export const isNode = () =>
   // Reason: Bun's `process.versions.node` includes version and creates false positives.
   typeof process.versions.bun === 'undefined'
 
-/**
- * Returns the current runtime.
- * @returns {Runtime | null}
- */
-export const getRuntime = () => {
+/** Returns the current runtime. */
+export const getRuntime = (): Runtime | null => {
   if (isBrowser()) {
     return 'browser'
   }
@@ -81,8 +79,8 @@ export class UnknownRuntimeError extends Error {
 }
 
 export class UnsupportedRuntimeAPIError extends Error {
-  /** @param {string} api - The unsupported API for the current runtime */
-  constructor(api) {
+  /** @param api - The unsupported API for the current runtime */
+  constructor(api: string) {
     super()
     this.name = 'UnsupportedRuntimeAPIError'
     this.message = `Unsupported API [${api}] for the current runtime [${

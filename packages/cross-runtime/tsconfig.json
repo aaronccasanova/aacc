@@ -4,7 +4,6 @@
     "module": "esnext",
     "outDir": "dist",
     "declarationDir": "dist/types",
-    "allowJs": true,
     "lib": ["WebWorker", "DOM"]
   },
   "include": ["src"],
