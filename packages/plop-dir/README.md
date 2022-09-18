@@ -46,6 +46,26 @@ export default async function (plop) {
 
 > Note: Currently, `plopDir` is only supported in asynchronous `plopfile`s.
 
+Example template directory:
+
+```
+plopfile.mjs
+src/
+templates/
+|__ my-generator/
+   |-- {{kebabCase extractedPrompt}}.js
+   |__ tests/
+      |__ {{kebabCase anotherPrompt}}.test.js
+```
+
+Example template file `{{kebabCase extractedPrompt}}.js`:
+
+```js
+export default function {{camelCase extractedPrompt}}() {
+  return '{{sentenceCase anotherPrompt}}'
+}
+```
+
 Run the `plop` CLI:
 
 ```sh
