@@ -33,7 +33,7 @@ import { plopDir } from 'plop-dir'
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 /** @param {import('plop').NodePlopAPI} plop */
-export default async function (plop) {
+export default async function run(plop) {
   plop.setGenerator(
     'my-generator',
     await plopDir({
@@ -47,7 +47,7 @@ export default async function (plop) {
 }
 ```
 
-> Note: Currently, `plopDir` is only supported in asynchronous `plopfile`s.
+> Note: Currently, `plopDir` is only supported in asynchronous `plopfile`s
 
 Example template directory:
 
@@ -78,7 +78,7 @@ export default function {{camelCase extractedPrompt}}() {
 Run the `plop` CLI:
 
 ```sh
-$ npx plop my-generator
+$ npm run plop my-generator
 Enter extractedPrompt: <answer>
 Enter anotherPrompt: <answer>
 ✔  plop-dir successfully wrote files to <outputDir>

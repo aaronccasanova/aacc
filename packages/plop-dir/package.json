@@ -23,7 +23,7 @@
     "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
     "test": "jest",
     "prepublishOnly": "npm run build",
-    "generate": "plop"
+    "plop": "plop"
   },
   "files": [
     "dist"

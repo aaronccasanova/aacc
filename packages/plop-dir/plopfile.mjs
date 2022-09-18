@@ -1,24 +1,22 @@
 import * as url from 'node:url'
+import * as path from 'node:path'
 
 import { plopDir } from './dist/esm/index.mjs'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention, no-underscore-dangle
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
+
 /** @param {import('plop').NodePlopAPI} plop */
 // eslint-disable-next-line import/no-default-export
-export default async function generate(plop) {
+export default async function run(plop) {
   plop.setGenerator(
-    'scss-migration',
+    'my-generator',
     await plopDir({
       plop,
-      templateDir: url.fileURLToPath(new URL('./templates', import.meta.url)),
-      outputDir: url.fileURLToPath(new URL('./src/nested', import.meta.url)),
+      // Path to my-generator templates
+      templateDir: path.join(__dirname, './templates/my-generator'),
+      // Path to output my-generator files
+      outputDir: path.join(__dirname, './tmp'),
     }),
   )
-
-  // plop.setGenerator(
-  //   'typescript-migration',
-  //   await plopDir(plop, {
-  //     templateDir: url.fileURLToPath(new URL('./templates', import.meta.url)),
-  //     outputDir: url.fileURLToPath(new URL('./src/nested', import.meta.url)),
-  //   }),
-  // )
 }
