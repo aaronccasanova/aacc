@@ -1,5 +1,13 @@
 # plop-dir
 
+## 0.0.3
+
+### Patch Changes
+
+- [`0ca985c`](https://github.com/aaronccasanova/aacc/commit/0ca985cc8522c6ddfa4f0417d6fc3b74f30079e5)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Add support to
+  override or extends inferred prompts
+
 ## 0.0.2
 
 ### Patch Changes
