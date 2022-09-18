@@ -1,0 +1,9 @@
+{
+  "extends": "@aacc/tsconfigs/node-library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "declarationDir": "dist/types"
+  },
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules", "dist"]
+}
