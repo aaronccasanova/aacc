@@ -1,5 +1,13 @@
 # plop-dir
 
+## 0.0.4
+
+### Patch Changes
+
+- [`46b5337`](https://github.com/aaronccasanova/aacc/commit/46b533702b79961339df2948b30b4892cd3d91df)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Improve README
+  examples
+
 ## 0.0.3
 
 ### Patch Changes
