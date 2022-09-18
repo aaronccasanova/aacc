@@ -1,6 +1,7 @@
 # plop-dir
 
-Directory based file generator built on Plop. Simply point to a directory and
+Directory based file generator built on
+[plop](https://www.npmjs.com/package/plop). Simply point to a directory and
 `plop-dir` will:
 
 - Parse each file path and content for handlebars templates
@@ -37,7 +38,9 @@ export default async function (plop) {
     'my-generator',
     await plopDir({
       plop,
+      // Path to my-generator templates
       templateDir: path.join(__dirname, './templates/my-generator'),
+      // Path to output my-generator files
       outputDir: path.join(__dirname, './src'),
     }),
   )
@@ -47,6 +50,9 @@ export default async function (plop) {
 > Note: Currently, `plopDir` is only supported in asynchronous `plopfile`s.
 
 Example template directory:
+
+> See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
+> available case modifiers
 
 ```
 plopfile.mjs
@@ -59,6 +65,9 @@ templates/
 ```
 
 Example template file `{{kebabCase extractedPrompt}}.js`:
+
+> See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
+> available case modifiers
 
 ```js
 export default function {{camelCase extractedPrompt}}() {
