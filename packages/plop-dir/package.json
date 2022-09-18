@@ -1,6 +1,6 @@
 {
   "name": "plop-dir",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Directory based file generator",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
