@@ -4,20 +4,28 @@ import * as fs from 'node:fs'
 // @ts-expect-error
 import type { NodePlopAPI, PlopGeneratorConfig } from 'plop'
 
-interface PlopDirOptions {
+type PlopPromptQuestion = Extract<PlopGeneratorConfig['prompts'], any[]>[number]
+
+export const plopDirActionType = 'plop-dir'
+
+export interface PlopDirOptions {
   plop: NodePlopAPI
   templateDir: string
   outputDir: string
   description?: string
-  // TODO: Add support for overriding inferred prompts
+  prompts?: Partial<PlopPromptQuestion>[]
 }
-
-export const plopDirActionType = 'plop-dir'
 
 export async function plopDir(
   options: PlopDirOptions,
 ): Promise<PlopGeneratorConfig> {
-  const { plop, templateDir, outputDir, description = '' } = options
+  const {
+    plop,
+    templateDir,
+    outputDir,
+    description = '',
+    prompts = [],
+  } = options
 
   const templateFiles = await getTemplateFiles(templateDir)
 
@@ -69,6 +77,7 @@ export async function plopDir(
       type: 'input',
       name: promptName,
       message: `Enter ${promptName}`,
+      ...prompts.find((prompt) => prompt.name === promptName),
     })),
     actions: [{ type: plopDirActionType }],
   }

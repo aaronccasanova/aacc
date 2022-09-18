@@ -42,6 +42,13 @@ export default async function run(plop) {
       templateDir: path.join(__dirname, './templates/my-generator'),
       // Path to output my-generator files
       outputDir: path.join(__dirname, './src'),
+      // Override or extend the inferred prompts
+      prompts: [
+        {
+          name: 'generatorName',
+          message: "What's the name of the generator?",
+        },
+      ],
     }),
   )
 }
