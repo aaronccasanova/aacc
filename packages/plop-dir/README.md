@@ -20,7 +20,7 @@ npm i -D plop plop-dir
 
 ## Usage
 
-`plop-dir` fits into your existing `plop` workflow.
+`plop-dir` fits into your existing `plop` workflow
 
 **`plopfile.mjs`**
 
