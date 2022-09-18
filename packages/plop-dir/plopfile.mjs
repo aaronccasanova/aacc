@@ -10,18 +10,18 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 // eslint-disable-next-line import/no-default-export
 export default async function run(plop) {
   plop.setGenerator(
-    'my-generator',
+    'my-template',
     await plopDir({
       plop,
-      // Path to my-generator templates
-      templateDir: path.join(__dirname, './templates/my-generator'),
-      // Path to output my-generator files
+      // Path to my-template templates
+      templateDir: path.join(__dirname, './templates/my-template'),
+      // Path to output my-template files
       outputDir: path.join(__dirname, './tmp'),
       // Override or extend the inferred prompts
       prompts: [
         {
-          name: 'generatorName',
-          message: "What's the name of the generator?",
+          name: 'templateName',
+          message: "What's the name of your template?",
         },
       ],
     }),

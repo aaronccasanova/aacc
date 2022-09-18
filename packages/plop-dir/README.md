@@ -35,18 +35,18 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 /** @param {import('plop').NodePlopAPI} plop */
 export default async function run(plop) {
   plop.setGenerator(
-    'my-generator',
+    'my-template',
     await plopDir({
       plop,
-      // Path to my-generator templates
-      templateDir: path.join(__dirname, './templates/my-generator'),
-      // Path to output my-generator files
+      // Path to my-template templates
+      templateDir: path.join(__dirname, './templates/my-template'),
+      // Path to output my-template files
       outputDir: path.join(__dirname, './src'),
       // Override or extend the inferred prompts
       prompts: [
         {
-          name: 'generatorName',
-          message: "What's the name of the generator?",
+          name: 'templateName',
+          message: "What's the name of your template?",
         },
       ],
     }),
@@ -65,28 +65,28 @@ Example template directory:
 plopfile.mjs
 src/
 templates/
-|__ my-generator/
-   |-- {{kebabCase extractedPrompt}}.js
+|__ my-template/
+   |-- {{kebabCase templateName}}.js
    |__ tests/
-      |__ {{kebabCase anotherPrompt}}.test.js
+      |__ {{kebabCase templateName}}.test.js
 ```
 
-Example template file `{{kebabCase extractedPrompt}}.js`:
+Example template file `my-template/tests/{{kebabCase templateName}}.js`:
 
 > See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
 > available case modifiers
 
 ```js
-export default function {{camelCase extractedPrompt}}() {
-  return '{{sentenceCase anotherPrompt}}'
+export default function {{camelCase testName}}() {
+  return '{{pascalCase templateName}}'
 }
 ```
 
 Run the `plop` CLI:
 
 ```sh
-$ npm run plop my-generator
-Enter extractedPrompt: <answer>
-Enter anotherPrompt: <answer>
+$ npm run plop my-template
+Whats the name of your template? <answer>
+Enter testName <answer>
 ✔  plop-dir successfully wrote files to <outputDir>
 ```
