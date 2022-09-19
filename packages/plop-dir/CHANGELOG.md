@@ -1,5 +1,13 @@
 # plop-dir
 
+## 0.0.5
+
+### Patch Changes
+
+- [`20e6b20`](https://github.com/aaronccasanova/aacc/commit/20e6b20fb5969802155519def025315ece1a7d78)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Update plop-dir
+  action handler to support multiple template dirs
+
 ## 0.0.4
 
 ### Patch Changes
