@@ -1,12 +1,22 @@
 import * as path from 'node:path'
 import * as fs from 'node:fs'
 
-// @ts-expect-error
-import type { NodePlopAPI, PlopGeneratorConfig } from 'plop'
+import type {
+  NodePlopAPI,
+  PlopGeneratorConfig,
+  CustomActionFunction,
+  // @ts-expect-error
+} from 'plop'
 
 type PlopPromptQuestion = Extract<PlopGeneratorConfig['prompts'], any[]>[number]
 
-export const plopDirActionType = 'plop-dir'
+const plopDirActionType = 'plop-dir'
+
+interface PlopDirActionData {
+  outputDir: PlopDirOptions['outputDir']
+  templateDir: PlopDirOptions['templateDir']
+  templateFiles: string[]
+}
 
 export interface PlopDirOptions {
   plop: NodePlopAPI
@@ -33,43 +43,13 @@ export async function plopDir(
     (await Promise.all(templateFiles.map(getTemplateFilePromptNames))).flat(),
   )
 
-  plop.setActionType(plopDirActionType, async (answers) => {
-    await Promise.all(
-      templateFiles.map(async (templateFile) => {
-        const templateFileContent = await fs.promises.readFile(
-          templateFile,
-          'utf8',
-        )
+  plop.setActionType(plopDirActionType, handlePlopDirActionType)
 
-        const renderedTemplateFileContent = plop.renderString(
-          templateFileContent,
-          answers,
-        )
-
-        const templateFilePath = templateFile
-          .replace(`${templateDir}${path.sep}`, '')
-          .replace('.hbs', '')
-
-        const outputTemplateFilePath = path.resolve(outputDir, templateFilePath)
-
-        const renderedTemplateFileOutputPath = plop.renderString(
-          outputTemplateFilePath,
-          answers,
-        )
-
-        await fs.promises.mkdir(path.dirname(renderedTemplateFileOutputPath), {
-          recursive: true,
-        })
-
-        await fs.promises.writeFile(
-          renderedTemplateFileOutputPath,
-          renderedTemplateFileContent,
-        )
-      }),
-    )
-
-    return `successfully wrote files to ${outputDir}`
-  })
+  const plopDirActionData: PlopDirActionData = {
+    outputDir,
+    templateDir,
+    templateFiles,
+  }
 
   return {
     description,
@@ -79,8 +59,58 @@ export async function plopDir(
       message: `Enter ${promptName}`,
       ...prompts.find((prompt) => prompt.name === promptName),
     })),
-    actions: [{ type: plopDirActionType }],
+    actions: [
+      {
+        type: plopDirActionType,
+        data: plopDirActionData,
+      },
+    ],
   }
+}
+
+type CustomActionFunctionArgs = Parameters<CustomActionFunction>
+
+async function handlePlopDirActionType(...args: CustomActionFunctionArgs) {
+  const [answers, config, plop] = args
+
+  const { outputDir, templateDir, templateFiles } =
+    config.data as PlopDirActionData
+
+  await Promise.all(
+    templateFiles.map(async (templateFile) => {
+      const templateFileContent = await fs.promises.readFile(
+        templateFile,
+        'utf8',
+      )
+
+      const renderedTemplateFileContent = plop.renderString(
+        templateFileContent,
+        answers,
+      )
+
+      const templateFilePath = templateFile
+        .replace(`${templateDir}${path.sep}`, '')
+        .replace('.hbs', '')
+
+      const outputTemplateFilePath = path.resolve(outputDir, templateFilePath)
+
+      const renderedTemplateFileOutputPath = plop.renderString(
+        outputTemplateFilePath,
+        answers,
+      )
+
+      await fs.promises.mkdir(path.dirname(renderedTemplateFileOutputPath), {
+        recursive: true,
+      })
+
+      await fs.promises.writeFile(
+        renderedTemplateFileOutputPath,
+        renderedTemplateFileContent,
+      )
+    }),
+  )
+
+  return `successfully wrote files to ${outputDir}`
 }
 
 const handlebarsTemplateRegExp = /{{(.+?)}}/g
