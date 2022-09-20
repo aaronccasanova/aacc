@@ -93,4 +93,4 @@ Enter testName <answer>
 
 ### That's it!
 
-Aside from configuring the `templateDir` and `outputDir`, you choose whether or not to add custom prompt messages or opt for a "zero config" approach where `plop-dir` generates prompts from the template file paths and content
+Aside from configuring the `templateDir` and `outputDir`, you choose whether or not to add custom prompt messages or opt for a "zero-config" approach where `plop-dir` generates prompts from the template file paths and content
