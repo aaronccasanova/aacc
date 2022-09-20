@@ -20,9 +20,21 @@ npm i -D plop plop-dir
 
 ## Usage
 
-`plop-dir` fits into your existing `plop` workflow
+### Example templates directory:
 
-**`plopfile.mjs`**
+```
+plopfile.mjs
+src/
+templates/
+|__ my-template/
+   |-- {{kebabCase templateName}}.js
+   |__ tests/
+      |__ {{kebabCase templateName}}.test.js
+```
+
+### `plopfile.mjs`
+
+`plop-dir` fits into your existing `plop` workflow
 
 ```mjs
 import * as url from 'node:url'
@@ -30,7 +42,7 @@ import * as path from 'node:path'
 
 import { plopDir } from 'plop-dir'
 
-const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 /** @param {import('plop').NodePlopAPI} plop */
 export default async function run(plop) {
@@ -56,25 +68,7 @@ export default async function run(plop) {
 
 > Note: Currently, `plopDir` is only supported in asynchronous `plopfile`s
 
-Example template directory:
-
-> See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
-> available case modifiers
-
-```
-plopfile.mjs
-src/
-templates/
-|__ my-template/
-   |-- {{kebabCase templateName}}.js
-   |__ tests/
-      |__ {{kebabCase templateName}}.test.js
-```
-
-Example template file `my-template/tests/{{kebabCase templateName}}.js`:
-
-> See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
-> available case modifiers
+### Example template file: `my-template/tests/{{kebabCase templateName}}.js`
 
 ```js
 export default function {{camelCase testName}}() {
@@ -82,7 +76,13 @@ export default function {{camelCase testName}}() {
 }
 ```
 
-Run the `plop` CLI:
+Note: `testName` is extracted from the file content (e.g.
+`{{camelCase testName}}`) and included as a `plop` prompt
+
+> See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
+> available case modifiers
+
+### Run the `plop` CLI:
 
 ```sh
 $ npm run plop my-template
