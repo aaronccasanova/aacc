@@ -1,5 +1,13 @@
 # plop-dir
 
+## 0.1.0
+
+### Minor Changes
+
+- [`c428e46`](https://github.com/aaronccasanova/aacc/commit/c428e460c7fc86b24045943e3d0d81a988d4f349)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Allow templates
+  in the outputDir config
+
 ## 0.0.6
 
 ### Patch Changes
