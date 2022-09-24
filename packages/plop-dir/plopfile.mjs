@@ -16,7 +16,7 @@ export default async function run(plop) {
       // Path to my-template templates
       templateDir: path.join(__dirname, './templates/my-template'),
       // Path to output my-template files
-      outputDir: path.join(__dirname, './tmp'),
+      outputDir: path.join(__dirname, './{{kebabCase outputDir}}'),
       // Override or extend the inferred prompts
       prompts: [
         {

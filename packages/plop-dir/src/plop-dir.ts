@@ -43,6 +43,8 @@ export async function plopDir(
     (await Promise.all(templateFiles.map(getTemplateFilePromptNames))).flat(),
   )
 
+  const outputDirPromptNames = getPromptNames(outputDir)
+
   plop.setActionType(plopDirActionType, handlePlopDirActionType)
 
   const plopDirActionData: PlopDirActionData = {
@@ -53,12 +55,14 @@ export async function plopDir(
 
   return {
     description,
-    prompts: templateFilesPromptNames.map((promptName) => ({
-      type: 'input',
-      name: promptName,
-      message: `Enter ${promptName}`,
-      ...prompts.find((prompt) => prompt.name === promptName),
-    })),
+    prompts: [...templateFilesPromptNames, ...outputDirPromptNames].map(
+      (promptName) => ({
+        type: 'input',
+        name: promptName,
+        message: `Enter ${promptName}`,
+        ...prompts.find((prompt) => prompt.name === promptName),
+      }),
+    ),
     actions: [
       {
         type: plopDirActionType,
@@ -76,6 +80,8 @@ async function handlePlopDirActionType(...args: CustomActionFunctionArgs) {
   const { outputDir, templateDir, templateFiles } =
     config.data as PlopDirActionData
 
+  const renderedOutputDir = plop.renderString(outputDir, answers)
+
   await Promise.all(
     templateFiles.map(async (templateFile) => {
       const templateFileContent = await fs.promises.readFile(
@@ -92,7 +98,10 @@ async function handlePlopDirActionType(...args: CustomActionFunctionArgs) {
         .replace(`${templateDir}${path.sep}`, '')
         .replace('.hbs', '')
 
-      const outputTemplateFilePath = path.resolve(outputDir, templateFilePath)
+      const outputTemplateFilePath = path.resolve(
+        renderedOutputDir,
+        templateFilePath,
+      )
 
       const renderedTemplateFileOutputPath = plop.renderString(
         outputTemplateFilePath,
@@ -110,7 +119,7 @@ async function handlePlopDirActionType(...args: CustomActionFunctionArgs) {
     }),
   )
 
-  return `successfully wrote files to ${outputDir}`
+  return `successfully wrote files to ${renderedOutputDir}`
 }
 
 const handlebarsTemplateRegExp = /{{(.+?)}}/g
