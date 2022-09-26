@@ -53,7 +53,7 @@ function App() {
 import { useListener } from 'use-listener'
 
 function App() {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = React.useRef<HTMLDivElement>(null)
 
   useListener('mouseover', (e) => console.log(e), ref)
 
@@ -72,9 +72,9 @@ import { useListener } from 'use-listener'
 
 function App() {
   const [element, ref] = useElementRef<HTMLParagraphElement>()
-  const [on, setOn] = useState(false)
+  const [on, setOn] = React.useState(false)
 
-  useListener('click', (e) => console.log(e), element)
+  useListener('mouseover', (e) => console.log(e), element)
 
   return (
     <div>
@@ -97,5 +97,5 @@ function useElementRef<T extends HTMLElement>() {
 }
 ```
 
-> Note: The `click` event and dynamically set `HTMLParagraphElement` target are
-> used to resolve the event object type (`MouseEvent`)
+> Note: The `mouseover` event and dynamically set `HTMLParagraphElement` target
+> are used to resolve the event object type (`MouseEvent`)
