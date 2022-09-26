@@ -4,6 +4,7 @@
   "workspaces": [
     "apps/*",
     "packages/*",
+    "hooks/*",
     "recipes/*"
   ],
   "scripts": {
