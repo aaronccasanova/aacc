@@ -46,26 +46,3 @@ npm run build -- --graph
 # Check formatting of all packages
 prettier --check '**/*.{js,ts,cjs,mjs,jsx,tsx,md}'
 ```
-
-#### TODO:
-
-- [ ] Add `vite-{ts,js}` package
-- [ ] Move TypeScript build and type-check up to the root of the monorepo. AC:
-  - [ ] Single `typescript` dependency
-  - [ ] Use TypeScript project references
-- [ ] Add storybook
-- [ ] Add jest setup (from designtokens.io) to rollup-babel-ts recipe
-- [ ] Update rollup-babel recipes to match designtokens.io's iife configuration
-- [ ] Create Typography classes transform
-- [ ] Experiment with xs to xl type scales
-- [ ] Create css baseline stylesheet
-- [x] Add `babel-{ts,js}` package
-- [x] Add `rollup-{ts,js}` package
-- [x] Add `webpack-{ts,js}` package
-- [x] Add `esbuild-{ts,js}` package
-- [x] Add eslint-config package
-- [x] Integrate eslint-config in all packages
-- [x] Add prettier-config package
-- [x] Integrate prettier-config in all packages
-- [x] Add CI workflow
-- [x] Move non-npm packages to a `recipes` directory
