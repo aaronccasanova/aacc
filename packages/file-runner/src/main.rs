@@ -54,7 +54,7 @@ fn main() {
 
             let chunked_io_slices: Vec<std::io::IoSlice> = formatted_files_chunk
                 .iter()
-                .map(|s| std::io::IoSlice::new(s.as_bytes()))
+                .map(|formatted_file| std::io::IoSlice::new(formatted_file.as_bytes()))
                 .collect();
 
             let mut child = std::process::Command::new("node")
@@ -64,15 +64,12 @@ fn main() {
                 .spawn()
                 .unwrap();
 
-            match child
+            child
                 .stdin
                 .as_mut()
                 .unwrap()
                 .write_vectored(&chunked_io_slices)
-            {
-                Err(why) => panic!("Couldn't write to child process stdin: {why}"),
-                Ok(_) => println!("Sent files to child process"),
-            }
+                .expect("Failed to write file paths to stdin");
 
             child.wait().unwrap()
         }));
