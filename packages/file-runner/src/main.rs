@@ -16,30 +16,24 @@ fn main() {
         .next()
         .expect("No pattern provided e.g. \"**/*.rs\"");
 
-    let mut files: Vec<String> = vec![];
-
-    for path_result in glob(&pattern).expect("Failed to read glob pattern") {
-        match path_result {
-            Err(err) => panic!("{err}"),
-            Ok(path) => {
-                let absolute_path = std::fs::canonicalize(&path)
-                    .unwrap()
-                    .into_os_string()
-                    .into_string()
-                    .unwrap();
-
-                files.push(absolute_path);
-            }
-        }
-    }
-
-    let mut chunked_files: Vec<Vec<String>> = vec![];
+    let files: Vec<String> = glob(&pattern)
+        .expect("Failed to read glob pattern")
+        .into_iter()
+        .map(|path| {
+            std::fs::canonicalize(path.unwrap())
+                .unwrap()
+                .into_os_string()
+                .into_string()
+                .unwrap()
+        })
+        .collect();
 
     let chunk_size = (files.len() / THREAD_POOL_SIZE as usize) + 1;
 
-    for files_chunk in files.chunks(chunk_size) {
-        chunked_files.push(files_chunk.to_vec());
-    }
+    let mut chunked_files: Vec<Vec<String>> = files
+        .chunks(chunk_size)
+        .map(|files_chunk| files_chunk.to_vec())
+        .collect();
 
     let mut children = vec![];
 
