@@ -1,20 +1,26 @@
 // cd packages/file-runner
-// cargo run "../**/*.mjs"
+// cargo run src/processor.mjs "../**/*.mjs"
 
 use glob::glob;
 use std::io::Write;
 
 // TODO: Make CLI option
-const THREAD_POOL_SIZE: u32 = 5;
+const THREAD_POOL_SIZE: usize = 5;
 
 fn main() {
     // TODO: Make CLI option
     let worker_path = "./src/worker.mjs";
 
-    let pattern = std::env::args()
-        .skip(1)
-        .next()
-        .expect("No pattern provided e.g. \"**/*.rs\"");
+    let mut args = std::env::args().skip(1);
+
+    let processor_path = args.next().expect("No processor path provided");
+    let processor_path = std::fs::canonicalize(processor_path)
+        .unwrap()
+        .into_os_string()
+        .into_string()
+        .unwrap();
+
+    let pattern = args.next().expect("No pattern provided e.g. \"**/*.rs\"");
 
     let files: Vec<String> = glob(&pattern)
         .expect("Failed to read glob pattern")
@@ -28,7 +34,16 @@ fn main() {
         })
         .collect();
 
-    let chunk_size = (files.len() / THREAD_POOL_SIZE as usize) + 1;
+    let num_of_files = files.len();
+
+    println!("Found {num_of_files} files\n");
+
+    let chunk_size = num_of_files / THREAD_POOL_SIZE;
+    let chunk_size = if chunk_size == 0 || chunk_size % 2 != 0 {
+        chunk_size + 1
+    } else {
+        chunk_size
+    };
 
     let mut chunked_files: Vec<Vec<String>> = files
         .chunks(chunk_size)
@@ -37,8 +52,9 @@ fn main() {
 
     let mut children = vec![];
 
-    for _i in 0..THREAD_POOL_SIZE {
+    for _ in 0..chunked_files.len() {
         let files_chunk = chunked_files.pop().unwrap();
+        let processor_path = processor_path.clone();
 
         children.push(std::thread::spawn(move || {
             let formatted_files_chunk: Vec<String> = files_chunk
@@ -59,6 +75,7 @@ fn main() {
 
             let mut child = std::process::Command::new("node")
                 .arg(worker_path)
+                .arg(processor_path)
                 .stdin(std::process::Stdio::piped())
                 .stdout(std::process::Stdio::inherit())
                 .spawn()

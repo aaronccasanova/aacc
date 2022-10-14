@@ -1,17 +1,26 @@
-import * as readline from 'node:readline'
+/**
+ * Parameter: async iterable of chunks (strings)
+ * Result: async iterable of lines (incl. newlines)
+ */
+export async function* chunksToLines(chunksAsync, withNewlines = false) {
+  let previous = ''
 
-export async function getStdinFiles() {
-  const files = []
+  for await (const chunk of chunksAsync) {
+    previous += chunk
 
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
-  })
+    let eolIndex
 
-  for await (const line of rl) {
-    files.push(line)
+    while ((eolIndex = previous.indexOf('\n')) >= 0) {
+      // line includes the EOL
+      const line = previous.slice(0, withNewlines ? eolIndex + 1 : eolIndex)
+
+      yield line
+
+      previous = previous.slice(eolIndex + 1)
+    }
   }
 
-  return files
+  if (previous.length > 0) {
+    yield previous
+  }
 }
