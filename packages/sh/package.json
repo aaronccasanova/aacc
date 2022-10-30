@@ -1,6 +1,6 @@
 {
   "name": "@aacc/sh",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Execa wrapper exposing a tagged templates API for executing shell commands",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
