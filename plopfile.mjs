@@ -15,7 +15,8 @@ const scopeNamePrompt = {
   name: 'scopeName',
   message: 'Optional registry scope name (e.g. @aacc)',
   suffix: ' Enter to skip',
-  transform: (input) => (input.endsWith('/') ? input : `${input}/`),
+  // TODO: Investigate why this is not working
+  // transformer: (input) => (!input || input.endsWith('/') ? input : `${input}/`),
 }
 
 const outputDirPrompt = {
