@@ -1,6 +1,6 @@
 {
   "name": "execa-extra",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Execa wrapper exposing tagged templates APIs",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
