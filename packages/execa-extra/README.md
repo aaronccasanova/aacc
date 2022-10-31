@@ -5,7 +5,7 @@ APIs
 
 ## Installation
 
-```execaCommand
+```sh
 npm install execa-extra
 ```
 
@@ -38,7 +38,10 @@ await execaCommand({ stdio: 'inherit' })`echo 'Hello world'`
 ```js
 import { execaCommand } from 'execa-extra'
 
-await execaCommand({ stdio: 'inherit', shell: true })`echo 'Hello world' | wc -w`
+await execaCommand({
+  stdio: 'inherit',
+  shell: true,
+})`echo 'Hello world' | wc -w`
 ```
 
 > See the
