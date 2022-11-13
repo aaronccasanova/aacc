@@ -1,6 +1,6 @@
 {
   "name": "type-guarden",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Collection of type guards for TypeScript",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
