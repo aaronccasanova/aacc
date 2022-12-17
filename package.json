@@ -19,7 +19,7 @@
     "version-packages": "changeset version",
     "release": "turbo run build && changeset publish",
     "tasks": "node scripts/tasks.mjs",
-    "generate": "plop"
+    "generate": "npm run build -- --filter=plop-dir && plop"
   },
   "devDependencies": {
     "@aacc/eslint-config": "*",
