@@ -6,8 +6,8 @@ Randomizes samples from a target directory and hard links them to another
 
 ```sh
 npx randsamp \
-	--target ./path/to/target-directory \
-	--output ./path/to/output-directory
+  --target ./path/to/target-directory \
+  --output ./path/to/output-directory
 ```
 
 ## Options
