@@ -44,7 +44,7 @@ export async function randsamp(options: RandsampOptions) {
   )
 
   if (!sampleFiles.length) {
-    throw new Error('No sample found.')
+    throw new Error('No samples found.')
   }
 
   const randomizedSampleFiles = sampleFiles.sort(() => Math.random() - 0.5)
