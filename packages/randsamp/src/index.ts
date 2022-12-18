@@ -47,9 +47,9 @@ export async function randsamp(options: RandsampOptions) {
     throw new Error('No samples found.')
   }
 
-  const randomizedSampleFiles = sampleFiles.sort(() => Math.random() - 0.5)
+  const shuffledSampleFiles = shuffle(sampleFiles)
 
-  const targetSampleFiles = randomizedSampleFiles.slice(0, sampleCount)
+  const targetSampleFiles = shuffledSampleFiles.slice(0, sampleCount)
 
   if (!fs.existsSync(absoluteOutputDir)) {
     await fs.promises.mkdir(absoluteOutputDir)
@@ -72,4 +72,26 @@ export async function randsamp(options: RandsampOptions) {
       }
     }),
   )
+}
+
+// https://stackoverflow.com/a/2450976
+function shuffle(array: string[]) {
+  let currentIndex: number = array.length
+  let randomIndex: number
+
+  // While there remain elements to shuffle.
+  while (currentIndex !== 0) {
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex -= 1
+
+    // And swap it with the current element.
+    // eslint-disable-next-line no-param-reassign
+    ;[array[currentIndex], array[randomIndex]] = [
+      array[randomIndex]!,
+      array[currentIndex]!,
+    ]
+  }
+
+  return array
 }
