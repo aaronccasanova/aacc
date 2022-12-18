@@ -1,6 +1,6 @@
 {
   "name": "randsamp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Randomizes samples from a target directory and hard links them to another",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
