@@ -1,0 +1,15 @@
+{
+  // "extends": "@aacc/tsconfigs/node-library.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "outDir": "dist",
+    "declarationDir": "dist/types",
+    "allowJs": true,
+    "lib": ["WebWorker", "DOM"],
+    "declaration": true,
+    "declarationMap": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
