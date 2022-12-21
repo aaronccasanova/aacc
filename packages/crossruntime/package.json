@@ -1,6 +1,6 @@
 {
   "name": "crossruntime",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Collection of cross runtime constants and utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
