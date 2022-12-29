@@ -1,0 +1,5 @@
+---
+'promptcreatives': patch
+---
+
+Fix README
