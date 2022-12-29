@@ -1,5 +1,0 @@
----
-'promptcreatives': patch
----
-
-Initial release
