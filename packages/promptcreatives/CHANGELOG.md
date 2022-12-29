@@ -1,5 +1,12 @@
 # promptcreatives
 
+## 0.0.2
+
+### Patch Changes
+
+- [`59894b1`](https://github.com/aaronccasanova/aacc/commit/59894b17ad10f8f4b7ea06d07d6a352e99e5b36b)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Fix README
+
 ## 0.0.1
 
 ### Patch Changes
