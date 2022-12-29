@@ -1,6 +1,6 @@
 # promptcreatives
 
-Playground for prompt engineering
+Community of prompt creatives
 
 ## Installation
 
