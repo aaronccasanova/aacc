@@ -1,0 +1,11 @@
+{
+  "presets": [
+    [
+      "@aacc/babel-preset",
+      {
+        "typescript": true,
+        "react": true
+      }
+    ]
+  ]
+}
