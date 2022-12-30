@@ -1,4 +1,4 @@
-# use-websocket
+# (WIP) use-websocket
 
 Base abstraction for using WebSockets in React
 
