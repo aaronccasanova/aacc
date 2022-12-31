@@ -1,6 +1,6 @@
 {
   "name": "use-websocket",
-  "version": "0.0.0",
+  "version": "0.1.2",
   "description": "Base abstraction for using WebSockets in React",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
