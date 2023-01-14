@@ -8,7 +8,7 @@
   Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - BREAKING:
   `execa-extra` improvements
 
-  - Renamed `execaCommand` to `# execa-extra
+  - Renamed `execaCommand` to `$`
   - Removed `createExecaCommand` API
   - Introduced `$.sync` API
   - Improved template parsing and escaping logic (Thanks
