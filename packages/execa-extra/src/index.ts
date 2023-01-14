@@ -14,9 +14,14 @@ type $Result<T extends TemplatesOrOptions> = T extends TemplateStringsArray
       ? ExecaChildProcess<Buffer>
       : ExecaChildProcess
 
-type ExecaCommandResult<T> = T extends TemplateStringsArray
-  ? ReturnType<typeof runExecaCommand>
-  : ConfiguredExecaCommand
+type $SyncResult<T extends TemplatesOrOptions> = T extends TemplateStringsArray
+  ? ExecaSyncReturnValue
+  : (
+      templates: TemplateStringsArray,
+      ...expressions: Expression[]
+    ) => T extends { encoding: null }
+      ? ExecaSyncReturnValue<Buffer>
+      : ExecaSyncReturnValue
 
 export function $<T extends TemplatesOrOptions>(
   templatesOrOptions: T,
@@ -38,13 +43,24 @@ export function $<T extends TemplatesOrOptions>(
   }) as $Result<T>
 }
 
-  return createExecaCommand(templatesOrOptions) as ExecaCommandResult<T>
-}
-
-export function createExecaCommand(options: Options): ConfiguredExecaCommand {
-  return function configuredExecaCommand(templates, ...expressions) {
-    return runExecaCommand(templates, expressions, options)
+$.sync = <T extends TemplatesOrOptions>(
+  templatesOrOptions: T,
+  ...expressions: Expression[]
+): $SyncResult<T> => {
+  if (isTemplateStringsArray(templatesOrOptions)) {
+    const [file = '', ...args] = parseTemplates(templatesOrOptions, expressions)
+    return execa.sync(file, args) as $SyncResult<T>
   }
+
+  return ((templates, ...innerExpressions) => {
+    const [file = '', ...args] = parseTemplates(templates, innerExpressions)
+    return execa.sync(
+      file,
+      args,
+      // @ts-expect-error - Execa types do allow `null` for `encoding`
+      templatesOrOptions,
+    )
+  }) as $SyncResult<T>
 }
 
 function runExecaCommand(
