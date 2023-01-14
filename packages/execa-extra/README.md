@@ -11,12 +11,22 @@ npm install execa-extra
 
 ## Usage
 
-### Basic
+### `$` API
 
 ```js
-import { execaCommand } from 'execa-extra'
+import { $ } from 'execa-extra'
 
-const { stdout } = await execaCommand`echo 'Hello world'`
+const { stdout } = await $`echo 'Hello world'`
+
+console.log(stdout)
+```
+
+### `$.sync` API
+
+```js
+import { $ } from 'execa-extra'
+
+const { stdout } = $.sync`echo 'Hello world'`
 
 console.log(stdout)
 ```
@@ -24,40 +34,34 @@ console.log(stdout)
 ### With options
 
 ```js
-import { execaCommand } from 'execa-extra'
+import { $ } from 'execa-extra'
 
-await execaCommand({ stdio: 'inherit' })`echo 'Hello world'`
+await $({ stdio: 'inherit' })`echo 'Hello world'`
 ```
 
-> See the
-> [execaCommand](https://github.com/sindresorhus/execa#execacommandcommand-options)
-> documentation for details on the available options
+> See the [execa](https://github.com/sindresorhus/execa#options) documentation
+> for details on the available options
 
 ### With shell syntax
 
 ```js
-import { execaCommand } from 'execa-extra'
+import { $ } from 'execa-extra'
 
-await execaCommand({
-  stdio: 'inherit',
-  shell: true,
-})`echo 'Hello world' | wc -w`
+await $({ stdio: 'inherit', shell: true })`echo 'Hello world' | wc -w`
 ```
 
-> See the
-> [execaCommand](https://github.com/sindresorhus/execa#execacommandcommand-options)
-> documentation for details on the available options
+> See the [execa](https://github.com/sindresorhus/execa#options) documentation
+> for details on the available options
 
-### Create `execaCommand` API with pre-configured options
+### With pre-configured options
 
 ```js
-import { createExecaCommand } from 'execa-extra'
+import { $ } from 'execa-extra'
 
-const execaCommand = createExecaCommand({ stdio: 'inherit', shell: true })
+const my$ = $({ stdio: 'inherit', shell: true })
 
-await execaCommand`echo 'Hello world' | wc -w`
+await my$`echo 'Hello world' | wc -w`
 ```
 
-> See the
-> [execaCommand](https://github.com/sindresorhus/execa#execacommandcommand-options)
-> documentation for details on the available options
+> See the [execa](https://github.com/sindresorhus/execa#options) documentation
+> for details on the available options
