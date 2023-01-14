@@ -1,6 +1,6 @@
 import { command, Options, ExecaChildProcess } from 'execa'
 
-type Expressions = (string | number)[]
+const SPACES_REGEXP = / +/g
 
 type TemplatesOrOptions = TemplateStringsArray | Options<string | null>
 type Expression = string | number | Array<string | number>
@@ -63,18 +63,30 @@ $.sync = <T extends TemplatesOrOptions>(
   }) as $SyncResult<T>
 }
 
-function runExecaCommand(
+function parseTemplate(
+  template: string,
+  index: number,
   templates: TemplateStringsArray,
-  expressions: Expressions,
-  options?: Options,
-): ExecaChildProcess<string> {
-  return command(join(templates, expressions), options)
+  expressions: Expression[],
+) {
+  const templateString = template ?? templates.raw[index]
+  const templateTokens = templateString.split(SPACES_REGEXP).filter(Boolean)
+
+  if (index === expressions.length) return templateTokens
+
+  const expression = expressions[index]
+
+  return Array.isArray(expression)
+    ? [...templateTokens, ...expression.map(String)]
+    : [...templateTokens, String(expression)]
 }
 
-function join(templates: TemplateStringsArray, expressions: Expressions) {
-  return templates.reduce(
-    (acc, template, i) => `${acc}${template}${expressions[i] ?? ''}`,
-    '',
+function parseTemplates(
+  templates: TemplateStringsArray,
+  expressions: Expression[],
+) {
+  return templates.flatMap((template, index) =>
+    parseTemplate(template, index, templates, expressions),
   )
 }
 
