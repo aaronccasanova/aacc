@@ -1,4 +1,4 @@
-import { command, Options, ExecaChildProcess } from 'execa'
+import execa, { Options, ExecaChildProcess, ExecaSyncReturnValue } from 'execa'
 
 const SPACES_REGEXP = / +/g
 
