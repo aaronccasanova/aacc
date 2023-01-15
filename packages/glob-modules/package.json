@@ -1,6 +1,6 @@
 {
   "name": "glob-modules",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Glob modules resolver for file convention based systems",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
