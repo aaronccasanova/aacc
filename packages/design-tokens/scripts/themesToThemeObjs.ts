@@ -5,6 +5,7 @@ import type * as tf from 'type-fest'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as ts from 'typescript'
+// @ts-ignore
 import set from 'just-safe-set'
 import * as dt from 'designtokens.io'
 
