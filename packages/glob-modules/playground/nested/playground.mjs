@@ -1,14 +1,14 @@
 import * as path from 'node:path'
 import * as url from 'node:url'
-import { globModules as globModulesRaw } from '../dist/esm/index.mjs'
+import { globModules as globModulesRaw } from '../../dist/esm/index.mjs'
 
-/** @type {import('../dist/types/index.js').globModules} */
+/** @type {import('../../dist/types/index.js').globModules} */
 // @ts-ignore
 const globModules = globModulesRaw
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
-const modules = await globModules('./modules/*.mjs', {
+const modules = await globModules('../modules/*.mjs', {
   importMeta: import.meta,
 })
 console.log('modules:', modules)
@@ -20,7 +20,7 @@ console.log('modules:', modules)
   },
 } */
 
-const nestedModules = await globModules('./modules/nested-modules/*.mjs', {
+const nestedModules = await globModules('../modules/nested-modules/*.mjs', {
   importMeta: import.meta,
 })
 console.log('nestedModules:', nestedModules)
@@ -34,7 +34,7 @@ console.log('nestedModules:', nestedModules)
   },
 } */
 
-const allModules = await globModules('./modules/**/*.mjs', {
+const allModules = await globModules('../modules/**/*.mjs', {
   cwd: __dirname,
 })
 console.log('allModules:', allModules)
@@ -51,7 +51,7 @@ console.log('allModules:', allModules)
   },
 } */
 
-const cjsModules = await globModules('./modules/**/*.js', {
+const cjsModules = await globModules('../modules/**/*.js', {
   cwd: __dirname,
 })
 console.log('cjsModules:', cjsModules)

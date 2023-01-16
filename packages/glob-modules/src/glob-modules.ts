@@ -14,7 +14,7 @@ function getCWD(options: GlobModulesCWDOptions) {
     return path.dirname(url.fileURLToPath(options.importMeta.url))
   }
 
-  throw new Error('globModules: cwd or importMeta must be specified')
+  throw new Error('`options.cwd` or `options.importMeta` must be specified')
 }
 
 type GlobbyParameters = Parameters<typeof globby>
@@ -43,29 +43,53 @@ export async function globModules<T extends GlobModulesResult>(
 
   const modules: GlobModulesResult = {}
 
-  const modulePaths = await globby(patterns, { cwd })
+  const modulePaths = await globby(patterns, {
+    absolute: true,
+    cwd,
+  })
+
+  if (!modulePaths.length) {
+    throw new Error(`Cannot find modules for patterns: ${patterns.toString()}`)
+  }
+
+  const commonParentModuleDir = getCommonParentModuleDir(cwd, modulePaths)
 
   for (const modulePath of modulePaths) {
-    const moduleSpecifier = path.join(cwd, modulePath)
+    // TODO: Investigate a Promise.all() implementation.
+    // eslint-disable-next-line no-await-in-loop
+    const mod = (await import(modulePath)) as { [modName: string]: any }
 
-    const moduleName = path.parse(moduleSpecifier).name
-
-    const moduleSegments = moduleSpecifier
-      .replace(`${cwd}${path.sep}`, '')
+    const moduleSegments = modulePath
+      .slice(1)
+      .replace(`${commonParentModuleDir}${path.sep}`, '')
       .split(path.sep)
-      .filter(Boolean)
 
-    // NOTE: This POC assumes only one extension type was
-    //       used in the glob pattern.
-    moduleSegments[moduleSegments.length - 1] = moduleName
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, no-await-in-loop
-    const mod: { [modName: string]: any } = await import(moduleSpecifier)
+    // NOTE: This POC assumes only one extension type was used in the glob pattern.
+    moduleSegments[moduleSegments.length - 1] = path.parse(modulePath).name
 
     for (const modName of Object.keys(mod)) {
-      safeSet(modules, [...moduleSegments, modName], mod[modName])
+      safeSet(modules, moduleSegments.concat(modName), mod[modName])
     }
   }
 
   return modules as T
+}
+
+function getCommonParentModuleDir(cwd: string, modulePaths: string[]) {
+  // NOTE: All paths are assumed to be absolute.
+  const commonParentModuleSegments = cwd.slice(1).split(path.sep)
+
+  for (const modulePath of modulePaths) {
+    const moduleSegments = modulePath.slice(1).split(path.sep)
+
+    for (const [i, moduleSegment] of moduleSegments.entries()) {
+      if (moduleSegment !== commonParentModuleSegments[i]) {
+        commonParentModuleSegments.splice(i, Infinity) // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice#deletecount
+
+        break
+      }
+    }
+  }
+
+  return commonParentModuleSegments.join(path.sep)
 }
