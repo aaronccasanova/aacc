@@ -1,5 +1,14 @@
 # @aacc/tsconfigs
 
+## 0.0.4
+
+### Patch Changes
+
+- [#75](https://github.com/aaronccasanova/aacc/pull/75)
+  [`6ad0ce0`](https://github.com/aaronccasanova/aacc/commit/6ad0ce0fa7fd7c7a2c951833fb1616d43b6ebda7)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Upgraded
+  minimum Node.js version to 16
+
 ## 0.0.3
 
 ### Patch Changes
