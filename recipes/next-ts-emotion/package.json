@@ -19,7 +19,7 @@
   "devDependencies": {
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
-    "@types/node": "18.0.0",
+    "@types/node": "^18.0.0",
     "@types/react": "^17.0.0",
     "eslint-config-next": "12.3.4",
     "eslint": "^8.16.0",
