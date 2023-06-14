@@ -1,5 +1,14 @@
 # @aacc/eslint-config
 
+## 0.0.6
+
+### Patch Changes
+
+- [#85](https://github.com/aaronccasanova/aacc/pull/85)
+  [`3c166a1`](https://github.com/aaronccasanova/aacc/commit/3c166a1c6be25475cc5621f1543a71f176f8ae8c)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Upgraded
+  `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` versions
+
 ## 0.0.5
 
 ### Patch Changes
