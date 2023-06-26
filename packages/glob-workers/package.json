@@ -1,12 +1,12 @@
 {
   "name": "glob-workers",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
+  "bin": "bin/glob-workers.mjs",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.mjs",
-  "browser": "dist/browser/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
@@ -26,10 +26,14 @@
     "prepublishOnly": "npm run build"
   },
   "files": [
+    "bin",
     "dist"
   ],
-  "peerDependencies": {},
-  "dependencies": {},
+  "dependencies": {
+    "debug": "^4.3.4",
+    "globby": "^11.1.0",
+    "piscina": "^4.0.0"
+  },
   "devDependencies": {
     "@aacc/babel-preset": "*",
     "@aacc/browserslist-config": "*",
@@ -38,6 +42,7 @@
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
+    "@types/debug": "^4.1.8",
     "rollup": "^2.70.2",
     "typescript": "^4.7.3"
   },

@@ -8,6 +8,8 @@
   "include": [
     // Paths to lint
     "src",
+    "bin/glob-workers.mjs",
+    "examples",
     ".eslintrc.js",
     "rollup.config.js"
   ]

@@ -6,15 +6,13 @@ import babel from '@rollup/plugin-babel'
 
 import pkg from './package.json'
 
-const name = 'globWorkers'
-
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
 /**
  * @type {import('rollup').RollupOptions}
  */
 export default {
-  input: 'src/index.ts',
+  input: ['src/index.ts', 'src/glob-worker.ts'],
   output: [
     {
       format: /** @type {const} */ ('cjs'),
@@ -27,14 +25,6 @@ export default {
       entryFileNames: '[name][assetExtname].mjs',
       dir: path.dirname(pkg.module),
       preserveModules: true,
-    },
-    {
-      format: /** @type {const} */ ('iife'),
-      file: pkg.browser,
-      name,
-
-      // https://rollupjs.org/guide/en/#outputglobals
-      // globals: {},
     },
   ],
   plugins: [
@@ -50,8 +40,5 @@ export default {
       include: ['src/**/*'],
     }),
   ],
-  external: [
-    ...Object.keys(pkg.dependencies ?? {}),
-    ...Object.keys(pkg.peerDependencies ?? {}),
-  ],
+  external: Object.keys(pkg.dependencies),
 }
