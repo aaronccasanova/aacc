@@ -25,7 +25,8 @@ export type GlobWorkersOptions = {
   /** Glob pattern of files to process. */
   glob: GlobbyParameters[0]
   /** Glob options such as cwd, ignore patterns, etc. */
-  globOptions?: GlobWorkersOptionsCWD & Omit<GlobbyParameters[1], 'cwd'>
+  globOptions?: GlobWorkersOptionsCWD &
+    Omit<GlobbyParameters[1], 'cwd' | 'absolute'>
   /** Path to the worker module. */
   worker: string
   /** Worker options such as cwd, ignore patterns, etc. */
@@ -65,6 +66,7 @@ export async function globWorkers(options: GlobWorkersOptions): Promise<void> {
   log('Resolving glob')
 
   const files = await globby(options.glob, {
+    ...options.globOptions,
     cwd: getCWD(options.globOptions),
     absolute: true,
   })

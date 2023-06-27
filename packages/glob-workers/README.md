@@ -56,7 +56,7 @@ interface WorkerOptions {
 ## JavaScript API
 
 ```sh
-npm i glob-modules
+npm i glob-workers
 ```
 
 ```ts
