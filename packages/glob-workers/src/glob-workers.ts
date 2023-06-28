@@ -11,22 +11,17 @@ const log = debug('glob-workers')
 
 type GlobbyParameters = Parameters<typeof globby>
 
-type GlobWorkersOptionsCWD =
-  | {
-      cwd?: string
-      importMeta?: never
-    }
-  | {
-      importMeta?: ImportMeta
-      cwd?: never
-    }
+interface GlobWorkersOptionsCWD {
+  /** @default process.cwd() */
+  cwd?: URL | string
+}
 
 export type GlobWorkersOptions = {
   /** Glob pattern of files to process. */
   glob: GlobbyParameters[0]
   /** Glob options such as cwd, ignore patterns, etc. */
   globOptions?: GlobWorkersOptionsCWD &
-    Omit<GlobbyParameters[1], 'cwd' | 'absolute'>
+    Omit<NonNullable<GlobbyParameters[1]>, 'cwd' | 'absolute'>
   /** Path to the worker module. */
   worker: string
   /** Worker options such as cwd, ignore patterns, etc. */
@@ -67,6 +62,9 @@ export async function globWorkers(options: GlobWorkersOptions): Promise<void> {
 
   const files = await globby(options.glob, {
     ...options.globOptions,
+    // TODO: Contribute back to globby
+    // https://github.com/sindresorhus/globby/blob/5f7ceaefc6b58989bbbaceb8bafd3e62e5d0ee4b/index.js#L44-L46
+    ignore: options?.globOptions?.ignore ?? [],
     cwd: getCWD(options.globOptions),
     absolute: true,
   })
@@ -112,22 +110,14 @@ export async function globWorkers(options: GlobWorkersOptions): Promise<void> {
   log(`Done!`)
 }
 
-function getCWD(options: GlobWorkersOptionsCWD = {}) {
-  if (options.cwd && options.importMeta) {
-    throw new Error(
-      '`cwd` and `importMeta` cannot be specified at the same time',
-    )
-  }
+/** https://github.com/sindresorhus/globby/blob/5f7ceaefc6b58989bbbaceb8bafd3e62e5d0ee4b/index.d.ts#L58-L63 */
+function getCWD(options?: GlobWorkersOptionsCWD) {
+  if (!options?.cwd) return process.cwd()
 
-  if (options.cwd) {
-    return path.resolve(options.cwd)
-  }
-
-  if (options.importMeta) {
-    return path.dirname(url.fileURLToPath(options.importMeta.url))
-  }
-
-  return process.cwd()
+  /** https://github.com/sindresorhus/globby/blob/5f7ceaefc6b58989bbbaceb8bafd3e62e5d0ee4b/utilities.js#L4 */
+  return options.cwd instanceof URL
+    ? url.fileURLToPath(options.cwd)
+    : options.cwd
 }
 
 function getGlobWorkerPath() {

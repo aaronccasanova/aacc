@@ -80,21 +80,17 @@ An object with the following properties:
 ```ts
 type GlobbyParameters = Parameters<typeof globby>
 
-type GlobWorkersOptionsCWD =
-  | {
-      cwd?: string
-      importMeta?: never
-    }
-  | {
-      importMeta?: ImportMeta
-      cwd?: never
-    }
+interface GlobWorkersOptionsCWD {
+  /** @default process.cwd() */
+  cwd?: URL | string
+}
 
 export type GlobWorkersOptions = {
   /** Glob pattern of files to process. */
   glob: GlobbyParameters[0]
   /** Glob options such as cwd, ignore patterns, etc. */
-  globOptions?: GlobWorkersOptionsCWD & Omit<GlobbyParameters[1], 'cwd'>
+  globOptions?: GlobWorkersOptionsCWD &
+    Omit<NonNullable<GlobbyParameters[1]>, 'cwd' | 'absolute'>
   /** Path to the worker module. */
   worker: string
   workerOptions?: GlobWorkersOptionsCWD & {
