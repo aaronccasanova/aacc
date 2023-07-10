@@ -47,7 +47,7 @@
     "dist"
   ],
   "dependencies": {
-    "deepmerge": "^4.2.2",
+    "deepmerge": "^4.3.1",
     "designtokens.io": "*",
     "just-safe-set": "^4.0.2"
   },
