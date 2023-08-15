@@ -1,0 +1,10 @@
+{
+  "presets": [
+    [
+      "@aacc/babel-preset",
+      {
+        "typescript": true
+      }
+    ]
+  ]
+}
