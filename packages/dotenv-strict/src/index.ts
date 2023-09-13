@@ -40,7 +40,7 @@ type DotenvStrictConfigOutput<T extends StrictEnvironmentVariables> = Omit<
  * env.parsed //=> {FOO: 'foo', BAR: 'bar'}
  * ```
  */
-export function config<T extends StrictEnvironmentVariable>(
+export function config<T extends StrictEnvironmentVariables>(
   options?: DotenvStrictConfigOptions<T>,
 ): DotenvStrictConfigOutput<T> {
   const { strict, ...restOptions } = options ?? {}
