@@ -29,7 +29,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "plop": "^3.0.0"
+    "plop": "^4.0.0"
   },
   "devDependencies": {
     "@aacc/babel-preset": "*",
@@ -42,7 +42,7 @@
     "@types/jest": "^28.1.2",
     "babel-jest": "^28.1.1",
     "jest": "^28.1.1",
-    "plop": "^3.0.0",
+    "plop": "^4.0.0",
     "rollup": "^2.70.2",
     "type-fest": "^2.14.0",
     "typescript": "^4.7.3"
