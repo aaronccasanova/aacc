@@ -5,20 +5,25 @@ import {
   DotenvParseOutput,
 } from 'dotenv'
 
-type DotenvStrictConfigOptions<T extends ReadonlyArray<string>> =
+type AnyEnvironmentVariable = string & {}
+type StrictEnvironmentVariables = ReadonlyArray<string>
+
+type DotenvStrictConfigOptions<T extends StrictEnvironmentVariables> =
   DotenvConfigOptions & {
     strict?: T
   }
 
-type DotenvStrictParseOutput<T extends ReadonlyArray<string>> = {
-  [K in T[number] | (string & {})]: string
+type DotenvStrictParseOutput<T extends StrictEnvironmentVariables> = {
+  [EnvironmentVariable in T[number]]: string
+} & {
+  [EnvironmentVariable in AnyEnvironmentVariable]: string | undefined
 }
 
-type DotenvStrictConfigOutput<T extends ReadonlyArray<string>> = Omit<
+type DotenvStrictConfigOutput<T extends StrictEnvironmentVariables> = Omit<
   DotenvConfigOutput,
   'parsed'
 > &
-  T extends ReadonlyArray<string>
+  T extends StrictEnvironmentVariables
   ? { parsed: DotenvStrictParseOutput<T> }
   : { parsed?: DotenvParseOutput }
 
@@ -35,7 +40,7 @@ type DotenvStrictConfigOutput<T extends ReadonlyArray<string>> = Omit<
  * env.parsed //=> {FOO: 'foo', BAR: 'bar'}
  * ```
  */
-export function config<T extends ReadonlyArray<string>>(
+export function config<T extends StrictEnvironmentVariables>(
   options?: DotenvStrictConfigOptions<T>,
 ): DotenvStrictConfigOutput<T> {
   const { strict, ...restOptions } = options ?? {}
