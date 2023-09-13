@@ -1,6 +1,6 @@
 {
   "name": "dotenv-strict",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "dotenv wrapper ensuring defined environment variables are present",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
