@@ -5,7 +5,7 @@
   "description": "A collection of typescript configuration files to extend.",
   "author": "Aaron Casanova",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "publishConfig": {
     "access": "public",

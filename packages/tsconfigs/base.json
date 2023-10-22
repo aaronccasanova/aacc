@@ -23,7 +23,6 @@
     "checkJs": true,
     "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
@@ -41,7 +40,6 @@
 
     // Convenience
     "resolveJsonModule": true,
-    "moduleResolution": "node16", // Required for json resolution
     "moduleDetection": "force",
     "jsx": "react",
     "pretty": true

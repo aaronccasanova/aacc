@@ -6,7 +6,8 @@
 
   "compilerOptions": {
     "module": "esnext",
-    "target": "es2021", // Node.js 16
-    "lib": ["es2021", "dom", "dom.iterable"]
+    "moduleResolution": "node16",
+    "target": "es2022", // Node.js 18
+    "lib": ["es2022", "dom", "dom.iterable"]
   }
 }
