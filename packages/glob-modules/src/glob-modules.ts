@@ -28,7 +28,10 @@ type GlobModulesCWDOptions =
     }
 
 export type GlobModulesPatterns = GlobbyParameters[0]
-export type GlobModulesOptions = GlobModulesCWDOptions
+export type GlobModulesOptions<T extends GlobModulesResult> =
+  GlobModulesCWDOptions & {
+    schema?: { parse: (globbedModules: unknown) => T }
+  }
 
 // TODO: Add import-lazy
 // - lib: https://www.npmjs.com/package/import-lazy
@@ -37,7 +40,7 @@ type GlobModulesResult = { [globModuleNames: string]: any }
 
 export async function globModules<T extends GlobModulesResult>(
   patterns: GlobModulesPatterns,
-  options: GlobModulesOptions,
+  options: GlobModulesOptions<T>,
 ): Promise<T> {
   const cwd = getCWD(options)
 
@@ -70,6 +73,10 @@ export async function globModules<T extends GlobModulesResult>(
     for (const modName of Object.keys(mod)) {
       safeSet(modules, moduleSegments.concat(modName), mod[modName])
     }
+  }
+
+  if (options.schema) {
+    return options.schema.parse(modules)
   }
 
   return modules as T
