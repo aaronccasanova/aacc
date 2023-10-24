@@ -1,5 +1,13 @@
 # glob-modules
 
+## 0.1.0
+
+### Minor Changes
+
+- [`ce8bf78`](https://github.com/aaronccasanova/aacc/commit/ce8bf785da8fe2d44290ef8ac95fd557580e0d64)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Added a
+  `schema` option to validate the shape of globbed modules
+
 ## 0.0.2
 
 ### Patch Changes
