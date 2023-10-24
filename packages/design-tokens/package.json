@@ -1,6 +1,6 @@
 {
   "name": "@aacc/design-tokens",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Design tokens for @aacc apps and packages",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",

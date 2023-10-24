@@ -1,5 +1,13 @@
 # @aacc/tsconfigs
 
+## 0.0.5
+
+### Patch Changes
+
+- [`7e2942f`](https://github.com/aaronccasanova/aacc/commit/7e2942f31ddd1977941a135aa794cb525493bad5)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Added support
+  for Node.js v18 and TypeScript > v5
+
 ## 0.0.4
 
 ### Patch Changes
