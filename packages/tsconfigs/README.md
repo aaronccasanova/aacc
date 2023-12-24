@@ -1,4 +1,3 @@
-TODO:
+# @aacc/tsconfigs
 
-- Review https://github.com/sindresorhus/tsconfig
-- Show various usage examples
+A collection of TypeScript configuration files to extend

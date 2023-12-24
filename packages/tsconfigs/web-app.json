@@ -5,8 +5,8 @@
   "extends": "./base.json",
 
   "compilerOptions": {
-    "module": "esnext",
-    "moduleResolution": "node16",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
     "target": "es2022", // Node.js 18
     "lib": ["es2022", "dom", "dom.iterable"]
   }

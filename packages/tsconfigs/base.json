@@ -8,8 +8,6 @@
     // - https://github.com/sindresorhus/tsconfig/blob/main/tsconfig.json
     // - https://github.com/Microsoft/TypeScript/issues/29172
     // "outDir": "dist",
-    "declaration": true,
-    "declarationMap": true,
     "noEmit": false,
     "newLine": "lf",
     "stripInternal": true,

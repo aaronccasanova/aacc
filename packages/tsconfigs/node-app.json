@@ -1,15 +1,13 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Web Library",
+  "display": "Node App",
 
   "extends": "./base.json",
 
   "compilerOptions": {
-    "module": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "es2022", // Node.js 18
-    "lib": ["es2022", "dom", "dom.iterable"],
-    "declaration": true,
-    "declarationMap": true
+    "lib": ["es2022"]
   }
 }
