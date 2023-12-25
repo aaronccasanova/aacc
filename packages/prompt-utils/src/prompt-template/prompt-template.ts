@@ -1,126 +1,192 @@
 import type { IsStringLiteral } from 'type-fest'
+import dedent from 'dedent'
 
-export type InputVariableName = string
+export type PromptTemplateInputVariableName = string
 
-type InputVariableNameError =
-  'Error: `InputVariableName` must be a string literal type'
+type PromptTemplateInputVariableNameError =
+  'Error: `PromptTemplateInputVariableName` must be a string literal type'
 
-export interface InputVariableConfig {
-  name: InputVariableName
+export interface PromptTemplateInputVariableConfig {
+  name: PromptTemplateInputVariableName
   default?: string
   schema?: { parse: (inputValue: string) => string }
   onFormat?: (inputValue: string) => string
 }
 
-export type InputVariable =
-  | InputVariableName
-  | InputVariableConfig
-  | PromptTemplateResult<InputVariable[]>
+export type PromptTemplateInputVariable =
+  | PromptTemplateInputVariableName
+  | PromptTemplateInputVariableConfig
+  | PromptTemplateResult<PromptTemplateInputVariable[]>
 
-type ExtractInputVariableName<T extends InputVariable[]> =
-  T[number] extends infer I
-    ? I extends InputVariableName
-      ? IfStringLiteral<I, I, never>
-      : I extends { name: infer N }
-      ? IfStringLiteral<N, N, never>
-      : I extends PromptTemplateResult<infer U>
-      ? ExtractInputVariableName<U>
-      : never
+type ExtractInputVariableName<
+  InputVariables extends PromptTemplateInputVariable[],
+> = InputVariables[number] extends infer InputVariable
+  ? InputVariable extends PromptTemplateInputVariableName
+    ? IfStringLiteral<InputVariable, InputVariable, never>
+    : InputVariable extends { name: infer InputVariableName }
+    ? IfStringLiteral<InputVariableName, InputVariableName, never>
+    : InputVariable extends PromptTemplateResult<infer InnerInputVariables>
+    ? ExtractInputVariableName<InnerInputVariables>
     : never
+  : never
 
-type ExtractInputVariableNameWithDefault<T extends InputVariable[]> =
-  T[number] extends infer I
-    ? I extends { name: infer N; default: string }
-      ? IfStringLiteral<N, N, never>
-      : I extends PromptTemplateResult<infer U>
-      ? ExtractInputVariableNameWithDefault<U>
-      : never
+type ExtractInputVariableNameWithDefault<
+  InputVariables extends PromptTemplateInputVariable[],
+> = InputVariables[number] extends infer InputVariable
+  ? InputVariable extends { name: infer InputVariableName; default: string }
+    ? IfStringLiteral<InputVariableName, InputVariableName, never>
+    : InputVariable extends PromptTemplateResult<infer InnerInputVariables>
+    ? ExtractInputVariableNameWithDefault<InnerInputVariables>
     : never
+  : never
 
-type PromptTemplateFormatInputValues<
-  Name extends InputVariableName,
-  NameWithDefault extends InputVariableName,
+type FormatInputValues<
+  InputVariableName extends PromptTemplateInputVariableName,
+  InputVarNameWithDefault extends PromptTemplateInputVariableName,
 > = Prettify<
   {
-    [N in Name as N extends NameWithDefault ? never : N]: string
+    [N in Exclude<InputVariableName, InputVarNameWithDefault>]: string
   } & {
-    [N in Name as N extends NameWithDefault ? N : never]?: string
+    [N in InputVarNameWithDefault]?: string
   }
 >
 
 export type PromptTemplateFormat<
-  T extends InputVariable[],
-  Name extends InputVariableName = ExtractInputVariableName<T>,
-  NameWithDefault extends InputVariableName = ExtractInputVariableNameWithDefault<T>,
+  InputVariables extends PromptTemplateInputVariable[],
+  InputVariableName extends PromptTemplateInputVariableName = ExtractInputVariableName<InputVariables>,
+  InputVarNameWithDefault extends PromptTemplateInputVariableName = ExtractInputVariableNameWithDefault<InputVariables>,
 > = (
-  inputValues: [Name] extends [never]
+  inputValues: [InputVariableName] extends [never]
     ? void
-    : PromptTemplateFormatInputValues<Name, NameWithDefault>,
+    : FormatInputValues<InputVariableName, InputVarNameWithDefault>,
 ) => string
 
-export type PromptTemplateResult<T extends InputVariable[]> = {
+export type PromptTemplateResult<
+  InputVariables extends PromptTemplateInputVariable[],
+> = {
   templateStrings: TemplateStringsArray
-  inputVariables: T
-  format: PromptTemplateFormat<T>
+  inputVariables: InputVariables
+  format: PromptTemplateFormat<InputVariables>
 }
 
 /**
  * Validates input variable names are a string literal type.
  *
- * Note: We only need to handle `InputVariableName` and `InputVariableConfig` types
- * as nested `PromptTemplateResult` types should already be validated.
+ * Note: We only need to handle `PromptTemplateInputVariableName`s and `PromptTemplateInputVariableConfig`s
+ * as `PromptTemplateInputVariable`s in nested `PromptTemplateResult`s should already be validated.
  */
-type ValidateInputVariables<T extends InputVariable[]> = {
-  [Index in keyof T]: T[Index] extends InputVariableName
-    ? IfStringLiteral<T[Index], T[Index], InputVariableNameError>
-    : T[Index] extends { name: infer N }
-    ? IfStringLiteral<N, T[Index], T[Index] & { name: InputVariableNameError }>
-    : T[Index]
+type ValidateInputVariables<
+  InputVariables extends PromptTemplateInputVariable[],
+> = {
+  [Index in keyof InputVariables]: InputVariables[Index] extends PromptTemplateInputVariableName
+    ? IfStringLiteral<
+        InputVariables[Index],
+        InputVariables[Index],
+        PromptTemplateInputVariableNameError
+      >
+    : InputVariables[Index] extends { name: infer InputVariableName }
+    ? IfStringLiteral<
+        InputVariableName,
+        InputVariables[Index],
+        InputVariables[Index] & { name: PromptTemplateInputVariableNameError }
+      >
+    : InputVariables[Index]
 }
 
-export function promptTemplate<T extends InputVariable[]>(
-  templateStrings: TemplateStringsArray,
-  ...inputVariables: ValidateInputVariables<T>
-): PromptTemplateResult<T> {
-  const format: PromptTemplateFormat<T> = (inputValues_) => {
-    const inputValues: { [inputVariableName: string]: string } =
-      inputValues_ ?? {}
+export interface PromptTemplateOptions {
+  /**
+   * @default true
+   */
+  dedent?: boolean
+}
 
-    const formatted = interleave(
-      templateStrings,
-      inputVariables,
-      (inputVariableConfig) => {
-        let inputValue =
-          inputValues[inputVariableConfig.name] ??
-          inputVariableConfig.default ??
-          ''
+type ExtractPromptTemplateResult<
+  T extends TemplateStringsArray | PromptTemplateOptions,
+  InputVariables extends PromptTemplateInputVariable[],
+> = T extends TemplateStringsArray
+  ? PromptTemplateResult<InputVariables>
+  : PromptTemplate
 
-        if (inputVariableConfig?.schema) {
-          inputValue = inputVariableConfig.schema.parse(inputValue)
-        }
+type PromptTemplate = <
+  T extends TemplateStringsArray | PromptTemplateOptions,
+  InputVariables extends PromptTemplateInputVariable[],
+>(
+  templateStringsOrOptions: T,
+  ...inputVariables: ValidateInputVariables<InputVariables>
+) => ExtractPromptTemplateResult<T, InputVariables>
 
-        if (inputVariableConfig?.onFormat) {
-          inputValue = inputVariableConfig.onFormat(inputValue)
-        }
+type CreatePromptTemplate = (options: PromptTemplateOptions) => PromptTemplate
 
-        return inputValue
-      },
-    )
+const createPromptTemplate: CreatePromptTemplate = (options) => {
+  const promptTemplate: PromptTemplate = <
+    T extends TemplateStringsArray | PromptTemplateOptions,
+    InputVariables extends PromptTemplateInputVariable[],
+  >(
+    templateStringsOrOptions: T,
+    ...inputVariables: ValidateInputVariables<InputVariables>
+  ): ExtractPromptTemplateResult<T, InputVariables> => {
+    if (!isTemplateStrings(templateStringsOrOptions)) {
+      const newPromptTemplate: PromptTemplate = createPromptTemplate({
+        ...options,
+        ...templateStringsOrOptions,
+      })
 
-    return formatted
+      return newPromptTemplate as ExtractPromptTemplateResult<T, InputVariables>
+    }
+
+    const format: PromptTemplateFormat<InputVariables> = (inputValues_) => {
+      const inputValues: { [inputVariableName: string]: string } =
+        inputValues_ ?? {}
+
+      const formatted = interleave(
+        templateStringsOrOptions,
+        inputVariables,
+        (inputVariableConfig) => {
+          let inputValue =
+            inputValues[inputVariableConfig.name] ??
+            inputVariableConfig.default ??
+            ''
+
+          if (inputVariableConfig?.schema) {
+            inputValue = inputVariableConfig.schema.parse(inputValue)
+          }
+
+          if (inputVariableConfig?.onFormat) {
+            inputValue = inputVariableConfig.onFormat(inputValue)
+          }
+
+          return inputValue
+        },
+      )
+
+      return options.dedent ? dedent(formatted) : formatted
+    }
+
+    const promptTemplateResult: PromptTemplateResult<InputVariables> = {
+      templateStrings: templateStringsOrOptions,
+      inputVariables: inputVariables as InputVariables,
+      format,
+    }
+
+    return promptTemplateResult as ExtractPromptTemplateResult<
+      T,
+      InputVariables
+    >
   }
 
-  return {
-    templateStrings,
-    inputVariables: inputVariables as T,
-    format,
-  }
+  return promptTemplate
+}
+
+function isTemplateStrings(
+  templateStringsOrOptions: TemplateStringsArray | PromptTemplateOptions,
+): templateStringsOrOptions is TemplateStringsArray {
+  return Array.isArray(templateStringsOrOptions)
 }
 
 function interleave(
   templateStrings: TemplateStringsArray,
-  inputVariables: InputVariable[],
-  cb: (inputVariableConfig: InputVariableConfig) => string,
+  inputVariables: PromptTemplateInputVariable[],
+  cb: (inputVariableConfig: PromptTemplateInputVariableConfig) => string,
 ): string {
   let result = ''
 
@@ -148,6 +214,10 @@ function interleave(
 
   return result
 }
+
+export const promptTemplate: PromptTemplate = createPromptTemplate({
+  dedent: true,
+})
 
 type IfStringLiteral<T, Then, Else> = IsStringLiteral<T> extends true
   ? Then

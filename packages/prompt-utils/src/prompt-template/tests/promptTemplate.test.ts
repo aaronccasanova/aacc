@@ -479,3 +479,45 @@ describe('promptTemplate `InputVariableConfig`', () => {
     expect(getPrompt).toThrow()
   })
 })
+
+describe('promptTemplate `PromptTemplateOptions`', () => {
+  it('formats `PromptTemplateOptions` with `dedent` default', () => {
+    const template = promptTemplate`
+      0
+        1
+    `
+    const prompt = template.format()
+
+    expect(prompt).toBe('0\n  1')
+  })
+
+  it('formats `PromptTemplateOptions` with `dedent` explicit', () => {
+    const template = promptTemplate({ dedent: true })`
+      0
+        1
+    `
+    const prompt = template.format()
+
+    expect(prompt).toBe('0\n  1')
+  })
+
+  it('formats `PromptTemplateOptions` without `dedent`', () => {
+    const template = promptTemplate({ dedent: false })`
+      0
+        1
+    `
+    const prompt = template.format()
+
+    expect(prompt).toBe('\n      0\n        1\n    ')
+  })
+
+  it('formats `PromptTemplateOptions` with `dedent` multiple overrides', () => {
+    const template = promptTemplate({ dedent: false })({ dedent: true })`
+      0
+        1
+    `
+    const prompt = template.format()
+
+    expect(prompt).toBe('0\n  1')
+  })
+})

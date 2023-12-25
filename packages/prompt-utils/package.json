@@ -1,6 +1,6 @@
 {
   "name": "prompt-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A collection of LLM prompt utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -31,6 +31,7 @@
     "dist"
   ],
   "dependencies": {
+    "dedent": "^1.5.1",
     "type-fest": "^4.8.3"
   },
   "devDependencies": {
