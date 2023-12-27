@@ -1,6 +1,16 @@
 # prompt-utils
 
-A collection of LLM prompt utilities
+A collection of LLM prompt utilities, primarily centered around the
+`promptTemplate` module. Key features include:
+
+- **Type Safety:** Ensures `promptTemplate` input variables are defined and
+  formatted correctly at compile time.
+- **Modular Design:** Supports nested `promptTemplate`s to promote organization
+  and reusability.
+- **Intuitive Authoring:** Simplifies prompt creation by solely defining input
+  variables in `promptTemplate`s.
+- **Community Prompts:** Designed with the vision of creating and sharing
+  `promptTemplate`s with the community (as NPM packages for example).
 
 ## Installation
 
@@ -8,7 +18,7 @@ A collection of LLM prompt utilities
 npm i prompt-utils
 ```
 
-## APIs
+## Usage
 
 ### `promptTemplate` with `InputVariableName`
 
@@ -110,7 +120,8 @@ const numberedListPrompt = brainstormWithFormatPromptTemplate.format({
   animal: 'cat',
   format: 'a numbered list',
 })
-//=> 'Brainstorm 3 superhero names for a cat. Format the output as a numbered list.'
+//=> 'Brainstorm 3 superhero names for a cat.
+//    Format the output as a numbered list.'
 ```
 
 ### `promptTemplate` with `Options`
