@@ -382,3 +382,42 @@ const prompt = promptTemplateResult.format({
 })
 //=> 'My prompt template with inputVariableValue.'
 ```
+
+### Text Transforms
+
+The following text transforms are simply a re-export of
+[change-case](https://npmjs.com/package/change-case) and
+[title-case](https://npmjs.com/package/title-case) with support for ESM and CJS.
+
+- **caseCamel**
+- **caseCapital**
+- **caseConstant**
+- **caseDot**
+- **caseKebab**
+- **caseNo**
+- **casePascal**
+- **casePascalSnake**
+- **casePath**
+- **caseSentence**
+- **caseSnake**
+- **caseTrain**
+- **caseTitle**
+
+> Note: Each transform has been renamed in reverse order to improve autocomplete
+> behavior and discovery.
+
+```ts
+import { promptTemplate, caseCapital } from 'prompt-utils'
+
+const promptTemplateResult = promptTemplate`
+  Brainstorm 3 superhero names for a ${{
+    name: 'animal',
+    onFormat: caseCapital,
+  }}
+`
+
+const prompt = promptTemplateResult.format({
+  inputVariableName: 'cat',
+})
+//=> 'Brainstorm 3 superhero names for a Cat.'
+```

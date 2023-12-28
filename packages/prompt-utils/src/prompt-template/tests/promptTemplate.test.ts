@@ -1,6 +1,21 @@
 import { z } from 'zod'
 
 import { promptTemplate } from '../prompt-template'
+import { titleCase } from '../../text-transforms/title-case'
+import {
+  camelCase,
+  capitalCase,
+  constantCase,
+  dotCase,
+  kebabCase,
+  noCase,
+  pascalCase,
+  pascalSnakeCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+  trainCase,
+} from '../../text-transforms/change-case'
 
 describe('promptTemplate', () => {
   it('formats empty string', () => {
@@ -519,5 +534,87 @@ describe('promptTemplate `PromptTemplateOptions`', () => {
     const prompt = template.format()
 
     expect(prompt).toBe('0\n  1')
+  })
+})
+
+describe('promptTemplate with text transforms', () => {
+  const textTransforms = [
+    {
+      transform: camelCase,
+      input: 'foo bar',
+      output: 'fooBar',
+    },
+    {
+      transform: capitalCase,
+      input: 'foo bar',
+      output: 'Foo Bar',
+    },
+    {
+      transform: constantCase,
+      input: 'foo bar',
+      output: 'FOO_BAR',
+    },
+    {
+      transform: dotCase,
+      input: 'foo bar',
+      output: 'foo.bar',
+    },
+    {
+      transform: kebabCase,
+      input: 'foo bar',
+      output: 'foo-bar',
+    },
+    {
+      transform: noCase,
+      input: 'foo bar',
+      output: 'foo bar',
+    },
+    {
+      transform: pascalCase,
+      input: 'foo bar',
+      output: 'FooBar',
+    },
+    {
+      transform: pascalSnakeCase,
+      input: 'foo bar',
+      output: 'Foo_Bar',
+    },
+    {
+      transform: pathCase,
+      input: 'foo bar',
+      output: 'foo/bar',
+    },
+    {
+      transform: sentenceCase,
+      input: 'foo bar',
+      output: 'Foo bar',
+    },
+    {
+      transform: snakeCase,
+      input: 'foo bar',
+      output: 'foo_bar',
+    },
+    {
+      transform: trainCase,
+      input: 'foo bar',
+      output: 'Foo-Bar',
+    },
+    {
+      transform: titleCase,
+      input: 'foo bar',
+      output: 'Foo Bar',
+    },
+  ]
+
+  textTransforms.forEach(({ transform, input, output }) => {
+    it(`formats \`${transform.name}\``, () => {
+      const template = promptTemplate`${{ name: 'a', onFormat: transform }}`
+
+      const prompt = template.format({
+        a: input,
+      })
+
+      expect(prompt).toBe(output)
+    })
   })
 })
