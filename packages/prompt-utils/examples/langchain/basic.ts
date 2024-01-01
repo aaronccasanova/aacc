@@ -1,7 +1,7 @@
 /**
-npx tsx examples/basic-langchain/index.ts
+npx tsx examples/langchain/basic.ts
 */
-import '../env'
+import '../env.js'
 import { OpenAIChat } from 'langchain/llms/openai'
 import { StringOutputParser } from 'langchain/schema/output_parser'
 import { promptTemplate } from 'prompt-utils'

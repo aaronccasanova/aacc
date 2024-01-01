@@ -1,7 +1,7 @@
 /**
-npx tsx examples/basic-openai/index.ts
+npx tsx examples/openai/basic.ts
 */
-import '../env'
+import '../env.js'
 import { OpenAI } from 'openai'
 
 import { promptTemplate } from 'prompt-utils'
