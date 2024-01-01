@@ -224,6 +224,83 @@ describe('promptTemplate', () => {
       inputVariableNamesRequired: ['a', 'b'],
     })
   })
+
+  it('handles invalid input variable `InputVariableName`', () => {
+    const invalidInputVariableName = 0
+
+    const getPromptTemplate = () =>
+      PromptTemplate.create`${
+        // @ts-expect-error
+        invalidInputVariableName
+      }`
+
+    expect(getPromptTemplate).toThrow()
+  })
+
+  it('handles invalid input variable `InputVariableConfig`', () => {
+    const invalidInputVariableConfig = {}
+
+    const getPromptTemplate = () =>
+      PromptTemplate.create`${
+        // @ts-expect-error
+        invalidInputVariableConfig
+      }`
+
+    expect(getPromptTemplate).toThrow()
+  })
+
+  it('handles invalid input variable `PromptTemplate` instance', () => {
+    const invalidInputVariablePromptTemplate = PromptTemplate
+
+    const getPromptTemplate = () =>
+      PromptTemplate.create`${
+        // @ts-expect-error
+        invalidInputVariablePromptTemplate
+      }`
+
+    expect(getPromptTemplate).toThrow()
+  })
+
+  it('handles missing input values from `InputVariableName`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'}`
+
+    const getPrompt = () =>
+      // @ts-expect-error
+      promptTemplate.format()
+
+    expect(getPrompt).toThrow()
+  })
+
+  it('handles missing input values from `InputVariableConfig`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }}`
+
+    const getPrompt = () =>
+      // @ts-expect-error
+      promptTemplate.format({
+        a: 'a',
+      })
+
+    expect(getPrompt).toThrow()
+  })
+
+  it('handles missing input values from `PromptTemplate` instance', () => {
+    const nestedPromptTemplate = PromptTemplate.create`${'c'}`
+
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }} ${nestedPromptTemplate}`
+
+    const getPrompt = () =>
+      // @ts-expect-error
+      promptTemplate.format({
+        a: 'a',
+        b: 'b',
+      })
+
+    expect(getPrompt).toThrow()
+  })
 })
 
 describe('promptTemplate nested', () => {

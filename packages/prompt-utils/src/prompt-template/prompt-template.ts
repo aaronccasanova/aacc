@@ -8,6 +8,7 @@ import type {
   ExtractInputVariableNameRequired,
   ExtractTaggedPromptTemplateResult,
   PromptTemplateBase,
+  PromptTemplateFormatOptions,
   PromptTemplateInputValues,
   PromptTemplateInputVariable,
   PromptTemplateInputVariableConfig,
@@ -65,22 +66,35 @@ export class PromptTemplate<
   constructor(
     templateStrings: TemplateStringsArray,
     inputVariables: ValidateInputVariables<InputVariables>,
-    options?: PromptTemplateOptions,
+    options: PromptTemplateOptions = {},
   ) {
     this.templateStrings = templateStrings
     this.inputVariables = inputVariables
-    this.prefix = options?.prefix ?? ''
-    this.suffix = options?.suffix ?? ''
-    this.#dedent = options?.dedent ?? true
+
+    this.#validateInputVariables()
+
+    this.prefix = options.prefix ?? ''
+    this.suffix = options.suffix ?? ''
+    this.#dedent = options.dedent ?? true
   }
 
-  format(inputValues: ExtractInputValues<InputVariables>): string {
+  format(
+    inputValues: ExtractInputValues<InputVariables>,
+    options: PromptTemplateFormatOptions = {
+      validateInputValues: true,
+    },
+  ): string {
     const normalizedInputValues: PromptTemplateInputValues = inputValues ?? {}
+
+    if (options.validateInputValues) {
+      this.#validateInputValues(normalizedInputValues)
+    }
 
     let prompt = this.#interleave({
       onPromptTemplate: (nestedPromptTemplate) =>
-        nestedPromptTemplate.format(normalizedInputValues),
-      //
+        nestedPromptTemplate.format(normalizedInputValues, {
+          validateInputValues: false,
+        }),
       onInputVariableName: (inputVariableName) =>
         normalizedInputValues[inputVariableName] ?? '',
       //
@@ -244,6 +258,41 @@ export class PromptTemplate<
 
     return interleaved
   }
+
+  #validateInputVariables() {
+    if (!Array.isArray(this.inputVariables)) {
+      throw new Error('Input variables must be an array')
+    }
+
+    for (const inputVariable of this.inputVariables) {
+      if (
+        !isInputVariableName(inputVariable) &&
+        !isInputVariableConfig(inputVariable) &&
+        !(inputVariable instanceof PromptTemplate)
+      ) {
+        throw new Error(
+          'Input variables must be a string literal, an object with a `name` property, or a `PromptTemplate` instance',
+        )
+      }
+    }
+  }
+
+  #validateInputValues(inputValues: PromptTemplateInputValues) {
+    if (typeof inputValues !== 'object' || inputValues === null) {
+      throw new Error('Input values must be an object')
+    }
+
+    const inputVariableNamesRequired: string[] =
+      this.getInputVariableNamesRequired()
+
+    for (const inputVariableNameRequired of inputVariableNamesRequired) {
+      if (!(inputVariableNameRequired in inputValues)) {
+        throw new Error(
+          `Missing input value for "${inputVariableNameRequired}"`,
+        )
+      }
+    }
+  }
 }
 
 function isInputVariableName(
@@ -255,7 +304,11 @@ function isInputVariableName(
 function isInputVariableConfig(
   inputVariable: PromptTemplateInputVariable,
 ): inputVariable is PromptTemplateInputVariableConfig {
-  return !isInputVariableName(inputVariable) && 'name' in inputVariable
+  return (
+    inputVariable !== null &&
+    typeof inputVariable === 'object' &&
+    'name' in inputVariable
+  )
 }
 
 function isInputVariableConfigOptional(
@@ -263,12 +316,6 @@ function isInputVariableConfigOptional(
 ): inputVariable is PromptTemplateInputVariableConfig & { default: string } {
   return isInputVariableConfig(inputVariable) && 'default' in inputVariable
 }
-
-// function isPromptTemplate(
-//   inputVariable: PromptTemplateInputVariable,
-// ): inputVariable is PromptTemplateBase {
-//   return inputVariable instanceof PromptTemplate
-// }
 
 function isTemplateStringsArray(
   templateStringsOrOptions: TemplateStringsArray | PromptTemplateOptions,
