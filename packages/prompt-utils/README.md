@@ -514,3 +514,34 @@ const myPrompt = myPromptTemplate.format({
 })
 //=> 'Brainstorm 3 superhero names for a Cat.'
 ```
+
+Additionally, the [`dedent`](https://npmjs.com/package/dedent) module is
+re-exported from `prompt-utils`.
+
+```ts
+import { promptTemplate, dedent } from 'prompt-utils'
+
+const chatPromptTemplate = promptTemplate`
+  You are a friendly chatbot.
+
+	Conversation:
+  ${'history'}
+  Human: ${'question'}
+  AI:
+`
+
+const chatPrompt = chatPromptTemplate.format({
+  history: dedent`
+    Human: Brainstorm 3 superhero names for a cat.
+    AI: Whisker Warrior, Shadow Pounce, and Feline Flash.
+  `,
+  question: 'What about a dog?',
+})
+//=> 'You are a friendly chatbot named Chatty.
+//
+//    Conversation:
+//    Human: Brainstorm 3 superhero names for a cat.
+//    AI: Whisker Warrior, Shadow Pounce, and Feline Flash.
+//    Human: What about a dog?
+//    AI:'
+```

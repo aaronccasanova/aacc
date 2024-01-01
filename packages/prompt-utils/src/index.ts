@@ -1,3 +1,5 @@
+export { default as dedent } from 'dedent'
+
 export type {
   PromptTemplateFormat,
   PromptTemplateFormatInputValues,
