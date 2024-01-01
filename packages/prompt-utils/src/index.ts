@@ -1,8 +1,9 @@
 export type {
+  PromptTemplateFormat,
+  PromptTemplateFormatInputValues,
   PromptTemplateInputVariable,
   PromptTemplateInputVariableConfig,
   PromptTemplateInputVariableName,
-  PromptTemplateFormat,
   PromptTemplateOptions,
 } from './prompt-template/types'
 

@@ -2,14 +2,14 @@ import dedent from 'dedent'
 
 import type {
   CreateTaggedPromptTemplate,
-  ExtractInputValues,
   ExtractInputVariableName,
   ExtractInputVariableNameOptional,
   ExtractInputVariableNameRequired,
   ExtractTaggedPromptTemplateResult,
   PromptTemplateBase,
+  PromptTemplateFormatInputValues,
+  PromptTemplateFormatInputValuesBase,
   PromptTemplateFormatOptions,
-  PromptTemplateInputValues,
   PromptTemplateInputVariable,
   PromptTemplateInputVariableConfig,
   PromptTemplateInputVariableName,
@@ -79,12 +79,13 @@ export class PromptTemplate<
   }
 
   format(
-    inputValues: ExtractInputValues<InputVariables>,
+    inputValues: PromptTemplateFormatInputValues<InputVariables>,
     options: PromptTemplateFormatOptions = {
       validateInputValues: true,
     },
   ): string {
-    const normalizedInputValues: PromptTemplateInputValues = inputValues ?? {}
+    const normalizedInputValues: PromptTemplateFormatInputValuesBase =
+      inputValues || {}
 
     if (options.validateInputValues) {
       this.#validateInputValues(normalizedInputValues)
@@ -277,7 +278,7 @@ export class PromptTemplate<
     }
   }
 
-  #validateInputValues(inputValues: PromptTemplateInputValues) {
+  #validateInputValues(inputValues: PromptTemplateFormatInputValuesBase) {
     if (typeof inputValues !== 'object' || inputValues === null) {
       throw new Error('Input values must be an object')
     }

@@ -16,7 +16,7 @@ export interface PromptTemplateBase {
   suffix: string
 
   format(
-    inputValues?: PromptTemplateInputValues | void,
+    inputValues?: PromptTemplateFormatInputValuesBase | void,
     options?: PromptTemplateFormatOptions,
   ): string
 
@@ -132,15 +132,15 @@ export type ExtractInputVariableNameOptional<
     : never
   : never
 
-// #########################
-// PromptTemplateInputValues
-// #########################
+// ####################
+// PromptTemplateFormat
+// ####################
 
-export interface PromptTemplateInputValues {
+export interface PromptTemplateFormatInputValuesBase {
   [inputVariableName: string]: string
 }
 
-export type ExtractInputValues<
+export type PromptTemplateFormatInputValues<
   InputVariables extends PromptTemplateInputVariable[],
   InputVariableNameRequired extends PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
   InputVariableNameOptional extends PromptTemplateInputVariableName = ExtractInputVariableNameOptional<InputVariables>,
@@ -154,10 +154,6 @@ export type ExtractInputValues<
       }
     >
 
-// ####################
-// PromptTemplateFormat
-// ####################
-
 export interface PromptTemplateFormatOptions {
   /**
    * @default true
@@ -168,7 +164,7 @@ export interface PromptTemplateFormatOptions {
 export type PromptTemplateFormat<
   InputVariables extends PromptTemplateInputVariable[],
 > = (
-  inputValues: ExtractInputValues<InputVariables>,
+  inputValues: PromptTemplateFormatInputValues<InputVariables>,
   options?: PromptTemplateFormatOptions,
 ) => string
 
