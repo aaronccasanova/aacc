@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 import { expectType } from 'tsd'
 
-import { promptTemplate, PromptTemplateFormat, PromptTemplateResult } from '..'
+import { PromptTemplate, PromptTemplateFormat } from '..'
 
 import { getInputValues } from './utils'
 
@@ -8,58 +9,58 @@ import { getInputValues } from './utils'
 Test `promptTemplate` with empty string
 */
 {
-  const promptTemplateResult = promptTemplate``
+  const promptTemplate = PromptTemplate.create``
 
   type InputVariables = []
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with basic string
 */
 {
-  const promptTemplateResult = promptTemplate`0`
+  const promptTemplate = PromptTemplate.create`0`
 
   type InputVariables = []
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with literal `InputVariableName`
 */
 {
-  const promptTemplateResult = promptTemplate`${'a'}`
+  const promptTemplate = PromptTemplate.create`${'a'}`
 
   type InputVariables = ['a']
 
   type InputValues = { a: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with literal `InputVariableConfig`
 */
 {
-  const promptTemplateResult = promptTemplate`${{
+  const promptTemplate = PromptTemplate.create`${{
     name: 'b' as const,
   }}`
 
@@ -67,18 +68,18 @@ Test `promptTemplate` with literal `InputVariableConfig`
 
   type InputValues = { b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResult = promptTemplate`${{
+  const promptTemplate = PromptTemplate.create`${{
     name: 'b' as const,
     default: 'value',
   }}`
@@ -87,11 +88,11 @@ Test `promptTemplate` with literal `InputVariableConfig` with default
 
   type InputValues = { b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -100,7 +101,7 @@ Test `promptTemplate` with
   literal `InputVariableConfig`
 */
 {
-  const promptTemplateResult = promptTemplate`${'a'}${{
+  const promptTemplate = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}`
 
@@ -108,11 +109,11 @@ Test `promptTemplate` with
 
   type InputValues = { a: string; b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -121,7 +122,7 @@ Test `promptTemplate` with
   literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResult = promptTemplate`${'a'}${{
+  const promptTemplate = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}`
@@ -130,11 +131,11 @@ Test `promptTemplate` with
 
   type InputValues = { a: string; b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -144,7 +145,7 @@ Test `promptTemplate` with
   literal `InputVariableName`
 */
 {
-  const promptTemplateResult = promptTemplate`${'a'}${{
+  const promptTemplate = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}${'c'}`
 
@@ -152,11 +153,11 @@ Test `promptTemplate` with
 
   type InputValues = { a: string; b: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -166,7 +167,7 @@ Test `promptTemplate` with
   literal `InputVariableName`
 */
 {
-  const promptTemplateResult = promptTemplate`${'a'}${{
+  const promptTemplate = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}${'c'}`
@@ -175,111 +176,111 @@ Test `promptTemplate` with
 
   type InputValues = { a: string; b?: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with nested `promptTemplate` with empty string
 */
 {
-  const promptTemplateResultNested = promptTemplate``
+  const promptTemplateNested = PromptTemplate.create``
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[]>]
+  type InputVariables = [PromptTemplate<[]>]
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with nested `promptTemplate` with basic string
 */
 {
-  const promptTemplateResultNested = promptTemplate`0`
+  const promptTemplateNested = PromptTemplate.create`0`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[]>]
+  type InputVariables = [PromptTemplate<[]>]
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with nested `promptTemplate` with literal `InputVariableName`
 */
 {
-  const promptTemplateResultNested = promptTemplate`${'a'}`
+  const promptTemplateNested = PromptTemplate.create`${'a'}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<['a']>]
+  type InputVariables = [PromptTemplate<['a']>]
 
   type InputValues = { a: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with nested `promptTemplate` with literal `InputVariableConfig`
 */
 {
-  const promptTemplateResultNested = promptTemplate`${{
+  const promptTemplateNested = PromptTemplate.create`${{
     name: 'b' as const,
   }}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[{ name: 'b' }]>]
+  type InputVariables = [PromptTemplate<[{ name: 'b' }]>]
 
   type InputValues = { b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with nested `promptTemplate` with literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResultNested = promptTemplate`${{
+  const promptTemplateNested = PromptTemplate.create`${{
     name: 'b' as const,
     default: 'value',
   }}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[{ name: 'b'; default: string }]>]
+  type InputVariables = [PromptTemplate<[{ name: 'b'; default: string }]>]
 
   type InputValues = { b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -288,21 +289,21 @@ Test `promptTemplate` with nested `promptTemplate` with
   literal `InputVariableConfig`
 */
 {
-  const promptTemplateResultNested = promptTemplate`${'a'}${{
+  const promptTemplateNested = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<['a', { name: 'b' }]>]
+  type InputVariables = [PromptTemplate<['a', { name: 'b' }]>]
 
   type InputValues = { a: string; b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -311,24 +312,22 @@ Test `promptTemplate` with nested `promptTemplate` with
   literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResultNested = promptTemplate`${'a'}${{
+  const promptTemplateNested = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [
-    PromptTemplateResult<['a', { name: 'b'; default: string }]>,
-  ]
+  type InputVariables = [PromptTemplate<['a', { name: 'b'; default: string }]>]
 
   type InputValues = { a: string; b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -338,21 +337,21 @@ Test `promptTemplate` with nested `promptTemplate` with
   literal `InputVariableName`
  */
 {
-  const promptTemplateResultNested = promptTemplate`${'a'}${{
+  const promptTemplateNested = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}${'c'}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<['a', { name: 'b' }, 'c']>]
+  type InputVariables = [PromptTemplate<['a', { name: 'b' }, 'c']>]
 
   type InputValues = { a: string; b: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -362,140 +361,136 @@ Test `promptTemplate` with nested `promptTemplate` with
   literal `InputVariableName`
 */
 {
-  const promptTemplateResultNested = promptTemplate`${'a'}${{
+  const promptTemplateNested = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}${'c'}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
   type InputVariables = [
-    PromptTemplateResult<['a', { name: 'b'; default: string }, 'c']>,
+    PromptTemplate<['a', { name: 'b'; default: string }, 'c']>,
   ]
 
   type InputValues = { a: string; b?: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with deeply nested `promptTemplate` with empty string
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate``
+  const promptTemplateNestedDeep = PromptTemplate.create``
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[PromptTemplateResult<[]>]>]
+  type InputVariables = [PromptTemplate<[PromptTemplate<[]>]>]
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with deeply nested `promptTemplate` with basic string
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`0`
+  const promptTemplateNestedDeep = PromptTemplate.create`0`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[PromptTemplateResult<[]>]>]
+  type InputVariables = [PromptTemplate<[PromptTemplate<[]>]>]
 
-  type InputValues = void
+  type InputValues = void | undefined
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with deeply nested `promptTemplate` with literal `InputVariableName`
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${'a'}`
+  const promptTemplateNestedDeep = PromptTemplate.create`${'a'}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [PromptTemplateResult<[PromptTemplateResult<['a']>]>]
+  type InputVariables = [PromptTemplate<[PromptTemplate<['a']>]>]
 
   type InputValues = { a: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with deeply nested `promptTemplate` with literal `InputVariableConfig`
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${{
     name: 'b' as const,
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [
-    PromptTemplateResult<[PromptTemplateResult<[{ name: 'b' }]>]>,
-  ]
+  type InputVariables = [PromptTemplate<[PromptTemplate<[{ name: 'b' }]>]>]
 
   type InputValues = { b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
 Test `promptTemplate` with deeply nested `promptTemplate` with literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${{
     name: 'b' as const,
     default: 'value',
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
   type InputVariables = [
-    PromptTemplateResult<
-      [PromptTemplateResult<[{ name: 'b'; default: string }]>]
-    >,
+    PromptTemplate<[PromptTemplate<[{ name: 'b'; default: string }]>]>,
   ]
 
   type InputValues = { b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -504,25 +499,23 @@ Test `promptTemplate` with deeply nested `promptTemplate` with
   literal `InputVariableConfig`
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${'a'}${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-  type InputVariables = [
-    PromptTemplateResult<[PromptTemplateResult<['a', { name: 'b' }]>]>,
-  ]
+  type InputVariables = [PromptTemplate<[PromptTemplate<['a', { name: 'b' }]>]>]
 
   type InputValues = { a: string; b: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -531,28 +524,26 @@ Test `promptTemplate` with deeply nested `promptTemplate` with
   literal `InputVariableConfig` with default
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${'a'}${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
   type InputVariables = [
-    PromptTemplateResult<
-      [PromptTemplateResult<['a', { name: 'b'; default: string }]>]
-    >,
+    PromptTemplate<[PromptTemplate<['a', { name: 'b'; default: string }]>]>,
   ]
 
   type InputValues = { a: string; b?: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -562,25 +553,25 @@ Test `promptTemplate` with deeply nested `promptTemplate` with
   literal `InputVariableName`
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${'a'}${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}${'c'}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}${'c'}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
   type InputVariables = [
-    PromptTemplateResult<[PromptTemplateResult<['a', { name: 'b' }]>, 'c']>,
+    PromptTemplate<[PromptTemplate<['a', { name: 'b' }]>, 'c']>,
   ]
 
   type InputValues = { a: string; b: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }
 
 /**
@@ -590,26 +581,26 @@ Test `promptTemplate` with deeply nested `promptTemplate` with
   literal `InputVariableName`
 */
 {
-  const promptTemplateResultNestedDeep = promptTemplate`${'a'}${{
+  const promptTemplateNestedDeep = PromptTemplate.create`${'a'}${{
     name: 'b' as const,
     default: 'value',
   }}`
 
-  const promptTemplateResultNested = promptTemplate`${promptTemplateResultNestedDeep}${'c'}`
+  const promptTemplateNested = PromptTemplate.create`${promptTemplateNestedDeep}${'c'}`
 
-  const promptTemplateResult = promptTemplate`${promptTemplateResultNested}`
+  const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
   type InputVariables = [
-    PromptTemplateResult<
-      [PromptTemplateResult<['a', { name: 'b'; default: string }]>, 'c']
+    PromptTemplate<
+      [PromptTemplate<['a', { name: 'b'; default: string }]>, 'c']
     >,
   ]
 
   type InputValues = { a: string; b?: string; c: string }
 
-  expectType<PromptTemplateResult<InputVariables>>(promptTemplateResult)
+  expectType<PromptTemplate<InputVariables>>(promptTemplate)
 
-  expectType<PromptTemplateFormat<InputVariables>>(promptTemplateResult.format)
+  expectType<PromptTemplateFormat<InputVariables>>(promptTemplate.format)
 
-  expectType<InputValues>(getInputValues(promptTemplateResult.format))
+  expectType<InputValues>(getInputValues(promptTemplate.format))
 }

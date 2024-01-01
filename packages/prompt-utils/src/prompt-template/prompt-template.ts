@@ -1,229 +1,283 @@
-import type { IsStringLiteral } from 'type-fest'
 import dedent from 'dedent'
 
-export type PromptTemplateInputVariableName = string
+import type {
+  CreateTaggedPromptTemplate,
+  ExtractInputValues,
+  ExtractInputVariableName,
+  ExtractInputVariableNameOptional,
+  ExtractInputVariableNameRequired,
+  ExtractTaggedPromptTemplateResult,
+  PromptTemplateBase,
+  PromptTemplateInputValues,
+  PromptTemplateInputVariable,
+  PromptTemplateInputVariableConfig,
+  PromptTemplateInputVariableName,
+  PromptTemplateOptions,
+  TaggedPromptTemplate,
+  ValidateInputVariables,
+} from './types'
 
-type PromptTemplateInputVariableNameError =
-  'Error: `PromptTemplateInputVariableName` must be a string literal type'
-
-export interface PromptTemplateInputVariableConfig {
-  name: PromptTemplateInputVariableName
-  default?: string
-  schema?: { parse: (inputValue: string) => string }
-  onFormat?: (inputValue: string) => string
-}
-
-export type PromptTemplateInputVariable =
-  | PromptTemplateInputVariableName
-  | PromptTemplateInputVariableConfig
-  | PromptTemplateResult<PromptTemplateInputVariable[]>
-
-type ExtractInputVariableName<
-  InputVariables extends PromptTemplateInputVariable[],
-> = InputVariables[number] extends infer InputVariable
-  ? InputVariable extends PromptTemplateInputVariableName
-    ? IfStringLiteral<InputVariable, InputVariable, never>
-    : InputVariable extends { name: infer InputVariableName }
-    ? IfStringLiteral<InputVariableName, InputVariableName, never>
-    : InputVariable extends PromptTemplateResult<infer InnerInputVariables>
-    ? ExtractInputVariableName<InnerInputVariables>
-    : never
-  : never
-
-type ExtractInputVariableNameWithDefault<
-  InputVariables extends PromptTemplateInputVariable[],
-> = InputVariables[number] extends infer InputVariable
-  ? InputVariable extends { name: infer InputVariableName; default: string }
-    ? IfStringLiteral<InputVariableName, InputVariableName, never>
-    : InputVariable extends PromptTemplateResult<infer InnerInputVariables>
-    ? ExtractInputVariableNameWithDefault<InnerInputVariables>
-    : never
-  : never
-
-type FormatInputValues<
-  InputVariableName extends PromptTemplateInputVariableName,
-  InputVarNameWithDefault extends PromptTemplateInputVariableName,
-> = Prettify<
-  {
-    [N in Exclude<InputVariableName, InputVarNameWithDefault>]: string
-  } & {
-    [N in InputVarNameWithDefault]?: string
-  }
->
-
-export type PromptTemplateFormat<
-  InputVariables extends PromptTemplateInputVariable[],
-  InputVariableName extends PromptTemplateInputVariableName = ExtractInputVariableName<InputVariables>,
-  InputVarNameWithDefault extends PromptTemplateInputVariableName = ExtractInputVariableNameWithDefault<InputVariables>,
-> = (
-  inputValues: [InputVariableName] extends [never]
-    ? void
-    : FormatInputValues<InputVariableName, InputVarNameWithDefault>,
-) => string
-
-export type PromptTemplateResult<
-  InputVariables extends PromptTemplateInputVariable[],
-> = {
-  templateStrings: TemplateStringsArray
-  inputVariables: InputVariables
-  format: PromptTemplateFormat<InputVariables>
-}
-
-/**
- * Validates input variable names are a string literal type.
- *
- * Note: We only need to handle `PromptTemplateInputVariableName`s and `PromptTemplateInputVariableConfig`s
- * as `PromptTemplateInputVariable`s in nested `PromptTemplateResult`s should already be validated.
- */
-type ValidateInputVariables<
-  InputVariables extends PromptTemplateInputVariable[],
-> = {
-  [Index in keyof InputVariables]: InputVariables[Index] extends PromptTemplateInputVariableName
-    ? IfStringLiteral<
-        InputVariables[Index],
-        InputVariables[Index],
-        PromptTemplateInputVariableNameError
-      >
-    : InputVariables[Index] extends { name: infer InputVariableName }
-    ? IfStringLiteral<
-        InputVariableName,
-        InputVariables[Index],
-        InputVariables[Index] & { name: PromptTemplateInputVariableNameError }
-      >
-    : InputVariables[Index]
-}
-
-export interface PromptTemplateOptions {
-  /**
-   * @default true
-   */
-  dedent?: boolean
-}
-
-type ExtractPromptTemplateResult<
-  T extends TemplateStringsArray | PromptTemplateOptions,
-  InputVariables extends PromptTemplateInputVariable[],
-> = T extends TemplateStringsArray
-  ? PromptTemplateResult<InputVariables>
-  : PromptTemplate
-
-type PromptTemplate = <
-  T extends TemplateStringsArray | PromptTemplateOptions,
-  InputVariables extends PromptTemplateInputVariable[],
->(
-  templateStringsOrOptions: T,
-  ...inputVariables: ValidateInputVariables<InputVariables>
-) => ExtractPromptTemplateResult<T, InputVariables>
-
-type CreatePromptTemplate = (options: PromptTemplateOptions) => PromptTemplate
-
-const createPromptTemplate: CreatePromptTemplate = (options) => {
-  const promptTemplate: PromptTemplate = <
+const createTaggedPromptTemplate: CreateTaggedPromptTemplate = (options) => {
+  const taggedPromptTemplate: TaggedPromptTemplate = <
     T extends TemplateStringsArray | PromptTemplateOptions,
     InputVariables extends PromptTemplateInputVariable[],
   >(
     templateStringsOrOptions: T,
     ...inputVariables: ValidateInputVariables<InputVariables>
-  ): ExtractPromptTemplateResult<T, InputVariables> => {
-    if (!isTemplateStrings(templateStringsOrOptions)) {
-      const newPromptTemplate: PromptTemplate = createPromptTemplate({
+  ): ExtractTaggedPromptTemplateResult<T, InputVariables> => {
+    if (isPromptTemplateOptions(templateStringsOrOptions)) {
+      return createTaggedPromptTemplate({
         ...options,
         ...templateStringsOrOptions,
-      })
-
-      return newPromptTemplate as ExtractPromptTemplateResult<T, InputVariables>
+      }) as ExtractTaggedPromptTemplateResult<T, InputVariables>
     }
 
-    const format: PromptTemplateFormat<InputVariables> = (inputValues_) => {
-      const inputValues: { [inputVariableName: string]: string } =
-        inputValues_ ?? {}
-
-      const formatted = interleave(
-        templateStringsOrOptions,
-        inputVariables,
-        (inputVariableConfig) => {
-          let inputValue =
-            inputValues[inputVariableConfig.name] ??
-            inputVariableConfig.default ??
-            ''
-
-          if (inputVariableConfig?.schema) {
-            inputValue = inputVariableConfig.schema.parse(inputValue)
-          }
-
-          if (inputVariableConfig?.onFormat) {
-            inputValue = inputVariableConfig.onFormat(inputValue)
-          }
-
-          return inputValue
-        },
-      )
-
-      return options.dedent ? dedent(formatted) : formatted
-    }
-
-    const promptTemplateResult: PromptTemplateResult<InputVariables> = {
-      templateStrings: templateStringsOrOptions,
-      inputVariables: inputVariables as InputVariables,
-      format,
-    }
-
-    return promptTemplateResult as ExtractPromptTemplateResult<
-      T,
-      InputVariables
-    >
+    return new PromptTemplate(
+      templateStringsOrOptions,
+      inputVariables,
+      options,
+    ) as ExtractTaggedPromptTemplateResult<T, InputVariables>
   }
 
-  return promptTemplate
+  return taggedPromptTemplate
 }
 
-function isTemplateStrings(
+export const promptTemplate: TaggedPromptTemplate = createTaggedPromptTemplate(
+  {},
+)
+
+export class PromptTemplate<
+  InputVariables extends PromptTemplateInputVariable[],
+> implements PromptTemplateBase
+{
+  static create = promptTemplate
+
+  templateStrings: TemplateStringsArray
+
+  inputVariables: ValidateInputVariables<InputVariables>
+
+  prefix: string
+
+  suffix: string
+
+  #dedent: boolean
+
+  constructor(
+    templateStrings: TemplateStringsArray,
+    inputVariables: ValidateInputVariables<InputVariables>,
+    options?: PromptTemplateOptions,
+  ) {
+    this.templateStrings = templateStrings
+    this.inputVariables = inputVariables
+    this.prefix = options?.prefix ?? ''
+    this.suffix = options?.suffix ?? ''
+    this.#dedent = options?.dedent ?? true
+  }
+
+  format(inputValues: ExtractInputValues<InputVariables>): string {
+    const normalizedInputValues: PromptTemplateInputValues = inputValues ?? {}
+
+    let prompt = this.#interleave({
+      onPromptTemplate: (nestedPromptTemplate) =>
+        nestedPromptTemplate.format(normalizedInputValues),
+      //
+      onInputVariableName: (inputVariableName) =>
+        normalizedInputValues[inputVariableName] ?? '',
+      //
+      onInputVariableConfig: (inputVariableConfig) => {
+        let inputValue =
+          normalizedInputValues[inputVariableConfig.name] ??
+          inputVariableConfig.default ??
+          ''
+
+        if (inputVariableConfig?.schema) {
+          inputValue = inputVariableConfig.schema.parse(inputValue)
+        }
+
+        if (inputVariableConfig?.onFormat) {
+          inputValue = inputVariableConfig.onFormat(inputValue)
+        }
+
+        return inputValue
+      },
+    })
+
+    prompt = this.#dedent ? dedent(prompt) : prompt
+
+    prompt = `${this.prefix}${prompt}${this.suffix}`
+
+    return prompt
+  }
+
+  /**
+   * Recursively extracts and deduplicates all input variable names.
+   */
+  getInputVariableNames(): ExtractInputVariableName<InputVariables>[] {
+    const inputVariableNamesSet = new Set<PromptTemplateInputVariableName>()
+
+    this.#walkInputVariables(this.inputVariables, {
+      onInputVariableName: (inputVariableName) => {
+        inputVariableNamesSet.add(inputVariableName)
+      },
+      onInputVariableConfig: (inputVariableConfig) => {
+        inputVariableNamesSet.add(inputVariableConfig.name)
+      },
+    })
+
+    const inputVariableNames = Array.from(inputVariableNamesSet)
+
+    return inputVariableNames as ExtractInputVariableName<InputVariables>[]
+  }
+
+  /**
+   * Recursively extracts and deduplicates all required input variable names (without a default value).
+   */
+  getInputVariableNamesRequired(): ExtractInputVariableNameRequired<InputVariables>[] {
+    const inputVariableNamesRequiredSet =
+      new Set<PromptTemplateInputVariableName>()
+
+    this.#walkInputVariables(this.inputVariables, {
+      onInputVariableName: (inputVariableName) => {
+        inputVariableNamesRequiredSet.add(inputVariableName)
+      },
+      onInputVariableConfig: (inputVariableConfig) => {
+        if (!isInputVariableConfigOptional(inputVariableConfig)) {
+          inputVariableNamesRequiredSet.add(inputVariableConfig.name)
+        }
+      },
+    })
+
+    const inputVariableNamesRequired = Array.from(inputVariableNamesRequiredSet)
+
+    return inputVariableNamesRequired as ExtractInputVariableNameRequired<InputVariables>[]
+  }
+
+  /**
+   * Recursively extracts and deduplicates all optional input variable names (with a default value and filtering out required input variable names).
+   */
+  getInputVariableNamesOptional(): ExtractInputVariableNameOptional<InputVariables>[] {
+    const inputVariableNamesOptionalAllSet =
+      new Set<PromptTemplateInputVariableName>()
+
+    const inputVariableNamesRequiredSet =
+      new Set<PromptTemplateInputVariableName>()
+
+    this.#walkInputVariables(this.inputVariables, {
+      onInputVariableName: (inputVariableName) => {
+        inputVariableNamesRequiredSet.add(inputVariableName)
+      },
+      onInputVariableConfig: (inputVariableConfig) => {
+        if (isInputVariableConfigOptional(inputVariableConfig)) {
+          inputVariableNamesOptionalAllSet.add(inputVariableConfig.name)
+        } else {
+          inputVariableNamesRequiredSet.add(inputVariableConfig.name)
+        }
+      },
+    })
+
+    const inputVariableNamesOptional: PromptTemplateInputVariableName[] = []
+
+    for (const inputVariableNameOptionalAll of inputVariableNamesOptionalAllSet) {
+      if (!inputVariableNamesRequiredSet.has(inputVariableNameOptionalAll)) {
+        inputVariableNamesOptional.push(inputVariableNameOptionalAll)
+      }
+    }
+
+    return inputVariableNamesOptional as ExtractInputVariableNameOptional<InputVariables>[]
+  }
+
+  #walkInputVariables(
+    inputVariables: PromptTemplateInputVariable[],
+    callbacks: {
+      onInputVariableName?: (
+        inputVariableName: PromptTemplateInputVariableName,
+      ) => void
+      onInputVariableConfig?: (
+        inputVariableConfig: PromptTemplateInputVariableConfig,
+      ) => void
+      onPromptTemplate?: (promptTemplate: PromptTemplateBase) => void
+    },
+  ) {
+    for (const inputVariable of inputVariables) {
+      if (isInputVariableName(inputVariable)) {
+        callbacks.onInputVariableName?.(inputVariable)
+        //
+      } else if (isInputVariableConfig(inputVariable)) {
+        callbacks.onInputVariableConfig?.(inputVariable)
+        //
+      } else {
+        callbacks.onPromptTemplate?.(inputVariable)
+
+        this.#walkInputVariables(inputVariable.inputVariables, callbacks)
+      }
+    }
+  }
+
+  #interleave(callbacks: {
+    onInputVariableName: (
+      inputVariableName: PromptTemplateInputVariableName,
+    ) => string
+    onInputVariableConfig: (
+      inputVariableConfig: PromptTemplateInputVariableConfig,
+    ) => string
+    onPromptTemplate: (promptTemplate: PromptTemplateBase) => string
+  }): string {
+    let interleaved = ''
+
+    for (let i = 0; i < this.templateStrings.length; i += 1) {
+      interleaved += this.templateStrings[i]
+
+      if (i < this.inputVariables.length) {
+        const inputVariable = this.inputVariables[i]!
+
+        if (isInputVariableName(inputVariable)) {
+          interleaved += callbacks.onInputVariableName(inputVariable)
+          //
+        } else if (isInputVariableConfig(inputVariable)) {
+          interleaved += callbacks.onInputVariableConfig(inputVariable)
+          //
+        } else {
+          interleaved += callbacks.onPromptTemplate(inputVariable)
+        }
+      }
+    }
+
+    return interleaved
+  }
+}
+
+function isInputVariableName(
+  inputVariable: PromptTemplateInputVariable,
+): inputVariable is PromptTemplateInputVariableName {
+  return typeof inputVariable === 'string'
+}
+
+function isInputVariableConfig(
+  inputVariable: PromptTemplateInputVariable,
+): inputVariable is PromptTemplateInputVariableConfig {
+  return !isInputVariableName(inputVariable) && 'name' in inputVariable
+}
+
+function isInputVariableConfigOptional(
+  inputVariable: PromptTemplateInputVariable,
+): inputVariable is PromptTemplateInputVariableConfig & { default: string } {
+  return isInputVariableConfig(inputVariable) && 'default' in inputVariable
+}
+
+// function isPromptTemplate(
+//   inputVariable: PromptTemplateInputVariable,
+// ): inputVariable is PromptTemplateBase {
+//   return inputVariable instanceof PromptTemplate
+// }
+
+function isTemplateStringsArray(
   templateStringsOrOptions: TemplateStringsArray | PromptTemplateOptions,
 ): templateStringsOrOptions is TemplateStringsArray {
   return Array.isArray(templateStringsOrOptions)
 }
 
-function interleave(
-  templateStrings: TemplateStringsArray,
-  inputVariables: PromptTemplateInputVariable[],
-  cb: (inputVariableConfig: PromptTemplateInputVariableConfig) => string,
-): string {
-  let result = ''
-
-  for (let i = 0; i < templateStrings.length; i += 1) {
-    result += templateStrings[i]
-
-    if (i < inputVariables.length) {
-      const inputVariable = inputVariables[i]!
-
-      if (typeof inputVariable === 'string') {
-        result += cb({ name: inputVariable })
-        //
-      } else if ('name' in inputVariable) {
-        result += cb(inputVariable)
-        //
-      } else {
-        result += interleave(
-          inputVariable.templateStrings,
-          inputVariable.inputVariables,
-          cb,
-        )
-      }
-    }
-  }
-
-  return result
+export function isPromptTemplateOptions(
+  templateStringsOrOptions: TemplateStringsArray | PromptTemplateOptions,
+): templateStringsOrOptions is PromptTemplateOptions {
+  return !isTemplateStringsArray(templateStringsOrOptions)
 }
-
-export const promptTemplate: PromptTemplate = createPromptTemplate({
-  dedent: true,
-})
-
-type IfStringLiteral<T, Then, Else> = IsStringLiteral<T> extends true
-  ? Then
-  : Else
-
-// https://www.totaltypescript.com/concepts/the-prettify-helper
-type Prettify<T> = {
-  [K in keyof T]: T[K]
-} & {}

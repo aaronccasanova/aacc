@@ -4,10 +4,12 @@ export type {
   PromptTemplateInputVariableName,
   PromptTemplateFormat,
   PromptTemplateOptions,
-  PromptTemplateResult,
-} from './prompt-template/prompt-template'
+} from './prompt-template/types'
 
-export { promptTemplate } from './prompt-template/prompt-template'
+export {
+  PromptTemplate,
+  promptTemplate,
+} from './prompt-template/prompt-template'
 
 export { titleCase as caseTitle } from './text-transforms/title-case'
 

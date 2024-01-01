@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-import { promptTemplate } from '../prompt-template'
+import type {
+  PromptTemplateBase,
+  PromptTemplateInputVariable,
+  PromptTemplateInputVariableName,
+} from '../types'
+import { PromptTemplate } from '../prompt-template'
 import { titleCase } from '../../text-transforms/title-case'
 import {
   camelCase,
@@ -18,101 +23,165 @@ import {
 } from '../../text-transforms/change-case'
 
 describe('promptTemplate', () => {
-  it('formats empty string', () => {
-    const template = promptTemplate``
+  it('handles empty string', () => {
+    const promptTemplate = PromptTemplate.create``
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats basic string', () => {
-    const template = promptTemplate`0`
+  it('handles basic string', () => {
+    const promptTemplate = PromptTemplate.create`0`
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats `InputVariableName`', () => {
-    const template = promptTemplate`${'a'}`
+  it('handles `InputVariableName`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
     })
 
     expect(prompt).toBe('a')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a'],
+      inputVariableNames: ['a'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableConfig`', () => {
-    const template = promptTemplate`${{ name: 'b' }}`
+  it('handles `InputVariableConfig`', () => {
+    const promptTemplate = PromptTemplate.create`${{ name: 'b' }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       b: 'b',
     })
 
     expect(prompt).toBe('b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [{ name: 'b' }],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['b'],
+    })
   })
 
-  it('formats `InputVariableConfig` with `default`', () => {
-    const template = promptTemplate`${{ name: 'b', default: 'default' }}`
+  it('handles `InputVariableConfig` with `default`', () => {
+    const promptTemplate = PromptTemplate.create`${{
+      name: 'b',
+      default: 'default',
+    }}`
 
-    const prompt = template.format({ b: 'b' })
+    const prompt = promptTemplate.format({ b: 'b' })
 
     expect(prompt).toBe('b')
 
-    const promptWithDefault = template.format({})
+    const promptWithDefault = promptTemplate.format({})
 
     expect(promptWithDefault).toBe('default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [{ name: 'b', default: 'default' }],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats `InputVariableName` and `InputVariableConfig`', () => {
-    const template = promptTemplate`${'a'} ${{ name: 'b' }}`
+  it('handles `InputVariableName` and `InputVariableConfig`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${{ name: 'b' }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
     })
 
     expect(prompt).toBe('a b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', { name: 'b' }],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
   })
 
-  it('formats `InputVariableName` and `InputVariableConfig` with `default`', () => {
-    const template = promptTemplate`${'a'} ${{ name: 'b', default: 'default' }}`
+  it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+      default: 'default',
+    }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
     })
 
     expect(prompt).toBe('a b')
 
-    const promptWithDefault = template.format({
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
     })
 
     expect(promptWithDefault).toBe('a default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', { name: 'b', default: 'default' }],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
-    const template = promptTemplate`${'a'} ${{ name: 'b' }} ${'c'}`
+  it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }} ${'c'}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
     })
 
     expect(prompt).toBe('a b c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', { name: 'b' }, 'c'],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b', 'c'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
-    const template = promptTemplate`${'a'} ${{
+  it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
       name: 'b',
       default: 'default',
     }} ${'c'}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
@@ -120,132 +189,223 @@ describe('promptTemplate', () => {
 
     expect(prompt).toBe('a b c')
 
-    const promptWithDefault = template.format({
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
       c: 'c',
     })
 
     expect(promptWithDefault).toBe('a default c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', { name: 'b', default: 'default' }, 'c'],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a', 'c'],
+    })
+  })
+
+  it('handles duplicate inputVariables', () => {
+    const promptTemplate = PromptTemplate.create`${'a'} ${'b'} ${{
+      name: 'b',
+      default: 'default',
+    }}`
+
+    const prompt = promptTemplate.format({
+      a: 'a',
+      b: 'b',
+    })
+
+    expect(prompt).toBe('a b b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', 'b', { name: 'b', default: 'default' }],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
   })
 })
 
 describe('promptTemplate nested', () => {
-  it('formats empty string', () => {
-    const templateNested = promptTemplate``
+  it('handles empty string', () => {
+    const promptTemplateNested = PromptTemplate.create``
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats basic string', () => {
-    const templateNested = promptTemplate`0`
+  it('handles basic string', () => {
+    const promptTemplateNested = PromptTemplate.create`0`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats `InputVariableName`', () => {
-    const templateNested = promptTemplate`${'a'}`
+  it('handles `InputVariableName`', () => {
+    const promptTemplateNested = PromptTemplate.create`${'a'}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
     })
 
     expect(prompt).toBe('a')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableConfig`', () => {
-    const templateNested = promptTemplate`${{ name: 'b' }}`
+  it('handles `InputVariableConfig`', () => {
+    const promptTemplateNested = PromptTemplate.create`${{ name: 'b' }}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       b: 'b',
     })
 
     expect(prompt).toBe('b')
-  })
 
-  it('formats `InputVariableConfig` with `default`', () => {
-    const templateNested = promptTemplate`${{ name: 'b', default: 'default' }}`
-
-    const template = promptTemplate`${templateNested}`
-
-    const prompt = template.format({ b: 'b' })
-
-    expect(prompt).toBe('b')
-
-    const promptWithDefault = template.format({})
-
-    expect(promptWithDefault).toBe('default')
-  })
-
-  it('formats `InputVariableName` and `InputVariableConfig`', () => {
-    const templateNested = promptTemplate`${'a'} ${{ name: 'b' }}`
-
-    const template = promptTemplate`${templateNested}`
-
-    const prompt = template.format({
-      a: 'a',
-      b: 'b',
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['b'],
     })
-
-    expect(prompt).toBe('a b')
   })
 
-  it('formats `InputVariableName` and `InputVariableConfig` with `default`', () => {
-    const templateNested = promptTemplate`${'a'} ${{
+  it('handles `InputVariableConfig` with `default`', () => {
+    const promptTemplateNested = PromptTemplate.create`${{
       name: 'b',
       default: 'default',
     }}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({ b: 'b' })
+
+    expect(prompt).toBe('b')
+
+    const promptWithDefault = promptTemplate.format({})
+
+    expect(promptWithDefault).toBe('default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: [],
+    })
+  })
+
+  it('handles `InputVariableName` and `InputVariableConfig`', () => {
+    const promptTemplateNested = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }}`
+
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
+
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
     })
 
     expect(prompt).toBe('a b')
 
-    const promptWithDefault = template.format({
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
+  })
+
+  it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
+    const promptTemplateNested = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+      default: 'default',
+    }}`
+
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
+
+    const prompt = promptTemplate.format({
+      a: 'a',
+      b: 'b',
+    })
+
+    expect(prompt).toBe('a b')
+
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
     })
 
     expect(promptWithDefault).toBe('a default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
-    const templateNested = promptTemplate`${'a'} ${{ name: 'b' }} ${'c'}`
+  it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
+    const promptTemplateNested = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }} ${'c'}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
     })
 
     expect(prompt).toBe('a b c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b', 'c'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
-    const templateNested = promptTemplate`${'a'} ${{
+  it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
+    const promptTemplateNested = PromptTemplate.create`${'a'} ${{
       name: 'b',
       default: 'default',
     }} ${'c'}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
@@ -253,153 +413,245 @@ describe('promptTemplate nested', () => {
 
     expect(prompt).toBe('a b c')
 
-    const promptWithDefault = template.format({
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
       c: 'c',
     })
 
     expect(promptWithDefault).toBe('a default c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a', 'c'],
+    })
+  })
+
+  it('handles duplicate inputVariables', () => {
+    const promptTemplateNested = PromptTemplate.create`${{
+      name: 'b',
+      default: 'default',
+    }}`
+
+    const promptTemplate = PromptTemplate.create`${'a'} ${'b'} ${promptTemplateNested}`
+
+    const prompt = promptTemplate.format({
+      a: 'a',
+      b: 'b',
+    })
+
+    expect(prompt).toBe('a b b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', 'b', promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
   })
 })
 
 describe('promptTemplate deeply nested', () => {
-  it('formats empty string', () => {
-    const templateNestedDeep = promptTemplate``
+  it('handles empty string', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create``
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats basic string', () => {
-    const templateNestedDeep = promptTemplate`0`
+  it('handles basic string', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`0`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: [],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats `InputVariableName`', () => {
-    const templateNestedDeep = promptTemplate`${'a'}`
+  it('handles `InputVariableName`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
     })
 
     expect(prompt).toBe('a')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableConfig`', () => {
-    const templateNestedDeep = promptTemplate`${{ name: 'b' }}`
+  it('handles `InputVariableConfig`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${{
+      name: 'b',
+    }}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       b: 'b',
     })
 
     expect(prompt).toBe('b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['b'],
+    })
   })
 
-  it('formats `InputVariableConfig` with `default`', () => {
-    const templateNestedDeep = promptTemplate`${{
+  it('handles `InputVariableConfig` with `default`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${{
       name: 'b',
       default: 'default',
     }}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({ b: 'b' })
+    const prompt = promptTemplate.format({ b: 'b' })
 
     expect(prompt).toBe('b')
 
-    const promptWithDefault = template.format({})
+    const promptWithDefault = promptTemplate.format({})
 
     expect(promptWithDefault).toBe('default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: [],
+    })
   })
 
-  it('formats `InputVariableName` and `InputVariableConfig`', () => {
-    const templateNestedDeep = promptTemplate`${'a'} ${{ name: 'b' }}`
+  it('handles `InputVariableName` and `InputVariableConfig`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
     })
 
     expect(prompt).toBe('a b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
   })
 
-  it('formats `InputVariableName` and `InputVariableConfig` with `default`', () => {
-    const templateNestedDeep = promptTemplate`${'a'} ${{
+  it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
       name: 'b',
       default: 'default',
     }}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
     })
 
     expect(prompt).toBe('a b')
 
-    const promptWithDefault = template.format({
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
     })
 
     expect(promptWithDefault).toBe('a default')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
-    const templateNestedDeep = promptTemplate`${'a'} ${{ name: 'b' }} ${'c'}`
+  it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
+      name: 'b',
+    }} ${'c'}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
     })
 
     expect(prompt).toBe('a b c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b', 'c'],
+    })
   })
 
-  it('formats `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
-    const templateNestedDeep = promptTemplate`${'a'} ${{
+  it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
       name: 'b',
       default: 'default',
     }} ${'c'}`
 
-    const templateNested = promptTemplate`${templateNestedDeep}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
 
-    const template = promptTemplate`${templateNested}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
@@ -407,87 +659,132 @@ describe('promptTemplate deeply nested', () => {
 
     expect(prompt).toBe('a b c')
 
-    const promptWithDefault = template.format({
+    const promptWithDefault = promptTemplate.format({
       a: 'a',
       c: 'c',
     })
 
     expect(promptWithDefault).toBe('a default c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: ['b'],
+      inputVariableNamesRequired: ['a', 'c'],
+    })
   })
 
-  it('formats each `InputVariableName`', () => {
-    const templateNestedDeep = promptTemplate`${'a'}`
+  it('handles each `InputVariableName`', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${'a'}`
 
-    const templateNested = promptTemplate`${templateNestedDeep} ${'b'}`
+    const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep} ${'b'}`
 
-    const template = promptTemplate`${templateNested} ${'c'}`
+    const promptTemplate = PromptTemplate.create`${promptTemplateNested} ${'c'}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
       b: 'b',
       c: 'c',
     })
 
     expect(prompt).toBe('a b c')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: [promptTemplateNested, 'c'],
+      inputVariableNames: ['a', 'b', 'c'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b', 'c'],
+    })
+  })
+
+  it('handles duplicate inputVariables', () => {
+    const promptTemplatedNestedDeep = PromptTemplate.create`${{
+      name: 'b',
+      default: 'default',
+    }}`
+
+    const promptTemplateNested = PromptTemplate.create`${'b'} ${promptTemplatedNestedDeep}`
+
+    const promptTemplate = PromptTemplate.create`${'a'} ${promptTemplateNested}`
+
+    const prompt = promptTemplate.format({
+      a: 'a',
+      b: 'b',
+    })
+
+    expect(prompt).toBe('a b b')
+
+    testInputVariables(promptTemplate, {
+      inputVariables: ['a', promptTemplateNested],
+      inputVariableNames: ['a', 'b'],
+      inputVariableNamesOptional: [],
+      inputVariableNamesRequired: ['a', 'b'],
+    })
   })
 })
 
 describe('promptTemplate `InputVariableConfig`', () => {
-  it('formats `InputVariableConfig` with `schema` basic', () => {
-    const template = promptTemplate`${{ name: 'a', schema: z.string() }}`
+  it('handles `InputVariableConfig` with `schema` basic', () => {
+    const promptTemplate = PromptTemplate.create`${{
+      name: 'a',
+      schema: z.string(),
+    }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
     })
 
     expect(prompt).toBe('a')
   })
 
-  it('formats `InputVariableConfig` with `schema` min length', () => {
-    const template = promptTemplate`${{ name: 'a', schema: z.string().min(2) }}`
+  it('handles `InputVariableConfig` with `schema` min length', () => {
+    const promptTemplate = PromptTemplate.create`${{
+      name: 'a',
+      schema: z.string().min(2),
+    }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'aa',
     })
 
     expect(prompt).toBe('aa')
 
     const getPrompt = () =>
-      template.format({
+      promptTemplate.format({
         a: 'a',
       })
 
     expect(getPrompt).toThrow()
   })
 
-  it('formats `InputVariableConfig` with `onFormat`', () => {
-    const template = promptTemplate`${{
+  it('handles `InputVariableConfig` with `onFormat`', () => {
+    const promptTemplate = PromptTemplate.create`${{
       name: 'a',
       onFormat: (inputValue) => inputValue.toUpperCase(),
     }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'a',
     })
 
     expect(prompt).toBe('A')
   })
 
-  it('formats `InputVariableConfig` with `schema` min length and `onFormat`', () => {
-    const template = promptTemplate`${{
+  it('handles `InputVariableConfig` with `schema` min length and `onFormat`', () => {
+    const promptTemplate = PromptTemplate.create`${{
       name: 'a',
       schema: z.string().min(2),
       onFormat: (inputValue) => inputValue.toUpperCase(),
     }}`
 
-    const prompt = template.format({
+    const prompt = promptTemplate.format({
       a: 'aa',
     })
 
     expect(prompt).toBe('AA')
 
     const getPrompt = () =>
-      template.format({
+      promptTemplate.format({
         a: 'a',
       })
 
@@ -496,44 +793,87 @@ describe('promptTemplate `InputVariableConfig`', () => {
 })
 
 describe('promptTemplate `PromptTemplateOptions`', () => {
-  it('formats `PromptTemplateOptions` with `dedent` default', () => {
-    const template = promptTemplate`
+  it('handles `PromptTemplateOptions` with `dedent` default', () => {
+    const promptTemplate = PromptTemplate.create`
       0
         1
     `
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0\n  1')
   })
 
-  it('formats `PromptTemplateOptions` with `dedent` explicit', () => {
-    const template = promptTemplate({ dedent: true })`
+  it('handles `PromptTemplateOptions` with `dedent` explicit', () => {
+    const promptTemplate = PromptTemplate.create({ dedent: true })`
       0
         1
     `
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0\n  1')
   })
 
-  it('formats `PromptTemplateOptions` without `dedent`', () => {
-    const template = promptTemplate({ dedent: false })`
+  it('handles `PromptTemplateOptions` without `dedent`', () => {
+    const promptTemplate = PromptTemplate.create({ dedent: false })`
       0
         1
     `
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('\n      0\n        1\n    ')
   })
 
-  it('formats `PromptTemplateOptions` with `dedent` multiple overrides', () => {
-    const template = promptTemplate({ dedent: false })({ dedent: true })`
+  it('handles `PromptTemplateOptions` with `dedent` multiple overrides', () => {
+    const promptTemplate = PromptTemplate.create({ dedent: false })({
+      dedent: true,
+    })`
       0
         1
     `
-    const prompt = template.format()
+    const prompt = promptTemplate.format()
 
     expect(prompt).toBe('0\n  1')
+  })
+
+  it('handles `PromptTemplateOptions` with `prefix`', () => {
+    const promptTemplate = PromptTemplate.create({ prefix: 'prefix' })`0`
+
+    const prompt = promptTemplate.format()
+
+    expect(prompt).toBe('prefix0')
+  })
+
+  it('handles `PromptTemplateOptions` with `suffix`', () => {
+    const promptTemplate = PromptTemplate.create({ suffix: 'suffix' })`0`
+
+    const prompt = promptTemplate.format()
+
+    expect(prompt).toBe('0suffix')
+  })
+
+  it('handles `PromptTemplateOptions` with `prefix` and `suffix`', () => {
+    const promptTemplate = PromptTemplate.create({
+      prefix: 'prefix',
+      suffix: 'suffix',
+    })`0`
+
+    const prompt = promptTemplate.format()
+
+    expect(prompt).toBe('prefix0suffix')
+  })
+
+  it('handles `PromptTemplateOptions` with `prefix` and `suffix` multiple overrides', () => {
+    const promptTemplate = PromptTemplate.create({
+      prefix: 'prefix1',
+      suffix: 'suffix1',
+    })({
+      prefix: 'prefix2',
+      suffix: 'suffix2',
+    })`0`
+
+    const prompt = promptTemplate.format()
+
+    expect(prompt).toBe('prefix20suffix2')
   })
 })
 
@@ -607,10 +947,13 @@ describe('promptTemplate with text transforms', () => {
   ]
 
   textTransforms.forEach(({ transform, input, output }) => {
-    it(`formats \`${transform.name}\``, () => {
-      const template = promptTemplate`${{ name: 'a', onFormat: transform }}`
+    it(`handles \`${transform.name}\``, () => {
+      const promptTemplate = PromptTemplate.create`${{
+        name: 'a',
+        onFormat: transform,
+      }}`
 
-      const prompt = template.format({
+      const prompt = promptTemplate.format({
         a: input,
       })
 
@@ -618,3 +961,27 @@ describe('promptTemplate with text transforms', () => {
     })
   })
 })
+
+function testInputVariables(
+  promptTemplate: PromptTemplateBase,
+  expected: {
+    inputVariables: PromptTemplateInputVariable[]
+    inputVariableNames: PromptTemplateInputVariableName[]
+    inputVariableNamesOptional: PromptTemplateInputVariableName[]
+    inputVariableNamesRequired: PromptTemplateInputVariableName[]
+  },
+) {
+  expect(promptTemplate.inputVariables).toEqual(expected.inputVariables)
+
+  expect(promptTemplate.getInputVariableNames()).toEqual(
+    expected.inputVariableNames,
+  )
+
+  expect(promptTemplate.getInputVariableNamesOptional()).toEqual(
+    expected.inputVariableNamesOptional,
+  )
+
+  expect(promptTemplate.getInputVariableNamesRequired()).toEqual(
+    expected.inputVariableNamesRequired,
+  )
+}
