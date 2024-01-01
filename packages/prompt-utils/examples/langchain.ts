@@ -1,10 +1,9 @@
 import { RunnableLambda } from 'langchain/schema/runnable'
-
 import {
   PromptTemplate,
   PromptTemplateFormatInputValues,
   PromptTemplateInputVariable,
-} from '..'
+} from 'prompt-utils'
 
 export function toRunnableLambda<T extends PromptTemplateInputVariable[]>(
   promptTemplate: PromptTemplate<T>,
