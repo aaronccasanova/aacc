@@ -524,7 +524,7 @@ import { promptTemplate, dedent } from 'prompt-utils'
 const chatPromptTemplate = promptTemplate`
   You are a friendly chatbot.
 
-	Conversation:
+  Conversation:
   ${'history'}
   Human: ${'question'}
   AI:

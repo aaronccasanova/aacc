@@ -11,13 +11,13 @@ import { toRunnableLambda } from '../../../../langchain.js'
 
 const qaMapReduceQuestionPromptTemplate = promptTemplate`
   Use the following portion of a long document to see if any of the text is relevant to answer the question.
-	Return any relevant text verbatim.
+  Return any relevant text verbatim.
 
-	${'context'}
+  ${'context'}
 
-	Question: ${'question'}
+  Question: ${'question'}
 
-	Relevant text, if any:
+  Relevant text, if any:
 `
 
 const llm = new OpenAIChat({ modelName: 'gpt-3.5-turbo-1106' })
