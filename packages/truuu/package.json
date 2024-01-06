@@ -1,6 +1,6 @@
 {
   "name": "truuu",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Generates a truth table from a JavaScript condition",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -44,7 +44,7 @@
     "@types/figlet": "^1.5.6",
     "rollup": "^2.70.2",
     "rollup-plugin-preserve-shebang": "^1.0.1",
-    "typescript": "^4.7.3"
+    "typescript": "~5.3.3"
   },
   "browserslist": [
     "extends @aacc/browserslist-config"

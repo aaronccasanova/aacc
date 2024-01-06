@@ -1,6 +1,6 @@
 {
   "name": "grouped-css-properties",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "All known CSS properties categorized into groups",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -45,9 +45,9 @@
     "jest": "^28.1.1",
     "known-css-properties": "^0.25.0",
     "rollup": "^2.70.2",
-    "ts-node": "^10.9.1",
+    "ts-node": "^10.9.2",
     "type-fest": "^2.14.0",
-    "typescript": "^4.7.3"
+    "typescript": "~5.3.3"
   },
   "browserslist": [
     "extends @aacc/browserslist-config"

@@ -1,6 +1,6 @@
 {
   "name": "cross-runtime",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Collection of cross runtime constants and utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
-    "typescript": "^4.7.3"
+    "typescript": "~5.3.3"
   },
   "publishConfig": {
     "access": "public",

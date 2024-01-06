@@ -1,6 +1,6 @@
 {
   "name": "prompt-utils",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "A collection of LLM prompt utilities",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -51,7 +51,7 @@
     "rollup": "^2.70.2",
     "tsd": "^0.30.0",
     "tsx": "^4.7.0",
-    "typescript": "^4.7.3",
+    "typescript": "~5.3.3",
     "zod": "^3.22.4"
   },
   "browserslist": [

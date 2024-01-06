@@ -1,6 +1,6 @@
 {
   "name": "@aacc/tsup-ts",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Example hybrid ESM/CJS TypeScript build with TSUP",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -32,6 +32,6 @@
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
     "tsup": "^5.12.6",
-    "typescript": "^4.7.3"
+    "typescript": "~5.3.3"
   }
 }
