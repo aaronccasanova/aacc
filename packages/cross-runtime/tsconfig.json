@@ -1,7 +1,8 @@
 {
   "extends": "@aacc/tsconfigs/node-library.json",
   "compilerOptions": {
-    "module": "esnext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "outDir": "dist",
     "declarationDir": "dist/types",
     "allowJs": true,
