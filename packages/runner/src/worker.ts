@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as wt from 'node:worker_threads'
 import * as fs from 'node:fs'
@@ -11,9 +12,7 @@ type ProcessorOptions = {
   fileContent: string
 }
 
-export type Processor<T extends any = null> = (
-  options: ProcessorOptions,
-) => Promise<T> | T
+export type Processor<T = null> = (options: ProcessorOptions) => Promise<T> | T
 
 export interface ProcessorImport {
   default: Processor
@@ -22,12 +21,8 @@ export interface ProcessorImport {
 export interface WorkerApi {
   processor: null | Processor
   loadProcessor(processorPath: string): Promise<void>
-  processFile: <T extends any = null>(options: {
-    filePath: string
-  }) => Promise<T>
-  processFiles: <T extends any = null>(options: {
-    filePaths: string[]
-  }) => Promise<T>
+  processFile: <T = null>(options: { filePath: string }) => Promise<T>
+  processFiles: <T = null>(options: { filePaths: string[] }) => Promise<T>
 }
 
 const workerApi: WorkerApi = {

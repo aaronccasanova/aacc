@@ -5,9 +5,11 @@ import type {
   NodePlopAPI,
   PlopGeneratorConfig,
   CustomActionFunction,
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
 } from 'plop'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PlopPromptQuestion = Extract<PlopGeneratorConfig['prompts'], any[]>[number]
 
 const plopDirActionType = 'plop-dir'

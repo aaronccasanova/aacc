@@ -5,6 +5,7 @@ import {
   DotenvParseOutput,
 } from 'dotenv'
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 type AnyEnvironmentVariable = string & {}
 type StrictEnvironmentVariables = ReadonlyArray<string>
 

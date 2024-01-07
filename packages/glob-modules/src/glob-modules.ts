@@ -1,6 +1,7 @@
 import * as path from 'node:path'
 import * as url from 'node:url'
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import safeSet from 'just-safe-set'
 import globby from 'globby'
@@ -36,6 +37,7 @@ export type GlobModulesOptions<T extends GlobModulesResult> =
 // TODO: Add import-lazy
 // - lib: https://www.npmjs.com/package/import-lazy
 // - reference: https://github.com/stylelint/stylelint/blob/main/lib/rules/index.js
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GlobModulesResult = { [globModuleNames: string]: any }
 
 export async function globModules<T extends GlobModulesResult>(
@@ -59,7 +61,7 @@ export async function globModules<T extends GlobModulesResult>(
 
   for (const modulePath of modulePaths) {
     // TODO: Investigate a Promise.all() implementation.
-    // eslint-disable-next-line no-await-in-loop
+    // eslint-disable-next-line no-await-in-loop, @typescript-eslint/no-explicit-any
     const mod = (await import(modulePath)) as { [modName: string]: any }
 
     const moduleSegments = modulePath

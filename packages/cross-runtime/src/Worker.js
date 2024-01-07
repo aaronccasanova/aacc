@@ -22,6 +22,7 @@ if (isNode()) {
   const error = new UnsupportedRuntimeAPIError('Worker')
 
   // Unsupported API - Throw on call or member access
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   _Worker = new Proxy(
     class UnsupportedRuntime {

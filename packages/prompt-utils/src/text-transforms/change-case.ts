@@ -1,6 +1,7 @@
 // Copy/paste from `change-case` to enable support for ESM and CJS:
 // https://github.com/blakeembrey/change-case/blob/f6ce967f7d287d38ab17063943f99864268947f9/packages/change-case/src/index.ts
 //
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 /* eslint-disable */
 

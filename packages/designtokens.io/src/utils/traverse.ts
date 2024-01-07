@@ -254,6 +254,7 @@ export function getTokenFromAlias(
 
   const rawPath = getRawPathFromAlias(aliasToken)
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let token: any = tokens
 
   // TODO: https://github.com/angus-c/just/tree/master/packages/object-safe-get
