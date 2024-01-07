@@ -1,2 +1,3 @@
-packages/prompt-utils/src/text-transforms/change-case.ts
-packages/prompt-utils/src/text-transforms/title-case.ts
+/packages/prompt-utils/src/text-transforms/change-case.ts
+/packages/prompt-utils/src/text-transforms/title-case.ts
+/templates

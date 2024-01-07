@@ -64,12 +64,12 @@ export type ValidateInputVariables<
         PromptTemplateInputVariableNameError
       >
     : InputVariables[Index] extends { name: infer InputVariableName }
-    ? IfStringLiteral<
-        InputVariableName,
-        InputVariables[Index],
-        InputVariables[Index] & { name: PromptTemplateInputVariableNameError }
-      >
-    : InputVariables[Index]
+      ? IfStringLiteral<
+          InputVariableName,
+          InputVariables[Index],
+          InputVariables[Index] & { name: PromptTemplateInputVariableNameError }
+        >
+      : InputVariables[Index]
 }
 
 /**
@@ -81,10 +81,10 @@ export type ExtractInputVariableName<
   ? InputVariable extends PromptTemplateInputVariableName
     ? IfStringLiteral<InputVariable, InputVariable, never>
     : InputVariable extends { name: infer InputVariableName }
-    ? IfStringLiteral<InputVariableName, InputVariableName, never>
-    : InputVariable extends PromptTemplate<infer NestedInputVariables>
-    ? ExtractInputVariableName<NestedInputVariables>
-    : never
+      ? IfStringLiteral<InputVariableName, InputVariableName, never>
+      : InputVariable extends PromptTemplate<infer NestedInputVariables>
+        ? ExtractInputVariableName<NestedInputVariables>
+        : never
   : never
 
 /**
@@ -96,13 +96,13 @@ export type ExtractInputVariableNameRequired<
   ? InputVariable extends PromptTemplateInputVariableName
     ? IfStringLiteral<InputVariable, InputVariable, never>
     : InputVariable extends {
-        name: infer InputVariableName
-        default?: undefined
-      }
-    ? IfStringLiteral<InputVariableName, InputVariableName, never>
-    : InputVariable extends PromptTemplate<infer NestedInputVariables>
-    ? ExtractInputVariableNameRequired<NestedInputVariables>
-    : never
+          name: infer InputVariableName
+          default?: undefined
+        }
+      ? IfStringLiteral<InputVariableName, InputVariableName, never>
+      : InputVariable extends PromptTemplate<infer NestedInputVariables>
+        ? ExtractInputVariableNameRequired<NestedInputVariables>
+        : never
   : never
 
 /**
@@ -114,8 +114,8 @@ type ExtractInputVariableNameOptionalAll<
   ? InputVariable extends { name: infer InputVariableName; default: string }
     ? IfStringLiteral<InputVariableName, InputVariableName, never>
     : InputVariable extends PromptTemplate<infer NestedInputVariables>
-    ? ExtractInputVariableNameOptionalAll<NestedInputVariables>
-    : never
+      ? ExtractInputVariableNameOptionalAll<NestedInputVariables>
+      : never
   : never
 
 /**
@@ -123,7 +123,8 @@ type ExtractInputVariableNameOptionalAll<
  */
 export type ExtractInputVariableNameOptional<
   InputVariables extends PromptTemplateInputVariable[],
-  InputVariableNameRequired extends PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
+  InputVariableNameRequired extends
+    PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
 > = ExtractInputVariableNameOptionalAll<InputVariables> extends infer InputVariableNameOptionalAll
   ? InputVariableNameOptionalAll extends PromptTemplateInputVariableName
     ? InputVariableNameOptionalAll extends InputVariableNameRequired
@@ -142,8 +143,10 @@ export interface PromptTemplateFormatInputValuesBase {
 
 export type PromptTemplateFormatInputValues<
   InputVariables extends PromptTemplateInputVariable[],
-  InputVariableNameRequired extends PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
-  InputVariableNameOptional extends PromptTemplateInputVariableName = ExtractInputVariableNameOptional<InputVariables>,
+  InputVariableNameRequired extends
+    PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
+  InputVariableNameOptional extends
+    PromptTemplateInputVariableName = ExtractInputVariableNameOptional<InputVariables>,
 > = [ExtractInputVariableName<InputVariables>] extends [never]
   ? undefined | void
   : Prettify<

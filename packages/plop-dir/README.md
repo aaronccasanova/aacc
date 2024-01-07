@@ -76,8 +76,8 @@ export default function {{camelCase testName}}() {
 }
 ```
 
-`testName` is extracted from the file content (e.g.
-`{{camelCase testName}}`) and included as a `plop` prompt
+`testName` is extracted from the file content (e.g. `{{camelCase testName}}`)
+and included as a `plop` prompt
 
 > See the [plop docs](https://plopjs.com/documentation/#case-modifiers) for all
 > available case modifiers
@@ -93,4 +93,6 @@ Enter testName <answer>
 
 ### That's it!
 
-Aside from configuring the `templateDir` and `outputDir`, you choose whether or not to add custom prompt messages or opt for a "zero-config" workflow where `plop-dir` generates all prompts from the template file paths and content
+Aside from configuring the `templateDir` and `outputDir`, you choose whether or
+not to add custom prompt messages or opt for a "zero-config" workflow where
+`plop-dir` generates all prompts from the template file paths and content

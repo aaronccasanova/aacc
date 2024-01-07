@@ -10,8 +10,8 @@ Casa for my packages, projects, and experiments.
 npm i
 ```
 
-> Note: Re-run the above command if you add or remove internal dependencies to ensure all
-> symlinks are up to date.
+> Note: Re-run the above command if you add or remove internal dependencies to
+> ensure all symlinks are up to date.
 
 - Build all projects
 
@@ -25,7 +25,8 @@ npm run build
 npm run build -- --filter=<package-json-name>
 ```
 
-> See the Turborepo docs for more info on the [--filter syntax](https://turborepo.org/docs/core-concepts/filtering#filter-syntax)
+> See the Turborepo docs for more info on the
+> [--filter syntax](https://turborepo.org/docs/core-concepts/filtering#filter-syntax)
 
 ## Local development
 

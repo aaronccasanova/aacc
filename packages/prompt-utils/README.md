@@ -201,9 +201,9 @@ additional properties/methods for advanced use cases.
 ```ts
 const myPromptTemplate = promptTemplate`
   My prompt template with ${'inputVariableName'} and default ${{
-  name: 'inputVariableConfigName' as const,
-  default: 'inputVariableConfigDefault',
-}}.
+    name: 'inputVariableConfigName' as const,
+    default: 'inputVariableConfigDefault',
+  }}.
 `
 
 myPromptTemplate.templateStrings
@@ -327,9 +327,9 @@ myPromptTemplate.getInputVariableNamesOptional()
 ```ts
 const myPromptTemplate = promptTemplate`
   My duplicate prompt template with ${'duplicateInputVariableName'} and ${{
-  name: 'duplicateInputVariableName' as const,
-  default: 'duplicateInputVariableNameDefault',
-}}.
+    name: 'duplicateInputVariableName' as const,
+    default: 'duplicateInputVariableNameDefault',
+  }}.
 `
 
 myPromptTemplate.getInputVariableNamesRequired()
