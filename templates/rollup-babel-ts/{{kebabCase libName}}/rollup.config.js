@@ -18,13 +18,13 @@ export default {
   output: [
     {
       format: /** @type {const} */ ('cjs'),
-      entryFileNames: '[name][assetExtname].js',
+      entryFileNames: '[name].js',
       dir: path.dirname(pkg.main),
       preserveModules: true,
     },
     {
       format: /** @type {const} */ ('es'),
-      entryFileNames: '[name][assetExtname].mjs',
+      entryFileNames: '[name].mjs',
       dir: path.dirname(pkg.module),
       preserveModules: true,
     },

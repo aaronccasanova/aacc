@@ -11,6 +11,6 @@
     "bin/glob-workers.mjs",
     "examples",
     ".eslintrc.js",
-    "rollup.config.js"
+    "rollup.config.mjs"
   ]
 }

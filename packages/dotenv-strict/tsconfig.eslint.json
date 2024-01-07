@@ -9,6 +9,6 @@
     // Paths to lint
     "src",
     ".eslintrc.js",
-    "rollup.config.js"
+    "rollup.config.mjs"
   ]
 }

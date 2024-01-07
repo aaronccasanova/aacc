@@ -9,4 +9,12 @@ module.exports = {
     project: 'tsconfig.eslint.json',
   },
   ignorePatterns: ['node_modules', 'dist'],
+  overrides: [
+    {
+      files: 'rollup.config.mjs',
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 }

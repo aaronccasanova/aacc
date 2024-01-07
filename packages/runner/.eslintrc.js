@@ -14,4 +14,12 @@ module.exports = {
     // TODO: Remove after benchmarking..
     'examples',
   ],
+  overrides: [
+    {
+      files: 'rollup.config.mjs',
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 }

@@ -37,12 +37,12 @@
     "@aacc/browserslist-config": "*",
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^21.1.0",
-    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/react": "^17.0.0",
     "react": "^17.0.0",
-    "rollup": "^2.70.2",
+    "rollup": "^4.9.4",
     "typescript": "~5.3.3"
   },
   "browserslist": [

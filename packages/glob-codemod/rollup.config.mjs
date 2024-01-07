@@ -1,12 +1,19 @@
-import path from 'path'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
 
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 
-import pkg from './package.json'
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const pkg = JSON.parse(
+  await fs.promises.readFile(
+    new URL('./package.json', import.meta.url),
+    'utf-8',
+  ),
+)
 
-const name = 'useWebSocket'
+const name = 'globCodemod'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -18,13 +25,13 @@ export default {
   output: [
     {
       format: /** @type {const} */ ('cjs'),
-      entryFileNames: '[name][assetExtname].js',
+      entryFileNames: '[name].js',
       dir: path.dirname(pkg.main),
       preserveModules: true,
     },
     {
       format: /** @type {const} */ ('es'),
-      entryFileNames: '[name][assetExtname].mjs',
+      entryFileNames: '[name].mjs',
       dir: path.dirname(pkg.module),
       preserveModules: true,
     },
