@@ -71,7 +71,7 @@ describe('promptTemplate', () => {
   })
 
   it('handles `InputVariableConfig`', () => {
-    const promptTemplate = PromptTemplate.create`${{ name: 'b' }}`
+    const promptTemplate = PromptTemplate.create`${{ name: 'b' as const }}`
 
     const prompt = promptTemplate.format({
       b: 'b',
@@ -89,7 +89,7 @@ describe('promptTemplate', () => {
 
   it('handles `InputVariableConfig` with `default`', () => {
     const promptTemplate = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -102,7 +102,7 @@ describe('promptTemplate', () => {
     expect(promptWithDefault).toBe('default')
 
     testInputVariables(promptTemplate, {
-      inputVariables: [{ name: 'b', default: 'default' }],
+      inputVariables: [{ name: 'b' as const, default: 'default' }],
       inputVariableNames: ['b'],
       inputVariableNamesOptional: ['b'],
       inputVariableNamesRequired: [],
@@ -110,7 +110,9 @@ describe('promptTemplate', () => {
   })
 
   it('handles `InputVariableName` and `InputVariableConfig`', () => {
-    const promptTemplate = PromptTemplate.create`${'a'} ${{ name: 'b' }}`
+    const promptTemplate = PromptTemplate.create`${'a'} ${{
+      name: 'b' as const,
+    }}`
 
     const prompt = promptTemplate.format({
       a: 'a',
@@ -129,7 +131,7 @@ describe('promptTemplate', () => {
 
   it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
     const promptTemplate = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -147,7 +149,7 @@ describe('promptTemplate', () => {
     expect(promptWithDefault).toBe('a default')
 
     testInputVariables(promptTemplate, {
-      inputVariables: ['a', { name: 'b', default: 'default' }],
+      inputVariables: ['a', { name: 'b' as const, default: 'default' }],
       inputVariableNames: ['a', 'b'],
       inputVariableNamesOptional: ['b'],
       inputVariableNamesRequired: ['a'],
@@ -156,7 +158,7 @@ describe('promptTemplate', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
     const promptTemplate = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }} ${'c'}`
 
     const prompt = promptTemplate.format({
@@ -177,7 +179,7 @@ describe('promptTemplate', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
     const promptTemplate = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }} ${'c'}`
 
@@ -197,7 +199,7 @@ describe('promptTemplate', () => {
     expect(promptWithDefault).toBe('a default c')
 
     testInputVariables(promptTemplate, {
-      inputVariables: ['a', { name: 'b', default: 'default' }, 'c'],
+      inputVariables: ['a', { name: 'b' as const, default: 'default' }, 'c'],
       inputVariableNames: ['a', 'b', 'c'],
       inputVariableNamesOptional: ['b'],
       inputVariableNamesRequired: ['a', 'c'],
@@ -206,7 +208,7 @@ describe('promptTemplate', () => {
 
   it('handles duplicate inputVariables', () => {
     const promptTemplate = PromptTemplate.create`${'a'} ${'b'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -218,7 +220,7 @@ describe('promptTemplate', () => {
     expect(prompt).toBe('a b b')
 
     testInputVariables(promptTemplate, {
-      inputVariables: ['a', 'b', { name: 'b', default: 'default' }],
+      inputVariables: ['a', 'b', { name: 'b' as const, default: 'default' }],
       inputVariableNames: ['a', 'b'],
       inputVariableNamesOptional: [],
       inputVariableNamesRequired: ['a', 'b'],
@@ -273,7 +275,7 @@ describe('promptTemplate', () => {
 
   it('handles missing input values from `InputVariableConfig`', () => {
     const promptTemplate = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }}`
 
     const getPrompt = () =>
@@ -289,7 +291,7 @@ describe('promptTemplate', () => {
     const nestedPromptTemplate = PromptTemplate.create`${'c'}`
 
     const promptTemplate = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }} ${nestedPromptTemplate}`
 
     const getPrompt = () =>
@@ -358,7 +360,9 @@ describe('promptTemplate nested', () => {
   })
 
   it('handles `InputVariableConfig`', () => {
-    const promptTemplateNested = PromptTemplate.create`${{ name: 'b' }}`
+    const promptTemplateNested = PromptTemplate.create`${{
+      name: 'b' as const,
+    }}`
 
     const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
 
@@ -378,7 +382,7 @@ describe('promptTemplate nested', () => {
 
   it('handles `InputVariableConfig` with `default`', () => {
     const promptTemplateNested = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -402,7 +406,7 @@ describe('promptTemplate nested', () => {
 
   it('handles `InputVariableName` and `InputVariableConfig`', () => {
     const promptTemplateNested = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }}`
 
     const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
@@ -424,7 +428,7 @@ describe('promptTemplate nested', () => {
 
   it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
     const promptTemplateNested = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -453,7 +457,7 @@ describe('promptTemplate nested', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
     const promptTemplateNested = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }} ${'c'}`
 
     const promptTemplate = PromptTemplate.create`${promptTemplateNested}`
@@ -476,7 +480,7 @@ describe('promptTemplate nested', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
     const promptTemplateNested = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }} ${'c'}`
 
@@ -507,7 +511,7 @@ describe('promptTemplate nested', () => {
 
   it('handles duplicate inputVariables', () => {
     const promptTemplateNested = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -591,7 +595,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableConfig`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
     }}`
 
     const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
@@ -614,7 +618,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableConfig` with `default`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -640,7 +644,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableName` and `InputVariableConfig`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }}`
 
     const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
@@ -664,7 +668,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableName` and `InputVariableConfig` with `default`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -695,7 +699,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig`, and `InputVariableName`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
     }} ${'c'}`
 
     const promptTemplateNested = PromptTemplate.create`${promptTemplatedNestedDeep}`
@@ -720,7 +724,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles `InputVariableName`, `InputVariableConfig` with `default`, and `InputVariableName`', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${'a'} ${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }} ${'c'}`
 
@@ -776,7 +780,7 @@ describe('promptTemplate deeply nested', () => {
 
   it('handles duplicate inputVariables', () => {
     const promptTemplatedNestedDeep = PromptTemplate.create`${{
-      name: 'b',
+      name: 'b' as const,
       default: 'default',
     }}`
 
@@ -803,7 +807,7 @@ describe('promptTemplate deeply nested', () => {
 describe('promptTemplate `InputVariableConfig`', () => {
   it('handles `InputVariableConfig` with `schema` basic', () => {
     const promptTemplate = PromptTemplate.create`${{
-      name: 'a',
+      name: 'a' as const,
       schema: z.string(),
     }}`
 
@@ -816,7 +820,7 @@ describe('promptTemplate `InputVariableConfig`', () => {
 
   it('handles `InputVariableConfig` with `schema` min length', () => {
     const promptTemplate = PromptTemplate.create`${{
-      name: 'a',
+      name: 'a' as const,
       schema: z.string().min(2),
     }}`
 
@@ -836,7 +840,7 @@ describe('promptTemplate `InputVariableConfig`', () => {
 
   it('handles `InputVariableConfig` with `onFormat`', () => {
     const promptTemplate = PromptTemplate.create`${{
-      name: 'a',
+      name: 'a' as const,
       onFormat: (inputValue) => inputValue.toUpperCase(),
     }}`
 
@@ -849,7 +853,7 @@ describe('promptTemplate `InputVariableConfig`', () => {
 
   it('handles `InputVariableConfig` with `schema` min length and `onFormat`', () => {
     const promptTemplate = PromptTemplate.create`${{
-      name: 'a',
+      name: 'a' as const,
       schema: z.string().min(2),
       onFormat: (inputValue) => inputValue.toUpperCase(),
     }}`
@@ -1026,7 +1030,7 @@ describe('promptTemplate with text transforms', () => {
   textTransforms.forEach(({ transform, input, output }) => {
     it(`handles \`${transform.name}\``, () => {
       const promptTemplate = PromptTemplate.create`${{
-        name: 'a',
+        name: 'a' as const,
         onFormat: transform,
       }}`
 
