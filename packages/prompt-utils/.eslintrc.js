@@ -11,12 +11,6 @@ module.exports = {
   ignorePatterns: ['node_modules', 'dist'],
   overrides: [
     {
-      files: 'rollup.config.mjs',
-      rules: {
-        'import/no-extraneous-dependencies': 'off',
-      },
-    },
-    {
       files: ['examples/**/*.ts'],
       rules: {
         'import/no-extraneous-dependencies': 'off',
