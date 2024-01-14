@@ -11,7 +11,7 @@
     "test-d",
     "examples",
     ".eslintrc.js",
-    "rollup.config.js",
+    "rollup.config.mjs",
     "jest.config.js"
   ]
 }

@@ -15,7 +15,7 @@ type ReadyState = keyof typeof readyStates
 // `readyState` alternative? Not sure about diverging from the WebSocket API
 // Currently, a string literal representation of ReadyState. However, this
 // could be extended to include additional custom states(e.g. 'error')
-type Status = typeof readyStates[ReadyState]
+type Status = (typeof readyStates)[ReadyState]
 
 export interface UseWebSocketOptions {
   protocols?: string | string[]

@@ -11,7 +11,7 @@
     "i-esm": "node test-implicit-esm.js",
     "build": "echo building @aacc/test-app",
     "start": "npm run i-esm",
-    "lint": "TIMING=1 eslint . --ext .js,.cjs,.mjs --cache"
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache"
   },
   "keywords": [],
   "author": "Aaron Casanova",

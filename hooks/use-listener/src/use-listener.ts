@@ -26,8 +26,8 @@ type ExtractTargetElement<Target> = Target extends React.RefObject<
 type ExtractEventMap<Target> = ExtractTargetElement<Target> extends Window
   ? WindowEventMap
   : ExtractTargetElement<Target> extends Document
-  ? DocumentEventMap
-  : HTMLElementEventMap
+    ? DocumentEventMap
+    : HTMLElementEventMap
 
 /**
  * Extracts all event names for a given target element.

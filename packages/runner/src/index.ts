@@ -1,4 +1,5 @@
 /* eslint-disable no-await-in-loop */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import * as path from 'node:path'
 import * as os from 'node:os'
@@ -13,7 +14,7 @@ interface RunnerOptions {
   workers?: number
   files: string[]
   processor: string
-  onProcessed?: <T extends any = null>(result: WorkerResult) => Promise<T> | T
+  onProcessed?: <T = null>(result: WorkerResult) => Promise<T> | T
 }
 
 export async function runner(options: RunnerOptions): Promise<WorkerResult> {

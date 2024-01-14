@@ -1,6 +1,6 @@
 {
   "name": "plop-dir",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Directory based file generator",
   "author": "Aaron Casanova <aaronccasanova@gmail.com>",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "build:js": "rollup -c",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache",
     "test": "jest",
     "prepublishOnly": "npm run build",
     "plop": "plop"
@@ -36,16 +36,16 @@
     "@aacc/browserslist-config": "*",
     "@aacc/eslint-config": "*",
     "@aacc/tsconfigs": "*",
-    "@rollup/plugin-babel": "^5.3.1",
-    "@rollup/plugin-commonjs": "^21.1.0",
-    "@rollup/plugin-node-resolve": "^13.2.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/jest": "^28.1.2",
     "babel-jest": "^28.1.1",
     "jest": "^28.1.1",
     "plop": "^3.0.0",
-    "rollup": "^2.70.2",
+    "rollup": "^4.9.4",
     "type-fest": "^2.14.0",
-    "typescript": "^4.7.3"
+    "typescript": "~5.3.3"
   },
   "browserslist": [
     "extends @aacc/browserslist-config"

@@ -9,7 +9,7 @@
     // Paths to lint
     "src",
     ".eslintrc.js",
-    "rollup.config.js",
+    "rollup.config.mjs",
     "jest.config.js",
     "plopfile.mjs"
   ]

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 declare namespace Bun {
   // https://github.com/oven-sh/bun#bunwrite--optimizing-io
   function write(

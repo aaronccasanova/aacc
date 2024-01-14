@@ -44,6 +44,7 @@ export function isUndefined(value: unknown): value is undefined {
   return typeof value === 'undefined'
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function isFunction(value: unknown): value is Function {
   return typeof value === 'function'
 }
@@ -78,8 +79,10 @@ export function isPlainObject<Value>(
 export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
   return (
     isObject(value) &&
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     isFunction(value.then) &&
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     isFunction(value.catch)
   )

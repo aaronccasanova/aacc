@@ -13,7 +13,7 @@ module.exports = {
     jest: true,
   },
   parserOptions: {
-    ecmaVersion: 2021, // Node.js 16
+    ecmaVersion: 2022, // Node.js 18
   },
   rules: {
     ...require('./rules/base'),
