@@ -1,11 +1,15 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+/* eslint-disable import/no-extraneous-dependencies */
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
+/* eslint-enable import/no-extraneous-dependencies */
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+/**
+ * @type {import('./package.json')}
+ */
 const pkg = JSON.parse(
   await fs.promises.readFile(
     new URL('./package.json', import.meta.url),
@@ -58,7 +62,7 @@ export default {
   ],
   external: [
     ...Object.keys(pkg.dependencies ?? {}),
-    // @ts-ignore
+    // @ts-expect-error - Safe to ignore
     ...Object.keys(pkg.peerDependencies ?? {}),
   ],
 }

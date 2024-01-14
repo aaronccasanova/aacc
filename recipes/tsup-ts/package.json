@@ -22,7 +22,7 @@
     "dev": "npm run build -- --watch",
     "build": "tsup",
     "type-check": "tsc --noEmit -p tsconfig.json",
-    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache",
     "prepublishOnly": "npm run build"
   },
   "files": [

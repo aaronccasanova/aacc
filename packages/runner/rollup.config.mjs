@@ -1,11 +1,16 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
+/* eslint-disable import/no-extraneous-dependencies */
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 import shebang from 'rollup-plugin-preserve-shebang'
+/* eslint-enable import/no-extraneous-dependencies */
 
+/**
+ * @type {import('./package.json')}
+ */
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 const pkg = JSON.parse(
   await fs.promises.readFile(
@@ -36,8 +41,10 @@ export default {
     },
   ],
   plugins: [
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    shebang(),
+    /** @type {import('rollup').Plugin} */ (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      shebang()
+    ),
     // Allows node_modules resolution
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     nodeResolve({ extensions }),
@@ -53,7 +60,7 @@ export default {
   external: [
     'comlink/dist/umd/node-adapter',
     ...Object.keys(pkg.dependencies ?? {}),
-    // @ts-ignore
+    // @ts-expect-error - Using fallbacks
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     ...Object.keys(pkg.peerDependencies ?? {}),
   ],

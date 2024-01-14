@@ -12,6 +12,7 @@ import * as util from 'node:util'
  */
 export default (options) => {
   const cli = util.parseArgs({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     args: options.args,
     options: {
       foo: { type: 'boolean' },

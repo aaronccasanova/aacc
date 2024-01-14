@@ -19,7 +19,7 @@
     "build": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache",
     "prepublishOnly": "npm run build",
     "deno-runtime": "deno run examples/runtime.js",
     "node-runtime": "node examples/runtime.js",

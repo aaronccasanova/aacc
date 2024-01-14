@@ -21,7 +21,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "lint": "TIMING=1 eslint . --ext .js,.ts --cache",
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache",
     "test": "npm-run-all --parallel 'test:*'",
     "test:js": "jest",
     "test:d": "tsd",
