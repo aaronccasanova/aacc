@@ -32,8 +32,8 @@ console.log(`Hello ${cr.getRuntime()}!`)
 // import-map.json
 {
   "imports": {
-    "cross-runtime": "https://cdn.skypack.dev/cross-runtime"
-  }
+    "cross-runtime": "https://cdn.skypack.dev/cross-runtime",
+  },
 }
 ```
 

@@ -125,13 +125,14 @@ export type ExtractInputVariableNameOptional<
   InputVariables extends PromptTemplateInputVariable[],
   InputVariableNameRequired extends
     PromptTemplateInputVariableName = ExtractInputVariableNameRequired<InputVariables>,
-> = ExtractInputVariableNameOptionalAll<InputVariables> extends infer InputVariableNameOptionalAll
-  ? InputVariableNameOptionalAll extends PromptTemplateInputVariableName
-    ? InputVariableNameOptionalAll extends InputVariableNameRequired
-      ? never
-      : InputVariableNameOptionalAll
+> =
+  ExtractInputVariableNameOptionalAll<InputVariables> extends infer InputVariableNameOptionalAll
+    ? InputVariableNameOptionalAll extends PromptTemplateInputVariableName
+      ? InputVariableNameOptionalAll extends InputVariableNameRequired
+        ? never
+        : InputVariableNameOptionalAll
+      : never
     : never
-  : never
 
 // ####################
 // PromptTemplateFormat
@@ -211,9 +212,8 @@ export type ExtractTaggedPromptTemplateResult<
 // Utility Types
 // #############
 
-type IfStringLiteral<T, Then, Else> = IsStringLiteral<T> extends true
-  ? Then
-  : Else
+type IfStringLiteral<T, Then, Else> =
+  IsStringLiteral<T> extends true ? Then : Else
 
 // https://www.totaltypescript.com/concepts/the-prettify-helper
 export type Prettify<T> = {
