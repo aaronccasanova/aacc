@@ -1,0 +1,73 @@
+{
+  "name": "@prompt-template/core",
+  "version": "0.0.0",
+  "description": "Core @prompt-template module",
+  "author": "Aaron Casanova <aaronccasanova@gmail.com>",
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "npm-run-all --parallel 'build:* -- --watch'",
+    "build": "npm-run-all --parallel build:*",
+    "build:js": "rollup -c",
+    "build:types": "tsc --emitDeclarationOnly",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "lint": "TIMING=1 eslint . --ext .js,.jsx,.ts,.tsx,.cjs,.mjs --cache",
+    "test": "npm-run-all --parallel 'test:*'",
+    "test:js": "jest",
+    "test:d": "tsd",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "type-fest": "^4.8.3"
+  },
+  "devDependencies": {
+    "@aacc/babel-preset": "*",
+    "@aacc/browserslist-config": "*",
+    "@aacc/eslint-config": "*",
+    "@aacc/tsconfigs": "*",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/jest": "^28.1.2",
+    "babel-jest": "^28.1.1",
+    "dedent": "^1.5.1",
+    "dotenv": "^16.3.1",
+    "jest": "^28.1.1",
+    "langchain": "^0.0.213",
+    "openai": "^4.24.1",
+    "rollup": "^4.9.4",
+    "tsd": "^0.30.0",
+    "tsx": "^4.7.0",
+    "typescript": "~5.3.3",
+    "zod": "^3.22.4"
+  },
+  "browserslist": [
+    "extends @aacc/browserslist-config"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "@aacc:registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaronccasanova/aacc.git",
+    "directory": "packages/prompt-template-core"
+  },
+  "bugs": {
+    "url": "https://github.com/aaronccasanova/aacc/issues"
+  },
+  "homepage": "https://github.com/aaronccasanova/aacc/blob/main/packages/prompt-template-core/README.md"
+}
