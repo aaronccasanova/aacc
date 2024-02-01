@@ -39,7 +39,7 @@ export default {
       preserveModules: true,
     },
   ],
-  plugins: [
+  plugins: /** @type {import('rollup').Plugin[]} */ ([
     // Allows node_modules resolution
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     nodeResolve({ extensions }),
@@ -51,7 +51,7 @@ export default {
       babelHelpers: 'bundled',
       include: ['src/**/*'],
     }),
-  ],
+  ]),
   external: [
     ...Object.keys(pkg.dependencies ?? {}),
     // @ts-expect-error - Safe to ignore
