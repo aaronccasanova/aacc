@@ -41,7 +41,7 @@ interface WorkerOptions {
 ## CLI Options
 
 ```
---glob, -g (string): The glob pattern of files to process.
+--glob, -g (string): The glob pattern of files to process. This option can be provided multiple times.
 --glob-cwd (string): Overrides the default glob `cwd` e.g. process.cwd()
 --glob-ignore (string): Ignore pattern for glob matching.
 
