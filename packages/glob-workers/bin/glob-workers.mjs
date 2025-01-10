@@ -8,7 +8,7 @@ const cli = util.parseArgs({
   allowPositionals: true,
   options: {
     /** Glob pattern of files to process */
-    glob: { type: 'string', short: 'g' },
+    glob: { type: 'string', short: 'g', multiple: true },
     /** Override current working directory when glob matching */
     'glob-cwd': { type: 'string' },
     /** Ignore pattern for glob matching */
