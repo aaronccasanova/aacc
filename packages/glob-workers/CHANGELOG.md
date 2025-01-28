@@ -1,5 +1,14 @@
 # glob-workers
 
+## 0.3.0
+
+### Minor Changes
+
+- [#138](https://github.com/aaronccasanova/aacc/pull/138)
+  [`dc279b7`](https://github.com/aaronccasanova/aacc/commit/dc279b7f87ebbae8e72c016935146a15c4c14638)
+  Thanks [@aaronccasanova](https://github.com/aaronccasanova)! - Updated
+  implementation to match hidden files and added `--help` option
+
 ## 0.2.0
 
 ### Minor Changes
