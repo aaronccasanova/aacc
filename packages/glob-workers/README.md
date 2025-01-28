@@ -41,16 +41,18 @@ interface WorkerOptions {
 ## CLI Options
 
 ```
---glob, -g (string): The glob pattern of files to process. This option can be provided multiple times.
---glob-cwd (string): Overrides the default glob `cwd` e.g. process.cwd()
---glob-ignore (string): Ignore pattern for glob matching.
+-g, --glob <pattern>...        Glob pattern of files to process. This option can be provided multiple times.
+--glob-cwd <path>              Override current working directory when glob matching.
+--glob-dot                     Allow patterns to match entries that begin with a period (.).
+--glob-ignore <pattern>...     Ignore pattern for glob matching. This option can be provided multiple times.
 
---worker, -w (string): Path to the worker module.
---worker-cwd (string): Overrides the default `cwd` when resolving the worker module e.g. process.cwd()
---worker-max-files (number): Overrides the max number of files concurrently processed by each worker thread.
+-w, --worker <path>            Path to the worker module.
+--worker-cwd <path>            Override current working directory when resolving worker module.
+--worker-max-files <number>    Override max number of files concurrently processed by each worker thread.
 
---max-workers (number): Override the max number of worker threads.
---verbose, -v (boolean): Output debug information.
+--max-workers <number>         Override max number of worker threads.
+-v, --verbose                  Output debug information.
+-h, --help                     Output help information about glob-workers.
 ```
 
 ## JavaScript API
